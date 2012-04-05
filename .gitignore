@@ -12,3 +12,4 @@
 #忽略prototype/html/目录
 #**/prototype/html/
 /govProject/target/
+/govProject/.settings/
