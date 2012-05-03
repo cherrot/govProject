@@ -1,21 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--xmlns:aop="http://www.springframework.org/schema/aop"
+http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.1.xsd-->
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:mvc="http://www.springframework.org/schema/mvc"
 	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:tx="http://www.springframework.org/schema/tx"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd	
-		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
-		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd" default-autowire="byName">
+
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+    default-autowire="byName">
 
 	<!-- Scans within the base package of the application for @Components to configure as beans -->
-	<bean id="placeholderConfig"
-		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:db.properties" />
-	</bean>
+	<!-- To externalize property values from a bean definition in a separate file using the standard Java Properties format-->
+    <context:property-placeholder location="classpath:db.properties"/>
 
-	<bean id="entityManagerFactory"
+    <!--Use this option for full JPA capabilities in a Spring-based application environment. This
+    includes web containers such as Tomcat as well as stand-alone applications and integration
+    tests with sophisticated persistence requirements-->
+
+    <!--The LocalContainerEntityManagerFactoryBean creates a
+    PersistenceUnitInfo instance based on the persistence.xml file-->
+    <bean id="entityManagerFactory"
 		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
 		<property name="jpaVendorAdapter">
 			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
@@ -23,7 +31,7 @@
 				<property name="generateDdl" value="true" />
 				<property name="databasePlatform" value="${db.dialect}" />
 			</bean>
-		</property>		
+		</property>
 	</bean>
 
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
@@ -34,15 +42,56 @@
 		<property name="password" value="${db.password}" />
 	</bean>
 
-	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+    <!-- bean post-processor for JPA annotations -->
+	<bean class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
 
+    <!-- post-processors for all standard config annotations -->
+    <!--context:annotation-config only looks for annotations on beans in the same
+application context in which it is defined. This means that, if you put
+context:annotation-config in a WebApplicationContext for a
+DispatcherServlet, it only checks for @Autowired beans in your controllers, and not
+your services.-->
+    <!--<context:annotation-config/>-->
+
+    <bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+        <property name="entityManagerFactory" ref="entityManagerFactory"/>
 	</bean>
-	
 
+    <!-- 开启注解式事务(@Transactional注解) 只对当前配置文件有效。关于Spring事务，详见3.1文档340页 -->
+  	<tx:annotation-driven transaction-manager="transactionManager"/>
 
-	<tx:annotation-driven />
+    <!-- 开启AOP监听 只对当前配置文件有效 -->
+<!--	<aop:aspectj-autoproxy expose-proxy="true" />-->
 
-	<bean
-		class="org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor" />
-	
+    <!--The <aop:config/> definition ensures that the transactional advice
+    defined by the txAdvice bean executes at the appropriate points in the program. -->
+    <!--Indicate that the proxy should be exposed by the AOP framework as a
+    ThreadLocal for retrieval via the AopContext class. Off by default, i.e.
+    no guarantees that AopContext access will work.-->
+<!--    <aop:config expose-proxy="true">
+         只对业务逻辑层实施事务 表达式为AspectJ pointcut expression
+        <aop:pointcut id="txPointcut" expression="execution(* com.cherrot..dao..*.*(..))" />
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut"/>
+    </aop:config>-->
+
+    <!--the transactional advice 配置实例见Spring3.1文档350页，propagation解释见364页Transaction propagation-->
+<!--    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" />
+            <tx:method name="add*" propagation="REQUIRED" />
+            <tx:method name="create*" propagation="REQUIRED" />
+            <tx:method name="insert*" propagation="REQUIRED" />
+            <tx:method name="update*" propagation="REQUIRED" />
+            <tx:method name="merge*" propagation="REQUIRED" />
+            <tx:method name="del*" propagation="REQUIRED" />
+            <tx:method name="remove*" propagation="REQUIRED" />
+            <tx:method name="put*" propagation="REQUIRED" />
+            <tx:method name="use*" propagation="REQUIRED"/>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="count*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="find*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="list*" propagation="REQUIRED" read-only="true" />
+            <tx:method name="*" read-only="true" />
+        </tx:attributes>
+    </tx:advice>-->
 </beans>

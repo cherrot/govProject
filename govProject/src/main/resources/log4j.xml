@@ -13,7 +13,8 @@
 	<!-- Application Loggers -->
 	<logger name="org.application">
 		<level value="debug" />
-	</logger>	
+	</logger>
+	
 	<!-- 3rdparty Loggers -->
 	<logger name="org.springframework.core">
 		<level value="info" />
