@@ -2,15 +2,16 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
+DROP SCHEMA IF EXISTS `govproject` ;
 CREATE SCHEMA IF NOT EXISTS `govproject` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci ;
 USE `govproject` ;
 
 -- -----------------------------------------------------
--- Table `govproject`.`users`
+-- Table `users`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`users` ;
+DROP TABLE IF EXISTS `users` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`users` (
+CREATE  TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `login` VARCHAR(32) NOT NULL ,
   `pass` VARCHAR(64) NOT NULL ,
@@ -19,17 +20,18 @@ CREATE  TABLE IF NOT EXISTS `govproject`.`users` (
   `displayName` VARCHAR(45) NOT NULL ,
   `email` VARCHAR(100) NOT NULL ,
   `url` VARCHAR(100) NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `login` (`login` ASC) )
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+CREATE INDEX `login` ON `users` (`login` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`posts`
+-- Table `posts`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`posts` ;
+DROP TABLE IF EXISTS `posts` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`posts` (
+CREATE  TABLE IF NOT EXISTS `posts` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '	' ,
   `user_id` INT NOT NULL ,
   `date` DATETIME NOT NULL ,
@@ -46,24 +48,28 @@ CREATE  TABLE IF NOT EXISTS `govproject`.`posts` (
   `content` TEXT NOT NULL ,
   `excerpt` TEXT NULL COMMENT '文章摘要' ,
   PRIMARY KEY (`id`) ,
-  INDEX `userID` (`user_id` ASC) ,
-  INDEX `slug` (`slug` ASC) ,
-  INDEX `parent` (`post_parent` ASC) ,
-  INDEX `type_status_date` (`type` ASC, `status` ASC, `date` ASC, `id` ASC) ,
-  CONSTRAINT `userID`
+  CONSTRAINT `post_user`
     FOREIGN KEY (`user_id` )
-    REFERENCES `govproject`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `users` (`id` )
+    ON DELETE RESTRICT
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+CREATE INDEX `post_user` ON `posts` (`user_id` ASC) ;
+
+CREATE INDEX `slug` ON `posts` (`slug` ASC) ;
+
+CREATE INDEX `parent` ON `posts` (`post_parent` ASC) ;
+
+CREATE INDEX `type_status_date` ON `posts` (`type` ASC, `status` ASC, `date` ASC, `id` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`comments`
+-- Table `comments`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`comments` ;
+DROP TABLE IF EXISTS `comments` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`comments` (
+CREATE  TABLE IF NOT EXISTS `comments` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `post_id` INT NOT NULL ,
   `date` DATETIME NOT NULL ,
@@ -76,90 +82,100 @@ CREATE  TABLE IF NOT EXISTS `govproject`.`comments` (
   `authorIp` VARCHAR(39) NOT NULL ,
   `content` TEXT NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `postID` (`post_id` ASC) ,
-  INDEX `approved` (`approved` ASC) ,
-  INDEX `date` (`date` ASC) ,
-  INDEX `parent` (`comment_parent` ASC) ,
-  CONSTRAINT `postID`
+  CONSTRAINT `comment_post`
     FOREIGN KEY (`post_id` )
-    REFERENCES `govproject`.`posts` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `posts` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = big5
 COLLATE = big5_chinese_ci
 COMMENT = '文章评论';
 
+CREATE INDEX `comment_post` ON `comments` (`post_id` ASC) ;
+
+CREATE INDEX `approved` ON `comments` (`approved` ASC) ;
+
+CREATE INDEX `date` ON `comments` (`date` ASC) ;
+
+CREATE INDEX `parent` ON `comments` (`comment_parent` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`commentmeta`
+-- Table `commentmeta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`commentmeta` ;
+DROP TABLE IF EXISTS `commentmeta` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`commentmeta` (
+CREATE  TABLE IF NOT EXISTS `commentmeta` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `comment_id` INT NOT NULL ,
-  `key` VARCHAR(45) NOT NULL ,
-  `value` VARCHAR(255) NULL ,
+  `metaKey` VARCHAR(45) NOT NULL ,
+  `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `commentID` (`comment_id` ASC) ,
-  INDEX `key` (`key` ASC) ,
-  CONSTRAINT `commentID`
+  CONSTRAINT `commentmeta_comment`
     FOREIGN KEY (`comment_id` )
-    REFERENCES `govproject`.`comments` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `comments` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+CREATE INDEX `commentmeta_comment` ON `commentmeta` (`comment_id` ASC) ;
+
+CREATE INDEX `key` ON `commentmeta` (`metaKey` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`postmeta`
+-- Table `postmeta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`postmeta` ;
+DROP TABLE IF EXISTS `postmeta` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`postmeta` (
+CREATE  TABLE IF NOT EXISTS `postmeta` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `post_id` INT NOT NULL ,
-  `key` VARCHAR(45) NOT NULL ,
-  `value` VARCHAR(255) NULL ,
+  `metaKey` VARCHAR(45) NOT NULL ,
+  `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `postID` (`post_id` ASC) ,
-  INDEX `key` (`key` ASC) ,
-  CONSTRAINT `postID`
+  CONSTRAINT `postmeta_post`
     FOREIGN KEY (`post_id` )
-    REFERENCES `govproject`.`posts` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `posts` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+CREATE INDEX `postmeta_post` ON `postmeta` (`post_id` ASC) ;
+
+CREATE INDEX `key` ON `postmeta` (`metaKey` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`usermeta`
+-- Table `usermeta`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`usermeta` ;
+DROP TABLE IF EXISTS `usermeta` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`usermeta` (
+CREATE  TABLE IF NOT EXISTS `usermeta` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `user_id` INT NOT NULL ,
-  `key` VARCHAR(45) NOT NULL ,
-  `value` VARCHAR(255) NULL ,
+  `metaKey` VARCHAR(45) NOT NULL ,
+  `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `userID` (`user_id` ASC) ,
-  INDEX `key` (`key` ASC) ,
-  CONSTRAINT `userID`
+  CONSTRAINT `usermeta_user`
     FOREIGN KEY (`user_id` )
-    REFERENCES `govproject`.`users` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `users` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB;
 
+CREATE INDEX `usermeta_user` ON `usermeta` (`user_id` ASC) ;
+
+CREATE INDEX `key` ON `usermeta` (`metaKey` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`links`
+-- Table `links`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`links` ;
+DROP TABLE IF EXISTS `links` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`links` (
+CREATE  TABLE IF NOT EXISTS `links` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `url` VARCHAR(255) NOT NULL ,
   `name` VARCHAR(45) NOT NULL ,
@@ -170,27 +186,29 @@ ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
--- Table `govproject`.`terms`
+-- Table `terms`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`terms` ;
+DROP TABLE IF EXISTS `terms` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`terms` (
+CREATE  TABLE IF NOT EXISTS `terms` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(100) NOT NULL ,
   `slug` VARCHAR(200) NOT NULL ,
   `group` INT NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
-  INDEX `name` (`name` ASC) )
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 
+CREATE UNIQUE INDEX `slug_UNIQUE` ON `terms` (`slug` ASC) ;
+
+CREATE INDEX `name` ON `terms` (`name` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`term_taxonomy`
+-- Table `term_taxonomy`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`term_taxonomy` ;
+DROP TABLE IF EXISTS `term_taxonomy` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`term_taxonomy` (
+CREATE  TABLE IF NOT EXISTS `term_taxonomy` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `term_id` INT NOT NULL ,
   `count` INT NOT NULL ,
@@ -198,60 +216,67 @@ CREATE  TABLE IF NOT EXISTS `govproject`.`term_taxonomy` (
   `name` VARCHAR(45) NULL ,
   `description` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `termID` (`term_id` ASC) ,
-  INDEX `termID_taxonomy` (`term_id` ASC, `name` ASC) ,
-  CONSTRAINT `term`
+  CONSTRAINT `taxonomy_term`
     FOREIGN KEY (`term_id` )
-    REFERENCES `govproject`.`terms` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    REFERENCES `terms` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB
+COMMENT = 'terms 和 term_taxonomy分离解决 分类名、链接分类、tag不能重名的问题';
+
+CREATE INDEX `termID` ON `term_taxonomy` (`term_id` ASC) ;
+
+CREATE INDEX `termID_taxonomy` ON `term_taxonomy` (`term_id` ASC, `name` ASC) ;
 
 
 -- -----------------------------------------------------
--- Table `govproject`.`term_relationships`
+-- Table `term_relationships`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`term_relationships` ;
+DROP TABLE IF EXISTS `term_relationships` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`term_relationships` (
+CREATE  TABLE IF NOT EXISTS `term_relationships` (
   `object_id` INT NOT NULL AUTO_INCREMENT ,
   `taxonomy_id` INT NOT NULL ,
   `termOrder` INT NULL ,
   PRIMARY KEY (`object_id`, `taxonomy_id`) ,
-  INDEX `postRelationship` (`object_id` ASC) ,
-  INDEX `linkRelationship` (`object_id` ASC) ,
-  INDEX `taxonomy` (`taxonomy_id` ASC) ,
-  CONSTRAINT `postRelationship`
+  CONSTRAINT `relationship_post`
     FOREIGN KEY (`object_id` )
-    REFERENCES `govproject`.`posts` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `linkRelationship`
+    REFERENCES `posts` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `relationship_link`
     FOREIGN KEY (`object_id` )
-    REFERENCES `govproject`.`links` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `taxonomy`
+    REFERENCES `links` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `relationship_taxonomy`
     FOREIGN KEY (`taxonomy_id` )
-    REFERENCES `govproject`.`term_taxonomy` (`id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `term_taxonomy` (`id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
 ENGINE = InnoDB
 COMMENT = 'http://codex.wordpress.org/Database_Description 和 http://cod' /* comment truncated */;
 
+CREATE INDEX `relationship_post` ON `term_relationships` (`object_id` ASC) ;
+
+CREATE INDEX `relationship_link` ON `term_relationships` (`object_id` ASC) ;
+
+CREATE INDEX `relationship_taxonomy` ON `term_relationships` (`taxonomy_id` ASC) ;
+
 
 -- -----------------------------------------------------
--- Table `govproject`.`options`
+-- Table `options`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `govproject`.`options` ;
+DROP TABLE IF EXISTS `options` ;
 
-CREATE  TABLE IF NOT EXISTS `govproject`.`options` (
+CREATE  TABLE IF NOT EXISTS `options` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `key` VARCHAR(64) NOT NULL ,
-  `value` VARCHAR(255) NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `key_UNIQUE` (`key` ASC) )
+  `optionKey` VARCHAR(64) NOT NULL ,
+  `optionValue` VARCHAR(255) NULL ,
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `key_UNIQUE` ON `options` (`optionKey` ASC) ;
 
 
 

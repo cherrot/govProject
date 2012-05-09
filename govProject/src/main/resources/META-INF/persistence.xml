@@ -1,19 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<persistence xmlns="http://java.sun.com/xml/ns/persistence"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
-      http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
-	version="2.0">
-
-    <!--The LocalContainerEntityManagerFactoryBean creates a
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence       http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <!--The LocalContainerEntityManagerFactoryBean creates a
 PersistenceUnitInfo instance based on the persistence.xml file-->
-	<persistence-unit name="acme" transaction-type="RESOURCE_LOCAL"><!---->
-		<properties>
-            <!--FIXME: Release前将 create-drop改为update-->
-			<property name="hibernate.hbm2ddl.auto" value="create-drop" />
-			<property name="hibernate.show_sql" value="true" />
-			<property name="hibernate.transaction.flush_before_completion" value="true" />
-			<property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider" />
-		</properties>
-	</persistence-unit>
+  <persistence-unit name="acme" transaction-type="RESOURCE_LOCAL">
+    <class>com.cherrot.govproject.model.Postmeta</class>
+    <class>com.cherrot.govproject.model.Terms</class>
+    <class>com.cherrot.govproject.model.TermRelationships</class>
+    <class>com.cherrot.govproject.model.TermTaxonomy</class>
+    <class>com.cherrot.govproject.model.Links</class>
+    <class>com.cherrot.govproject.model.Users</class>
+    <class>com.cherrot.govproject.model.Commentmeta</class>
+    <class>com.cherrot.govproject.model.Comments</class>
+    <class>com.cherrot.govproject.model.Posts</class>
+    <class>com.cherrot.govproject.model.Usermeta</class>
+    <class>com.cherrot.govproject.model.Options</class>
+    <properties>
+      <!--FIXME: Release前将 create-drop改为update-->
+      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+      <property name="hibernate.show_sql" value="true"/>
+      <property name="hibernate.transaction.flush_before_completion" value="true"/>
+      <property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>
+    </properties>
+  </persistence-unit>
 </persistence>
