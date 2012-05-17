@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.UsermetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Usermeta;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class UsermetaJpaDao implements Serializable {
+public class UsermetaJpaDao implements UsermetaDao {
 
     public UsermetaJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -30,10 +31,12 @@ public class UsermetaJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Usermeta usermeta) {
         EntityManager em = null;
         try {
@@ -57,6 +60,7 @@ public class UsermetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Usermeta usermeta) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -95,6 +99,7 @@ public class UsermetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -121,10 +126,12 @@ public class UsermetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Usermeta> findUsermetaEntities() {
         return findUsermetaEntities(true, -1, -1);
     }
 
+    @Override
     public List<Usermeta> findUsermetaEntities(int maxResults, int firstResult) {
         return findUsermetaEntities(false, maxResults, firstResult);
     }
@@ -145,6 +152,7 @@ public class UsermetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Usermeta findUsermeta(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -154,6 +162,7 @@ public class UsermetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getUsermetaCount() {
         EntityManager em = getEntityManager();
         try {

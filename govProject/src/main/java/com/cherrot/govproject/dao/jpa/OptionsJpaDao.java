@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.OptionsDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Options;
 import java.io.Serializable;
@@ -20,7 +21,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class OptionsJpaDao implements Serializable {
+public class OptionsJpaDao implements OptionsDao {
 
     public OptionsJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -29,10 +30,12 @@ public class OptionsJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Options options) {
         EntityManager em = null;
         try {
@@ -47,6 +50,7 @@ public class OptionsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Options options) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -70,6 +74,7 @@ public class OptionsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -91,10 +96,12 @@ public class OptionsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Options> findOptionsEntities() {
         return findOptionsEntities(true, -1, -1);
     }
 
+    @Override
     public List<Options> findOptionsEntities(int maxResults, int firstResult) {
         return findOptionsEntities(false, maxResults, firstResult);
     }
@@ -115,6 +122,7 @@ public class OptionsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Options findOptions(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -124,6 +132,7 @@ public class OptionsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getOptionsCount() {
         EntityManager em = getEntityManager();
         try {

@@ -44,19 +44,23 @@ public class TermTaxonomy implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private int count;
     @Column(name = "taxonomy_parent")
     private Integer taxonomyParent;
     @Size(max = 45)
+    @Column(length = 45)
     private String name;
     @Size(max = 255)
+    @Column(length = 255)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "termTaxonomy")
     private List<TermRelationships> termRelationshipsList;
-    @JoinColumn(name = "term_id", referencedColumnName = "id")
+    @JoinColumn(name = "term_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Terms termId;
 

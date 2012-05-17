@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -39,20 +40,25 @@ public class Links implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
+    @Column(nullable = false, length = 255)
     private String url;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
+    @Column(nullable = false, length = 45)
     private String name;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
+    @Column(nullable = false, length = 20)
     private String target;
     @Size(max = 255)
+    @Column(length = 255)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "links")
     private List<TermRelationships> termRelationshipsList;

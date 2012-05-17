@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Comments.findAll", query = "SELECT c FROM Comments c"),
     @NamedQuery(name = "Comments.findById", query = "SELECT c FROM Comments c WHERE c.id = :id"),
-    @NamedQuery(name = "Comments.findByDate", query = "SELECT c FROM Comments c WHERE c.date = :date"),
+    @NamedQuery(name = "Comments.findByCommentDate", query = "SELECT c FROM Comments c WHERE c.commentDate = :commentDate"),
     @NamedQuery(name = "Comments.findByApproved", query = "SELECT c FROM Comments c WHERE c.approved = :approved"),
     @NamedQuery(name = "Comments.findByUserId", query = "SELECT c FROM Comments c WHERE c.userId = :userId"),
     @NamedQuery(name = "Comments.findByCommentParent", query = "SELECT c FROM Comments c WHERE c.commentParent = :commentParent"),
@@ -50,13 +50,16 @@ public class Comments implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date commentDate;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private boolean approved;
     @Column(name = "user_id")
     private Integer userId;
@@ -65,27 +68,32 @@ public class Comments implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
+    @Column(nullable = false, length = 45)
     private String author;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
+    @Column(nullable = false, length = 45)
     private String authorEmail;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
+    @Column(nullable = false, length = 200)
     private String authorUrl;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 39)
+    @Column(nullable = false, length = 39)
     private String authorIp;
     @Basic(optional = false)
     @NotNull
     @Lob
     @Size(min = 1, max = 65535)
+    @Column(nullable = false, length = 65535)
     private String content;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId")
     private List<Commentmeta> commentmetaList;
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Posts postId;
 
@@ -96,9 +104,9 @@ public class Comments implements Serializable {
         this.id = id;
     }
 
-    public Comments(Integer id, Date date, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
+    public Comments(Integer id, Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
         this.id = id;
-        this.date = date;
+        this.commentDate = commentDate;
         this.approved = approved;
         this.author = author;
         this.authorEmail = authorEmail;
@@ -115,12 +123,12 @@ public class Comments implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCommentDate() {
+        return commentDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCommentDate(Date commentDate) {
+        this.commentDate = commentDate;
     }
 
     public boolean getApproved() {

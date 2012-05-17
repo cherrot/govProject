@@ -18,11 +18,11 @@ import javax.validation.constraints.NotNull;
 public class TermRelationshipsPK implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Column(name = "object_id")
+    @Column(name = "object_id", nullable = false)
     private int objectId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "taxonomy_id")
+    @Column(name = "taxonomy_id", nullable = false)
     private int taxonomyId;
 
     public TermRelationshipsPK() {

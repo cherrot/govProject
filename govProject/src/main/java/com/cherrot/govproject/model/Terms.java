@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,29 +28,34 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Terms.findAll", query = "SELECT t FROM Terms t"),
     @NamedQuery(name = "Terms.findById", query = "SELECT t FROM Terms t WHERE t.id = :id"),
     @NamedQuery(name = "Terms.findByName", query = "SELECT t FROM Terms t WHERE t.name = :name"),
     @NamedQuery(name = "Terms.findBySlug", query = "SELECT t FROM Terms t WHERE t.slug = :slug"),
-    @NamedQuery(name = "Terms.findByGroup", query = "SELECT t FROM Terms t WHERE t.group = :group")})
+    @NamedQuery(name = "Terms.findByTermGroup", query = "SELECT t FROM Terms t WHERE t.termGroup = :termGroup")})
 public class Terms implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
+    @Column(nullable = false, length = 100)
     private String name;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
+    @Column(nullable = false, length = 200)
     private String slug;
-    private Integer group;
+    private Integer termGroup;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "termId")
     private List<TermTaxonomy> termTaxonomyList;
 
@@ -88,12 +96,12 @@ public class Terms implements Serializable {
         this.slug = slug;
     }
 
-    public Integer getGroup() {
-        return group;
+    public Integer getTermGroup() {
+        return termGroup;
     }
 
-    public void setGroup(Integer group) {
-        this.group = group;
+    public void setTermGroup(Integer termGroup) {
+        this.termGroup = termGroup;
     }
 
     @XmlTransient

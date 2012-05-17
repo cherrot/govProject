@@ -15,7 +15,7 @@ CREATE  TABLE IF NOT EXISTS `users` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `login` VARCHAR(32) NOT NULL ,
   `pass` VARCHAR(64) NOT NULL ,
-  `level` INT NOT NULL COMMENT '1024表示未审核' ,
+  `userLevel` INT NOT NULL COMMENT '1024表示未审核' ,
   `registerDate` DATETIME NOT NULL ,
   `displayName` VARCHAR(45) NOT NULL ,
   `email` VARCHAR(100) NOT NULL ,
@@ -34,7 +34,7 @@ DROP TABLE IF EXISTS `posts` ;
 CREATE  TABLE IF NOT EXISTS `posts` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '	' ,
   `user_id` INT NOT NULL ,
-  `date` DATETIME NOT NULL ,
+  `createDate` DATETIME NOT NULL ,
   `modifyDate` DATETIME NOT NULL ,
   `commentStatus` TINYINT(1) NOT NULL ,
   `commentCount` INT NOT NULL ,
@@ -61,7 +61,7 @@ CREATE INDEX `slug` ON `posts` (`slug` ASC) ;
 
 CREATE INDEX `parent` ON `posts` (`post_parent` ASC) ;
 
-CREATE INDEX `type_status_date` ON `posts` (`type` ASC, `status` ASC, `date` ASC, `id` ASC) ;
+CREATE INDEX `type_status_date` ON `posts` (`type` ASC, `status` ASC, `createDate` ASC, `id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `comments` ;
 CREATE  TABLE IF NOT EXISTS `comments` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `post_id` INT NOT NULL ,
-  `date` DATETIME NOT NULL ,
+  `commentDate` DATETIME NOT NULL ,
   `approved` TINYINT(1) NOT NULL ,
   `user_id` INT NULL ,
   `comment_parent` INT NULL ,
@@ -96,7 +96,7 @@ CREATE INDEX `comment_post` ON `comments` (`post_id` ASC) ;
 
 CREATE INDEX `approved` ON `comments` (`approved` ASC) ;
 
-CREATE INDEX `date` ON `comments` (`date` ASC) ;
+CREATE INDEX `date` ON `comments` (`commentDate` ASC) ;
 
 CREATE INDEX `parent` ON `comments` (`comment_parent` ASC) ;
 
@@ -194,7 +194,7 @@ CREATE  TABLE IF NOT EXISTS `terms` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `name` VARCHAR(100) NOT NULL ,
   `slug` VARCHAR(200) NOT NULL ,
-  `group` INT NULL ,
+  `termGroup` INT NULL ,
   PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
 

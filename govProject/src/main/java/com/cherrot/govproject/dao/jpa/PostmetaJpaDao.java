@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.PostmetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Postmeta;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class PostmetaJpaDao implements Serializable {
+public class PostmetaJpaDao implements PostmetaDao {
 
     public PostmetaJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -30,10 +31,12 @@ public class PostmetaJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Postmeta postmeta) {
         EntityManager em = null;
         try {
@@ -57,6 +60,7 @@ public class PostmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Postmeta postmeta) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -95,6 +99,7 @@ public class PostmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -121,10 +126,12 @@ public class PostmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Postmeta> findPostmetaEntities() {
         return findPostmetaEntities(true, -1, -1);
     }
 
+    @Override
     public List<Postmeta> findPostmetaEntities(int maxResults, int firstResult) {
         return findPostmetaEntities(false, maxResults, firstResult);
     }
@@ -145,6 +152,7 @@ public class PostmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Postmeta findPostmeta(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -154,6 +162,7 @@ public class PostmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getPostmetaCount() {
         EntityManager em = getEntityManager();
         try {

@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.TermRelationsshipsDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.dao.exceptions.PreexistingEntityException;
 import java.io.Serializable;
@@ -25,7 +26,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class TermRelationshipsJpaDao implements Serializable {
+public class TermRelationshipsJpaDao implements TermRelationsshipsDao {
 
     public TermRelationshipsJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -34,10 +35,12 @@ public class TermRelationshipsJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(TermRelationships termRelationships) throws PreexistingEntityException, Exception {
         if (termRelationships.getTermRelationshipsPK() == null) {
             termRelationships.setTermRelationshipsPK(new TermRelationshipsPK());
@@ -87,6 +90,7 @@ public class TermRelationshipsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(TermRelationships termRelationships) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -153,6 +157,7 @@ public class TermRelationshipsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(TermRelationshipsPK id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -189,10 +194,12 @@ public class TermRelationshipsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<TermRelationships> findTermRelationshipsEntities() {
         return findTermRelationshipsEntities(true, -1, -1);
     }
 
+    @Override
     public List<TermRelationships> findTermRelationshipsEntities(int maxResults, int firstResult) {
         return findTermRelationshipsEntities(false, maxResults, firstResult);
     }
@@ -213,6 +220,7 @@ public class TermRelationshipsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public TermRelationships findTermRelationships(TermRelationshipsPK id) {
         EntityManager em = getEntityManager();
         try {
@@ -222,6 +230,7 @@ public class TermRelationshipsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getTermRelationshipsCount() {
         EntityManager em = getEntityManager();
         try {

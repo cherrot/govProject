@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.TermTaxonomyDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class TermTaxonomyJpaDao implements Serializable {
+public class TermTaxonomyJpaDao implements TermTaxonomyDao {
 
     public TermTaxonomyJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -33,10 +34,12 @@ public class TermTaxonomyJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(TermTaxonomy termTaxonomy) {
         if (termTaxonomy.getTermRelationshipsList() == null) {
             termTaxonomy.setTermRelationshipsList(new ArrayList<TermRelationships>());
@@ -78,6 +81,7 @@ public class TermTaxonomyJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(TermTaxonomy termTaxonomy) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -148,6 +152,7 @@ public class TermTaxonomyJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -185,10 +190,12 @@ public class TermTaxonomyJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<TermTaxonomy> findTermTaxonomyEntities() {
         return findTermTaxonomyEntities(true, -1, -1);
     }
 
+    @Override
     public List<TermTaxonomy> findTermTaxonomyEntities(int maxResults, int firstResult) {
         return findTermTaxonomyEntities(false, maxResults, firstResult);
     }
@@ -209,6 +216,7 @@ public class TermTaxonomyJpaDao implements Serializable {
         }
     }
 
+    @Override
     public TermTaxonomy findTermTaxonomy(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -218,6 +226,7 @@ public class TermTaxonomyJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getTermTaxonomyCount() {
         EntityManager em = getEntityManager();
         try {

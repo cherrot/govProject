@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.CommentmetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Commentmeta;
 import java.io.Serializable;
@@ -21,7 +22,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class CommentmetaJpaDao implements Serializable {
+public class CommentmetaJpaDao implements CommentmetaDao {
 
     public CommentmetaJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -30,10 +31,12 @@ public class CommentmetaJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Commentmeta commentmeta) {
         EntityManager em = null;
         try {
@@ -57,6 +60,7 @@ public class CommentmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Commentmeta commentmeta) throws NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -95,6 +99,7 @@ public class CommentmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -121,10 +126,12 @@ public class CommentmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Commentmeta> findCommentmetaEntities() {
         return findCommentmetaEntities(true, -1, -1);
     }
 
+    @Override
     public List<Commentmeta> findCommentmetaEntities(int maxResults, int firstResult) {
         return findCommentmetaEntities(false, maxResults, firstResult);
     }
@@ -145,6 +152,7 @@ public class CommentmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Commentmeta findCommentmeta(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -154,6 +162,7 @@ public class CommentmetaJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getCommentmetaCount() {
         EntityManager em = getEntityManager();
         try {

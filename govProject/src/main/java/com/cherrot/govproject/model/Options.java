@@ -6,12 +6,15 @@ package com.cherrot.govproject.model;
 
 import java.io.Serializable;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -21,6 +24,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cherrot
  */
 @Entity
+@Table(uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"optionKey"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Options.findAll", query = "SELECT o FROM Options o"),
@@ -33,12 +38,15 @@ public class Options implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
+    @Column(nullable = false, length = 64)
     private String optionKey;
     @Size(max = 255)
+    @Column(length = 255)
     private String optionValue;
 
     public Options() {

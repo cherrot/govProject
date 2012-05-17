@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -34,7 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
     @NamedQuery(name = "Users.findByLogin", query = "SELECT u FROM Users u WHERE u.login = :login"),
     @NamedQuery(name = "Users.findByPass", query = "SELECT u FROM Users u WHERE u.pass = :pass"),
-    @NamedQuery(name = "Users.findByLevel", query = "SELECT u FROM Users u WHERE u.level = :level"),
+    @NamedQuery(name = "Users.findByUserLevel", query = "SELECT u FROM Users u WHERE u.userLevel = :userLevel"),
     @NamedQuery(name = "Users.findByRegisterDate", query = "SELECT u FROM Users u WHERE u.registerDate = :registerDate"),
     @NamedQuery(name = "Users.findByDisplayName", query = "SELECT u FROM Users u WHERE u.displayName = :displayName"),
     @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
@@ -45,32 +46,40 @@ public class Users implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
+    @Column(nullable = false, length = 32)
     private String login;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
+    @Column(nullable = false, length = 64)
     private String pass;
     @Basic(optional = false)
     @NotNull
-    private int level;
+    @Column(nullable = false)
+    private int userLevel;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
+    @Column(nullable = false, length = 45)
     private String displayName;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
+    @Column(nullable = false, length = 100)
     private String email;
     @Size(max = 100)
+    @Column(length = 100)
     private String url;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Posts> postsList;
@@ -84,11 +93,11 @@ public class Users implements Serializable {
         this.id = id;
     }
 
-    public Users(Integer id, String login, String pass, int level, Date registerDate, String displayName, String email) {
+    public Users(Integer id, String login, String pass, int userLevel, Date registerDate, String displayName, String email) {
         this.id = id;
         this.login = login;
         this.pass = pass;
-        this.level = level;
+        this.userLevel = userLevel;
         this.registerDate = registerDate;
         this.displayName = displayName;
         this.email = email;
@@ -118,12 +127,12 @@ public class Users implements Serializable {
         this.pass = pass;
     }
 
-    public int getLevel() {
-        return level;
+    public int getUserLevel() {
+        return userLevel;
     }
 
-    public void setLevel(int level) {
-        this.level = level;
+    public void setUserLevel(int userLevel) {
+        this.userLevel = userLevel;
     }
 
     public Date getRegisterDate() {

@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.TermsDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
@@ -23,7 +24,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class TermsJpaDao implements Serializable {
+public class TermsJpaDao implements TermsDao {
 
     public TermsJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -32,10 +33,12 @@ public class TermsJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Terms terms) {
         if (terms.getTermTaxonomyList() == null) {
             terms.setTermTaxonomyList(new ArrayList<TermTaxonomy>());
@@ -68,6 +71,7 @@ public class TermsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Terms terms) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -124,6 +128,7 @@ public class TermsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -156,10 +161,12 @@ public class TermsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Terms> findTermsEntities() {
         return findTermsEntities(true, -1, -1);
     }
 
+    @Override
     public List<Terms> findTermsEntities(int maxResults, int firstResult) {
         return findTermsEntities(false, maxResults, firstResult);
     }
@@ -180,6 +187,7 @@ public class TermsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Terms findTerms(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -189,6 +197,7 @@ public class TermsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getTermsCount() {
         EntityManager em = getEntityManager();
         try {

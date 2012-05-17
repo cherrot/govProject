@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.LinksDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Links;
@@ -23,7 +24,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class LinksJpaDao implements Serializable {
+public class LinksJpaDao implements LinksDao {
 
     public LinksJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -32,10 +33,12 @@ public class LinksJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Links links) {
         if (links.getTermRelationshipsList() == null) {
             links.setTermRelationshipsList(new ArrayList<TermRelationships>());
@@ -68,6 +71,7 @@ public class LinksJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Links links) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -124,6 +128,7 @@ public class LinksJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -156,10 +161,12 @@ public class LinksJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Links> findLinksEntities() {
         return findLinksEntities(true, -1, -1);
     }
 
+    @Override
     public List<Links> findLinksEntities(int maxResults, int firstResult) {
         return findLinksEntities(false, maxResults, firstResult);
     }
@@ -180,6 +187,7 @@ public class LinksJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Links findLinks(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -189,6 +197,7 @@ public class LinksJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getLinksCount() {
         EntityManager em = getEntityManager();
         try {

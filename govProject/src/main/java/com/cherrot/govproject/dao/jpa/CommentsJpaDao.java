@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.CommentsDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class CommentsJpaDao implements Serializable {
+public class CommentsJpaDao implements CommentsDao {
 
     public CommentsJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -33,10 +34,12 @@ public class CommentsJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Comments comments) {
         if (comments.getCommentmetaList() == null) {
             comments.setCommentmetaList(new ArrayList<Commentmeta>());
@@ -78,6 +81,7 @@ public class CommentsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Comments comments) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -148,6 +152,7 @@ public class CommentsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -185,10 +190,12 @@ public class CommentsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Comments> findCommentsEntities() {
         return findCommentsEntities(true, -1, -1);
     }
 
+    @Override
     public List<Comments> findCommentsEntities(int maxResults, int firstResult) {
         return findCommentsEntities(false, maxResults, firstResult);
     }
@@ -209,6 +216,7 @@ public class CommentsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Comments findComments(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -218,6 +226,7 @@ public class CommentsJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getCommentsCount() {
         EntityManager em = getEntityManager();
         try {

@@ -31,13 +31,13 @@ public class TermRelationships implements Serializable {
     @EmbeddedId
     protected TermRelationshipsPK termRelationshipsPK;
     private Integer termOrder;
-    @JoinColumn(name = "taxonomy_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "taxonomy_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private TermTaxonomy termTaxonomy;
-    @JoinColumn(name = "object_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Posts posts;
-    @JoinColumn(name = "object_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Links links;
 

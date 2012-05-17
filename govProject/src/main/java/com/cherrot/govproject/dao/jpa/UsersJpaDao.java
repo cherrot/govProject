@@ -4,6 +4,7 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
+import com.cherrot.govproject.dao.UsersDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import java.io.Serializable;
@@ -24,7 +25,7 @@ import javax.transaction.UserTransaction;
  *
  * @author cherrot
  */
-public class UsersJpaDao implements Serializable {
+public class UsersJpaDao implements UsersDao {
 
     public UsersJpaDao(UserTransaction utx, EntityManagerFactory emf) {
         this.utx = utx;
@@ -33,10 +34,12 @@ public class UsersJpaDao implements Serializable {
     private UserTransaction utx = null;
     private EntityManagerFactory emf = null;
 
+    @Override
     public EntityManager getEntityManager() {
         return emf.createEntityManager();
     }
 
+    @Override
     public void create(Users users) {
         if (users.getPostsList() == null) {
             users.setPostsList(new ArrayList<Posts>());
@@ -87,6 +90,7 @@ public class UsersJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void edit(Users users) throws IllegalOrphanException, NonexistentEntityException, Exception {
         EntityManager em = null;
         try {
@@ -171,6 +175,7 @@ public class UsersJpaDao implements Serializable {
         }
     }
 
+    @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
         EntityManager em = null;
         try {
@@ -210,10 +215,12 @@ public class UsersJpaDao implements Serializable {
         }
     }
 
+    @Override
     public List<Users> findUsersEntities() {
         return findUsersEntities(true, -1, -1);
     }
 
+    @Override
     public List<Users> findUsersEntities(int maxResults, int firstResult) {
         return findUsersEntities(false, maxResults, firstResult);
     }
@@ -234,6 +241,7 @@ public class UsersJpaDao implements Serializable {
         }
     }
 
+    @Override
     public Users findUsers(Integer id) {
         EntityManager em = getEntityManager();
         try {
@@ -243,6 +251,7 @@ public class UsersJpaDao implements Serializable {
         }
     }
 
+    @Override
     public int getUsersCount() {
         EntityManager em = getEntityManager();
         try {

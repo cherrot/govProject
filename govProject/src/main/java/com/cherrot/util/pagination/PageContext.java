@@ -1,17 +1,46 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.cherrot.util.pagination;
 
+import com.cherrot.util.Constants;
+
 /**
- * With respect to Single Responsibility Principle, attributes such as
- * itemsPerPage, amountOfItems are abstracted from the Page class into this
- * PageContext class.
+ * 分页上下文环境。用于计算Page。
  *
- * @since 1.0
- * @author cherrot
  */
-public interface PageContext<Entity> {
+public interface PageContext<E> {
+
+    /**
+     * 默认设定每页显示记录数为10
+     */
+    public static final int DEFAULT_PAGE_SIZE = Constants.DEFAULT_PAGE_SIZE;
+
+    /**
+     * 计算总页数.
+     *
+     * @return
+     */
+    public int getPageCount();
+
+
+    /**
+     * 返回 Page 对象.
+     *
+     * @param index
+     * @return
+     */
+    public Page<E> getPage(int index);
+
+    /**
+     * 每页显示的记录数量
+     *
+     * @return
+     */
+    public int getPageSize();
+
+    /**
+     * 计算总记录数
+     *
+     * @return
+     */
+    public int getTotal();
 
 }

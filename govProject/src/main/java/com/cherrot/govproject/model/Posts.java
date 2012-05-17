@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Posts.findAll", query = "SELECT p FROM Posts p"),
     @NamedQuery(name = "Posts.findById", query = "SELECT p FROM Posts p WHERE p.id = :id"),
-    @NamedQuery(name = "Posts.findByDate", query = "SELECT p FROM Posts p WHERE p.date = :date"),
+    @NamedQuery(name = "Posts.findByCreateDate", query = "SELECT p FROM Posts p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "Posts.findByModifyDate", query = "SELECT p FROM Posts p WHERE p.modifyDate = :modifyDate"),
     @NamedQuery(name = "Posts.findByCommentStatus", query = "SELECT p FROM Posts p WHERE p.commentStatus = :commentStatus"),
     @NamedQuery(name = "Posts.findByCommentCount", query = "SELECT p FROM Posts p WHERE p.commentCount = :commentCount"),
@@ -53,54 +53,67 @@ public class Posts implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date;
+    private Date createDate;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifyDate;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private boolean commentStatus;
     @Basic(optional = false)
     @NotNull
+    @Column(nullable = false)
     private int commentCount;
     @Column(name = "post_parent")
     private Integer postParent;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
+    @Column(nullable = false, length = 20)
     private String status;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
+    @Column(nullable = false, length = 20)
     private String type;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
+    @Column(nullable = false, length = 200)
     private String slug;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
+    @Column(nullable = false, length = 255)
     private String tittle;
     @Size(max = 20)
+    @Column(length = 20)
     private String password;
     @Size(max = 45)
+    @Column(length = 45)
     private String mime;
     @Basic(optional = false)
     @NotNull
     @Lob
     @Size(min = 1, max = 65535)
+    @Column(nullable = false, length = 65535)
     private String content;
     @Lob
     @Size(max = 65535)
+    @Column(length = 65535)
     private String excerpt;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
     private List<Postmeta> postmetaList;
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Users userId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts")
@@ -115,9 +128,9 @@ public class Posts implements Serializable {
         this.id = id;
     }
 
-    public Posts(Integer id, Date date, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
+    public Posts(Integer id, Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
         this.id = id;
-        this.date = date;
+        this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.commentStatus = commentStatus;
         this.commentCount = commentCount;
@@ -136,12 +149,12 @@ public class Posts implements Serializable {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
+    public Date getCreateDate() {
+        return createDate;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
     }
 
     public Date getModifyDate() {

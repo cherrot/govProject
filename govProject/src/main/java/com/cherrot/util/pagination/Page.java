@@ -36,4 +36,45 @@ public class Page<Entity> {
      * @see PageContext
      */
     private PageContext<Entity> context;
+
+
+    public boolean isHasPre() {
+        return hasPre;
+    }
+
+    public void setHasPre(boolean hasPre) {
+        this.hasPre = hasPre;
+    }
+
+    public boolean isHasNext() {
+        return hasNext;
+    }
+
+    public void setHasNext(boolean hasNext) {
+        this.hasNext = hasNext;
+    }
+
+    public List<Entity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<Entity> items) {
+        this.items = items;
+    }
+
+    public int getPageNum() {
+        return pageNum;
+    }
+
+    public void setPageNum(int pageNum) {
+        this.pageNum = pageNum;
+    }
+
+    public PageContext<Entity> getContext() {
+        return context;
+    }
+
+    public void setContext(PageContext<Entity> context) {
+        this.context = context;
+    }
 }
