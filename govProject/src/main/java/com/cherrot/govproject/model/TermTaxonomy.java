@@ -59,10 +59,10 @@ public class TermTaxonomy implements Serializable {
     @Column(length = 255)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "termTaxonomy")
-    private List<TermRelationships> termRelationshipsList;
+    private List<TermRelationship> termRelationshipList;
     @JoinColumn(name = "term_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Terms termId;
+    private Term termId;
 
     public TermTaxonomy() {
     }
@@ -117,19 +117,19 @@ public class TermTaxonomy implements Serializable {
     }
 
     @XmlTransient
-    public List<TermRelationships> getTermRelationshipsList() {
-        return termRelationshipsList;
+    public List<TermRelationship> getTermRelationshipList() {
+        return termRelationshipList;
     }
 
-    public void setTermRelationshipsList(List<TermRelationships> termRelationshipsList) {
-        this.termRelationshipsList = termRelationshipsList;
+    public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
+        this.termRelationshipList = termRelationshipList;
     }
 
-    public Terms getTermId() {
+    public Term getTermId() {
         return termId;
     }
 
-    public void setTermId(Terms termId) {
+    public void setTermId(Term termId) {
         this.termId = termId;
     }
 

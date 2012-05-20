@@ -48,7 +48,7 @@ public class Usermeta implements Serializable {
     private String metaValue;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Users userId;
+    private User userId;
 
     public Usermeta() {
     }
@@ -86,11 +86,11 @@ public class Usermeta implements Serializable {
         this.metaValue = metaValue;
     }
 
-    public Users getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Users userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 

@@ -17,6 +17,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -29,18 +30,19 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
+@Table(name = "users")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
-    @NamedQuery(name = "Users.findById", query = "SELECT u FROM Users u WHERE u.id = :id"),
-    @NamedQuery(name = "Users.findByLogin", query = "SELECT u FROM Users u WHERE u.login = :login"),
-    @NamedQuery(name = "Users.findByPass", query = "SELECT u FROM Users u WHERE u.pass = :pass"),
-    @NamedQuery(name = "Users.findByUserLevel", query = "SELECT u FROM Users u WHERE u.userLevel = :userLevel"),
-    @NamedQuery(name = "Users.findByRegisterDate", query = "SELECT u FROM Users u WHERE u.registerDate = :registerDate"),
-    @NamedQuery(name = "Users.findByDisplayName", query = "SELECT u FROM Users u WHERE u.displayName = :displayName"),
-    @NamedQuery(name = "Users.findByEmail", query = "SELECT u FROM Users u WHERE u.email = :email"),
-    @NamedQuery(name = "Users.findByUrl", query = "SELECT u FROM Users u WHERE u.url = :url")})
-public class Users implements Serializable {
+    @NamedQuery(name = "User.findAll", query = "SELECT u FROM User u"),
+    @NamedQuery(name = "User.findById", query = "SELECT u FROM User u WHERE u.id = :id"),
+    @NamedQuery(name = "User.findByLogin", query = "SELECT u FROM User u WHERE u.login = :login"),
+    @NamedQuery(name = "User.findByPass", query = "SELECT u FROM User u WHERE u.pass = :pass"),
+    @NamedQuery(name = "User.findByUserLevel", query = "SELECT u FROM User u WHERE u.userLevel = :userLevel"),
+    @NamedQuery(name = "User.findByRegisterDate", query = "SELECT u FROM User u WHERE u.registerDate = :registerDate"),
+    @NamedQuery(name = "User.findByDisplayName", query = "SELECT u FROM User u WHERE u.displayName = :displayName"),
+    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
+    @NamedQuery(name = "User.findByUrl", query = "SELECT u FROM User u WHERE u.url = :url")})
+public class User implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -82,18 +84,18 @@ public class Users implements Serializable {
     @Column(length = 100)
     private String url;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
-    private List<Posts> postsList;
+    private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
     private List<Usermeta> usermetaList;
 
-    public Users() {
+    public User() {
     }
 
-    public Users(Integer id) {
+    public User(Integer id) {
         this.id = id;
     }
 
-    public Users(Integer id, String login, String pass, int userLevel, Date registerDate, String displayName, String email) {
+    public User(Integer id, String login, String pass, int userLevel, Date registerDate, String displayName, String email) {
         this.id = id;
         this.login = login;
         this.pass = pass;
@@ -168,12 +170,12 @@ public class Users implements Serializable {
     }
 
     @XmlTransient
-    public List<Posts> getPostsList() {
-        return postsList;
+    public List<Post> getPostList() {
+        return postList;
     }
 
-    public void setPostsList(List<Posts> postsList) {
-        this.postsList = postsList;
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     @XmlTransient
@@ -195,10 +197,10 @@ public class Users implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Users)) {
+        if (!(object instanceof User)) {
             return false;
         }
-        Users other = (Users) object;
+        User other = (User) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -207,7 +209,7 @@ public class Users implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Users[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.User[ id=" + id + " ]";
     }
 
 }

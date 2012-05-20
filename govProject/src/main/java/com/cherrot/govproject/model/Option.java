@@ -24,15 +24,15 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cherrot
  */
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "options", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"optionKey"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Options.findAll", query = "SELECT o FROM Options o"),
-    @NamedQuery(name = "Options.findById", query = "SELECT o FROM Options o WHERE o.id = :id"),
-    @NamedQuery(name = "Options.findByOptionKey", query = "SELECT o FROM Options o WHERE o.optionKey = :optionKey"),
-    @NamedQuery(name = "Options.findByOptionValue", query = "SELECT o FROM Options o WHERE o.optionValue = :optionValue")})
-public class Options implements Serializable {
+    @NamedQuery(name = "Option.findAll", query = "SELECT o FROM Option o"),
+    @NamedQuery(name = "Option.findById", query = "SELECT o FROM Option o WHERE o.id = :id"),
+    @NamedQuery(name = "Option.findByOptionKey", query = "SELECT o FROM Option o WHERE o.optionKey = :optionKey"),
+    @NamedQuery(name = "Option.findByOptionValue", query = "SELECT o FROM Option o WHERE o.optionValue = :optionValue")})
+public class Option implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,14 +49,14 @@ public class Options implements Serializable {
     @Column(length = 255)
     private String optionValue;
 
-    public Options() {
+    public Option() {
     }
 
-    public Options(Integer id) {
+    public Option(Integer id) {
         this.id = id;
     }
 
-    public Options(Integer id, String optionKey) {
+    public Option(Integer id, String optionKey) {
         this.id = id;
         this.optionKey = optionKey;
     }
@@ -95,10 +95,10 @@ public class Options implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Options)) {
+        if (!(object instanceof Option)) {
             return false;
         }
-        Options other = (Options) object;
+        Option other = (Option) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -107,7 +107,7 @@ public class Options implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Options[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.Option[ id=" + id + " ]";
     }
 
 }

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
  * @author cherrot
  */
 @Embeddable
-public class TermRelationshipsPK implements Serializable {
+public class TermRelationshipPK implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Column(name = "object_id", nullable = false)
@@ -25,10 +25,10 @@ public class TermRelationshipsPK implements Serializable {
     @Column(name = "taxonomy_id", nullable = false)
     private int taxonomyId;
 
-    public TermRelationshipsPK() {
+    public TermRelationshipPK() {
     }
 
-    public TermRelationshipsPK(int objectId, int taxonomyId) {
+    public TermRelationshipPK(int objectId, int taxonomyId) {
         this.objectId = objectId;
         this.taxonomyId = taxonomyId;
     }
@@ -60,10 +60,10 @@ public class TermRelationshipsPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TermRelationshipsPK)) {
+        if (!(object instanceof TermRelationshipPK)) {
             return false;
         }
-        TermRelationshipsPK other = (TermRelationshipsPK) object;
+        TermRelationshipPK other = (TermRelationshipPK) object;
         if (this.objectId != other.objectId) {
             return false;
         }

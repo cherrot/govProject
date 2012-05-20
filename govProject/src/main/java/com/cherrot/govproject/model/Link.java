@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -26,15 +27,16 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
+@Table(name = "links")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Links.findAll", query = "SELECT l FROM Links l"),
-    @NamedQuery(name = "Links.findById", query = "SELECT l FROM Links l WHERE l.id = :id"),
-    @NamedQuery(name = "Links.findByUrl", query = "SELECT l FROM Links l WHERE l.url = :url"),
-    @NamedQuery(name = "Links.findByName", query = "SELECT l FROM Links l WHERE l.name = :name"),
-    @NamedQuery(name = "Links.findByTarget", query = "SELECT l FROM Links l WHERE l.target = :target"),
-    @NamedQuery(name = "Links.findByDescription", query = "SELECT l FROM Links l WHERE l.description = :description")})
-public class Links implements Serializable {
+    @NamedQuery(name = "Link.findAll", query = "SELECT l FROM Link l"),
+    @NamedQuery(name = "Link.findById", query = "SELECT l FROM Link l WHERE l.id = :id"),
+    @NamedQuery(name = "Link.findByUrl", query = "SELECT l FROM Link l WHERE l.url = :url"),
+    @NamedQuery(name = "Link.findByName", query = "SELECT l FROM Link l WHERE l.name = :name"),
+    @NamedQuery(name = "Link.findByTarget", query = "SELECT l FROM Link l WHERE l.target = :target"),
+    @NamedQuery(name = "Link.findByDescription", query = "SELECT l FROM Link l WHERE l.description = :description")})
+public class Link implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,16 +63,16 @@ public class Links implements Serializable {
     @Column(length = 255)
     private String description;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "links")
-    private List<TermRelationships> termRelationshipsList;
+    private List<TermRelationship> termRelationshipList;
 
-    public Links() {
+    public Link() {
     }
 
-    public Links(Integer id) {
+    public Link(Integer id) {
         this.id = id;
     }
 
-    public Links(Integer id, String url, String name, String target) {
+    public Link(Integer id, String url, String name, String target) {
         this.id = id;
         this.url = url;
         this.name = name;
@@ -118,12 +120,12 @@ public class Links implements Serializable {
     }
 
     @XmlTransient
-    public List<TermRelationships> getTermRelationshipsList() {
-        return termRelationshipsList;
+    public List<TermRelationship> getTermRelationshipList() {
+        return termRelationshipList;
     }
 
-    public void setTermRelationshipsList(List<TermRelationships> termRelationshipsList) {
-        this.termRelationshipsList = termRelationshipsList;
+    public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
+        this.termRelationshipList = termRelationshipList;
     }
 
     @Override
@@ -136,10 +138,10 @@ public class Links implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Links)) {
+        if (!(object instanceof Link)) {
             return false;
         }
-        Links other = (Links) object;
+        Link other = (Link) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -148,7 +150,7 @@ public class Links implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Links[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.Link[ id=" + id + " ]";
     }
 
 }

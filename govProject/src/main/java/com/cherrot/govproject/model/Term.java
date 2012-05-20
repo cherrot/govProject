@@ -28,16 +28,16 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
-@Table(uniqueConstraints = {
+@Table(name = "terms", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Terms.findAll", query = "SELECT t FROM Terms t"),
-    @NamedQuery(name = "Terms.findById", query = "SELECT t FROM Terms t WHERE t.id = :id"),
-    @NamedQuery(name = "Terms.findByName", query = "SELECT t FROM Terms t WHERE t.name = :name"),
-    @NamedQuery(name = "Terms.findBySlug", query = "SELECT t FROM Terms t WHERE t.slug = :slug"),
-    @NamedQuery(name = "Terms.findByTermGroup", query = "SELECT t FROM Terms t WHERE t.termGroup = :termGroup")})
-public class Terms implements Serializable {
+    @NamedQuery(name = "Term.findAll", query = "SELECT t FROM Term t"),
+    @NamedQuery(name = "Term.findById", query = "SELECT t FROM Term t WHERE t.id = :id"),
+    @NamedQuery(name = "Term.findByName", query = "SELECT t FROM Term t WHERE t.name = :name"),
+    @NamedQuery(name = "Term.findBySlug", query = "SELECT t FROM Term t WHERE t.slug = :slug"),
+    @NamedQuery(name = "Term.findByTermGroup", query = "SELECT t FROM Term t WHERE t.termGroup = :termGroup")})
+public class Term implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,14 +59,14 @@ public class Terms implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "termId")
     private List<TermTaxonomy> termTaxonomyList;
 
-    public Terms() {
+    public Term() {
     }
 
-    public Terms(Integer id) {
+    public Term(Integer id) {
         this.id = id;
     }
 
-    public Terms(Integer id, String name, String slug) {
+    public Term(Integer id, String name, String slug) {
         this.id = id;
         this.name = name;
         this.slug = slug;
@@ -123,10 +123,10 @@ public class Terms implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Terms)) {
+        if (!(object instanceof Term)) {
             return false;
         }
-        Terms other = (Terms) object;
+        Term other = (Term) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -135,7 +135,7 @@ public class Terms implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Terms[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.Term[ id=" + id + " ]";
     }
 
 }

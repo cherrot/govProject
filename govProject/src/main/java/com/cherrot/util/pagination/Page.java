@@ -12,7 +12,7 @@ import java.util.List;
  * @since 1.0
  * @author cherrot
  */
-public class Page<Entity> {
+public class Page<Model> {
     /**
      * Dose this page has pre page.
      */
@@ -24,7 +24,7 @@ public class Page<Entity> {
     /**
      * items list include in this page.
      */
-    private List<Entity> items;
+    private List<Model> items;
     /**
      * The page number of this page, start at 1.
      * e.g. If a page is the 2nd page, the pageNumber is 2.
@@ -35,7 +35,7 @@ public class Page<Entity> {
      * The PageContext object of this page.
      * @see PageContext
      */
-    private PageContext<Entity> context;
+    private PageContext<Model> context;
 
 
     public boolean isHasPre() {
@@ -54,11 +54,11 @@ public class Page<Entity> {
         this.hasNext = hasNext;
     }
 
-    public List<Entity> getItems() {
+    public List<Model> getItems() {
         return items;
     }
 
-    public void setItems(List<Entity> items) {
+    public void setItems(List<Model> items) {
         this.items = items;
     }
 
@@ -70,11 +70,11 @@ public class Page<Entity> {
         this.pageNum = pageNum;
     }
 
-    public PageContext<Entity> getContext() {
+    public PageContext<Model> getContext() {
         return context;
     }
 
-    public void setContext(PageContext<Entity> context) {
+    public void setContext(PageContext<Model> context) {
         this.context = context;
     }
 }

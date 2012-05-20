@@ -4,16 +4,16 @@
 PersistenceUnitInfo instance based on the persistence.xml file-->
   <persistence-unit name="acme" transaction-type="RESOURCE_LOCAL">
     <class>com.cherrot.govproject.model.Postmeta</class>
-    <class>com.cherrot.govproject.model.Terms</class>
-    <class>com.cherrot.govproject.model.TermRelationships</class>
     <class>com.cherrot.govproject.model.TermTaxonomy</class>
-    <class>com.cherrot.govproject.model.Links</class>
     <class>com.cherrot.govproject.model.Commentmeta</class>
-    <class>com.cherrot.govproject.model.Comments</class>
-    <class>com.cherrot.govproject.model.Posts</class>
     <class>com.cherrot.govproject.model.Usermeta</class>
-    <class>com.cherrot.govproject.model.Options</class>
-    <class>com.cherrot.govproject.model.Users</class>
+    <class>com.cherrot.govproject.model.Comments</class>
+    <class>com.cherrot.govproject.model.TermRelationship</class>
+    <class>com.cherrot.govproject.model.Link</class>
+    <class>com.cherrot.govproject.model.Option</class>
+    <class>com.cherrot.govproject.model.Post</class>
+    <class>com.cherrot.govproject.model.Term</class>
+    <class>com.cherrot.govproject.model.User</class>
     <properties>
       <!--FIXME: Release前将 create-drop改为update-->
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

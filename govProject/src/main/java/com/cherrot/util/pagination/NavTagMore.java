@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 /**
  * 显示格式 上一页 1 2 3 4 5 下一页
  */
-public class NavigationTag extends TagSupport {
+public class NavTagMore extends TagSupport {
 
     static final long serialVersionUID = 1L;
     /**
@@ -98,7 +98,7 @@ public class NavigationTag extends TagSupport {
             }
             writer.print("&nbsp;(共" + onePage.getContext().getTotal() + "条记录)<br/>");
         } catch (IOException e) {
-            LoggerFactory.getLogger(NavigationTag.class).error(e.getMessage() + ":====:" + e.getCause());
+            LoggerFactory.getLogger(NavTagMore.class).error(e.getMessage() + ":====:" + e.getCause());
         }
         return SKIP_BODY;
     }

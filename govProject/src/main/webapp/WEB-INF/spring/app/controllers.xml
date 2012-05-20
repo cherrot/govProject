@@ -11,6 +11,6 @@
 	<!-- Scans within the base package of the application for @Components to
 		configure as beans -->
 	<context:component-scan base-package="com.cherrot.springmvcjpademo" />
-<!--    <context:component-scan base-package="com.cherrot.springmvcjpademo.controller" />-->
+<!--    <context:component-scan base-package="com.cherrot.springmvcjpademo.controller" />not work-->
 <!--	<tx:annotation-driven /> in db.xml-->
 </beans>

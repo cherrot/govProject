@@ -6,43 +6,48 @@ package com.cherrot.govproject.dao.jpa;
 
 import com.cherrot.govproject.dao.CommentmetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
+import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import com.cherrot.govproject.model.Comments;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.transaction.UserTransaction;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
-public class CommentmetaJpaDao implements CommentmetaDao {
+@Repository
+public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
 
-    public CommentmetaJpaDao(UserTransaction utx, EntityManagerFactory emf) {
-        this.utx = utx;
-        this.emf = emf;
-    }
-    private UserTransaction utx = null;
-    private EntityManagerFactory emf = null;
+    @PersistenceContext
+    private EntityManager em;
+//    public CommentmetaJpaDao(UserTransaction utx, EntityManagerFactory emf) {
+//        this.utx = utx;
+//        this.emf = emf;
+//    }
+//    private UserTransaction utx = null;
+//    private EntityManagerFactory emf = null;
+
+//    @Override
+//    public EntityManager getEntityManager() {
+//        return emf.createEntityManager();
+//    }
 
     @Override
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
-    @Override
+    @Transactional
     public void create(Commentmeta commentmeta) {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
-            Comments commentId = commentmeta.getCommentId();
+//        EntityManager em = null;
+//        try {
+//            em = getEntityManager();
+//            em.getTransaction().begin();
+            Comment commentId = commentmeta.getCommentId();
             if (commentId != null) {
                 commentId = em.getReference(commentId.getClass(), commentId.getId());
                 commentmeta.setCommentId(commentId);
@@ -52,23 +57,25 @@ public class CommentmetaJpaDao implements CommentmetaDao {
                 commentId.getCommentmetaList().add(commentmeta);
                 commentId = em.merge(commentId);
             }
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+//            em.getTransaction().commit();
+//        }
+//        finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
     }
 
     @Override
+    @Transactional
     public void edit(Commentmeta commentmeta) throws NonexistentEntityException, Exception {
-        EntityManager em = null;
+//        EntityManager em = null;
         try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+//            em = getEntityManager();
+//            em.getTransaction().begin();
             Commentmeta persistentCommentmeta = em.find(Commentmeta.class, commentmeta.getId());
-            Comments commentIdOld = persistentCommentmeta.getCommentId();
-            Comments commentIdNew = commentmeta.getCommentId();
+            Comment commentIdOld = persistentCommentmeta.getCommentId();
+            Comment commentIdNew = commentmeta.getCommentId();
             if (commentIdNew != null) {
                 commentIdNew = em.getReference(commentIdNew.getClass(), commentIdNew.getId());
                 commentmeta.setCommentId(commentIdNew);
@@ -82,63 +89,68 @@ public class CommentmetaJpaDao implements CommentmetaDao {
                 commentIdNew.getCommentmetaList().add(commentmeta);
                 commentIdNew = em.merge(commentIdNew);
             }
-            em.getTransaction().commit();
-        } catch (Exception ex) {
+//            em.getTransaction().commit();
+        }
+        catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = commentmeta.getId();
-                if (findCommentmeta(id) == null) {
+                if (find(id) == null) {
                     throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.");
                 }
             }
             throw ex;
-        } finally {
-            if (em != null) {
-                em.close();
-            }
         }
+//        finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) throws NonexistentEntityException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+//        EntityManager em = null;
+//        try {
+//            em = getEntityManager();
+//            em.getTransaction().begin();
             Commentmeta commentmeta;
             try {
                 commentmeta = em.getReference(Commentmeta.class, id);
                 commentmeta.getId();
-            } catch (EntityNotFoundException enfe) {
+            }
+            catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.", enfe);
             }
-            Comments commentId = commentmeta.getCommentId();
+            Comment commentId = commentmeta.getCommentId();
             if (commentId != null) {
                 commentId.getCommentmetaList().remove(commentmeta);
                 commentId = em.merge(commentId);
             }
             em.remove(commentmeta);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+//            em.getTransaction().commit();
+//        }
+//        finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
     }
 
     @Override
-    public List<Commentmeta> findCommentmetaEntities() {
-        return findCommentmetaEntities(true, -1, -1);
+    public List<Commentmeta> findEntities() {
+        return findEntities(true, -1, -1);
     }
 
     @Override
-    public List<Commentmeta> findCommentmetaEntities(int maxResults, int firstResult) {
-        return findCommentmetaEntities(false, maxResults, firstResult);
+    public List<Commentmeta> findEntities(int maxResults, int firstResult) {
+        return findEntities(false, maxResults, firstResult);
     }
 
-    private List<Commentmeta> findCommentmetaEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
+    private List<Commentmeta> findEntities(boolean all, int maxResults, int firstResult) {
+//        EntityManager em = getEntityManager();
+//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Commentmeta.class));
             Query q = em.createQuery(cq);
@@ -147,33 +159,36 @@ public class CommentmetaJpaDao implements CommentmetaDao {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
-            em.close();
-        }
+//        }
+//        finally {
+//            em.close();
+//        }
     }
 
     @Override
-    public Commentmeta findCommentmeta(Integer id) {
-        EntityManager em = getEntityManager();
-        try {
+    public Commentmeta find(Integer id) {
+//        EntityManager em = getEntityManager();
+//        try {
             return em.find(Commentmeta.class, id);
-        } finally {
-            em.close();
-        }
+//        }
+//        finally {
+//            em.close();
+//        }
     }
 
     @Override
-    public int getCommentmetaCount() {
-        EntityManager em = getEntityManager();
-        try {
+    public int getCount() {
+//        EntityManager em = getEntityManager();
+//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Commentmeta> rt = cq.from(Commentmeta.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
+            return ( (Long) q.getSingleResult() ).intValue();
+//        }
+//        finally {
+//            em.close();
+//        }
     }
 
 }

@@ -48,7 +48,7 @@ public class Commentmeta implements Serializable {
     private String metaValue;
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Comments commentId;
+    private Comment commentId;
 
     public Commentmeta() {
     }
@@ -86,11 +86,11 @@ public class Commentmeta implements Serializable {
         this.metaValue = metaValue;
     }
 
-    public Comments getCommentId() {
+    public Comment getCommentId() {
         return commentId;
     }
 
-    public void setCommentId(Comments commentId) {
+    public void setCommentId(Comment commentId) {
         this.commentId = commentId;
     }
 

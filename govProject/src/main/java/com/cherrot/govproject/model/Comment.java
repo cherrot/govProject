@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -32,19 +33,20 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
+@Table(name = "comments")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Comments.findAll", query = "SELECT c FROM Comments c"),
-    @NamedQuery(name = "Comments.findById", query = "SELECT c FROM Comments c WHERE c.id = :id"),
-    @NamedQuery(name = "Comments.findByCommentDate", query = "SELECT c FROM Comments c WHERE c.commentDate = :commentDate"),
-    @NamedQuery(name = "Comments.findByApproved", query = "SELECT c FROM Comments c WHERE c.approved = :approved"),
-    @NamedQuery(name = "Comments.findByUserId", query = "SELECT c FROM Comments c WHERE c.userId = :userId"),
-    @NamedQuery(name = "Comments.findByCommentParent", query = "SELECT c FROM Comments c WHERE c.commentParent = :commentParent"),
-    @NamedQuery(name = "Comments.findByAuthor", query = "SELECT c FROM Comments c WHERE c.author = :author"),
-    @NamedQuery(name = "Comments.findByAuthorEmail", query = "SELECT c FROM Comments c WHERE c.authorEmail = :authorEmail"),
-    @NamedQuery(name = "Comments.findByAuthorUrl", query = "SELECT c FROM Comments c WHERE c.authorUrl = :authorUrl"),
-    @NamedQuery(name = "Comments.findByAuthorIp", query = "SELECT c FROM Comments c WHERE c.authorIp = :authorIp")})
-public class Comments implements Serializable {
+    @NamedQuery(name = "Comment.findAll", query = "SELECT c FROM Comment c"),
+    @NamedQuery(name = "Comment.findById", query = "SELECT c FROM Comment c WHERE c.id = :id"),
+    @NamedQuery(name = "Comment.findByCommentDate", query = "SELECT c FROM Comment c WHERE c.commentDate = :commentDate"),
+    @NamedQuery(name = "Comment.findByApproved", query = "SELECT c FROM Comment c WHERE c.approved = :approved"),
+    @NamedQuery(name = "Comment.findByUserId", query = "SELECT c FROM Comment c WHERE c.userId = :userId"),
+    @NamedQuery(name = "Comment.findByCommentParent", query = "SELECT c FROM Comment c WHERE c.commentParent = :commentParent"),
+    @NamedQuery(name = "Comment.findByAuthor", query = "SELECT c FROM Comment c WHERE c.author = :author"),
+    @NamedQuery(name = "Comment.findByAuthorEmail", query = "SELECT c FROM Comment c WHERE c.authorEmail = :authorEmail"),
+    @NamedQuery(name = "Comment.findByAuthorUrl", query = "SELECT c FROM Comment c WHERE c.authorUrl = :authorUrl"),
+    @NamedQuery(name = "Comment.findByAuthorIp", query = "SELECT c FROM Comment c WHERE c.authorIp = :authorIp")})
+public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -95,16 +97,16 @@ public class Comments implements Serializable {
     private List<Commentmeta> commentmetaList;
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Posts postId;
+    private Post postId;
 
-    public Comments() {
+    public Comment() {
     }
 
-    public Comments(Integer id) {
+    public Comment(Integer id) {
         this.id = id;
     }
 
-    public Comments(Integer id, Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
+    public Comment(Integer id, Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
         this.id = id;
         this.commentDate = commentDate;
         this.approved = approved;
@@ -204,11 +206,11 @@ public class Comments implements Serializable {
         this.commentmetaList = commentmetaList;
     }
 
-    public Posts getPostId() {
+    public Post getPostId() {
         return postId;
     }
 
-    public void setPostId(Posts postId) {
+    public void setPostId(Post postId) {
         this.postId = postId;
     }
 
@@ -222,10 +224,10 @@ public class Comments implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Comments)) {
+        if (!(object instanceof Comment)) {
             return false;
         }
-        Comments other = (Comments) object;
+        Comment other = (Comment) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -234,7 +236,7 @@ public class Comments implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Comments[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.Comment[ id=" + id + " ]";
     }
 
 }

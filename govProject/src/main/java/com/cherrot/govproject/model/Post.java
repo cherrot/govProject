@@ -20,6 +20,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
@@ -32,22 +33,23 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author cherrot
  */
 @Entity
+@Table(name = "posts")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Posts.findAll", query = "SELECT p FROM Posts p"),
-    @NamedQuery(name = "Posts.findById", query = "SELECT p FROM Posts p WHERE p.id = :id"),
-    @NamedQuery(name = "Posts.findByCreateDate", query = "SELECT p FROM Posts p WHERE p.createDate = :createDate"),
-    @NamedQuery(name = "Posts.findByModifyDate", query = "SELECT p FROM Posts p WHERE p.modifyDate = :modifyDate"),
-    @NamedQuery(name = "Posts.findByCommentStatus", query = "SELECT p FROM Posts p WHERE p.commentStatus = :commentStatus"),
-    @NamedQuery(name = "Posts.findByCommentCount", query = "SELECT p FROM Posts p WHERE p.commentCount = :commentCount"),
-    @NamedQuery(name = "Posts.findByPostParent", query = "SELECT p FROM Posts p WHERE p.postParent = :postParent"),
-    @NamedQuery(name = "Posts.findByStatus", query = "SELECT p FROM Posts p WHERE p.status = :status"),
-    @NamedQuery(name = "Posts.findByType", query = "SELECT p FROM Posts p WHERE p.type = :type"),
-    @NamedQuery(name = "Posts.findBySlug", query = "SELECT p FROM Posts p WHERE p.slug = :slug"),
-    @NamedQuery(name = "Posts.findByTittle", query = "SELECT p FROM Posts p WHERE p.tittle = :tittle"),
-    @NamedQuery(name = "Posts.findByPassword", query = "SELECT p FROM Posts p WHERE p.password = :password"),
-    @NamedQuery(name = "Posts.findByMime", query = "SELECT p FROM Posts p WHERE p.mime = :mime")})
-public class Posts implements Serializable {
+    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
+    @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
+    @NamedQuery(name = "Post.findByCreateDate", query = "SELECT p FROM Post p WHERE p.createDate = :createDate"),
+    @NamedQuery(name = "Post.findByModifyDate", query = "SELECT p FROM Post p WHERE p.modifyDate = :modifyDate"),
+    @NamedQuery(name = "Post.findByCommentStatus", query = "SELECT p FROM Post p WHERE p.commentStatus = :commentStatus"),
+    @NamedQuery(name = "Post.findByCommentCount", query = "SELECT p FROM Post p WHERE p.commentCount = :commentCount"),
+    @NamedQuery(name = "Post.findByPostParent", query = "SELECT p FROM Post p WHERE p.postParent = :postParent"),
+    @NamedQuery(name = "Post.findByStatus", query = "SELECT p FROM Post p WHERE p.status = :status"),
+    @NamedQuery(name = "Post.findByType", query = "SELECT p FROM Post p WHERE p.type = :type"),
+    @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
+    @NamedQuery(name = "Post.findByTittle", query = "SELECT p FROM Post p WHERE p.tittle = :tittle"),
+    @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
+    @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime")})
+public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -115,20 +117,20 @@ public class Posts implements Serializable {
     private List<Postmeta> postmetaList;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Users userId;
+    private User userId;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts")
-    private List<TermRelationships> termRelationshipsList;
+    private List<TermRelationship> termRelationshipList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
-    private List<Comments> commentsList;
+    private List<Comment> commentList;
 
-    public Posts() {
+    public Post() {
     }
 
-    public Posts(Integer id) {
+    public Post(Integer id) {
         this.id = id;
     }
 
-    public Posts(Integer id, Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
+    public Post(Integer id, Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
         this.id = id;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
@@ -262,30 +264,30 @@ public class Posts implements Serializable {
         this.postmetaList = postmetaList;
     }
 
-    public Users getUserId() {
+    public User getUserId() {
         return userId;
     }
 
-    public void setUserId(Users userId) {
+    public void setUserId(User userId) {
         this.userId = userId;
     }
 
     @XmlTransient
-    public List<TermRelationships> getTermRelationshipsList() {
-        return termRelationshipsList;
+    public List<TermRelationship> getTermRelationshipList() {
+        return termRelationshipList;
     }
 
-    public void setTermRelationshipsList(List<TermRelationships> termRelationshipsList) {
-        this.termRelationshipsList = termRelationshipsList;
+    public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
+        this.termRelationshipList = termRelationshipList;
     }
 
     @XmlTransient
-    public List<Comments> getCommentsList() {
-        return commentsList;
+    public List<Comment> getCommentList() {
+        return commentList;
     }
 
-    public void setCommentsList(List<Comments> commentsList) {
-        this.commentsList = commentsList;
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 
     @Override
@@ -298,10 +300,10 @@ public class Posts implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Posts)) {
+        if (!(object instanceof Post)) {
             return false;
         }
-        Posts other = (Posts) object;
+        Post other = (Post) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -310,7 +312,7 @@ public class Posts implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Posts[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.Post[ id=" + id + " ]";
     }
 
 }

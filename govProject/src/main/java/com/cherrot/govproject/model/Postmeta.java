@@ -48,7 +48,7 @@ public class Postmeta implements Serializable {
     private String metaValue;
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Posts postId;
+    private Post postId;
 
     public Postmeta() {
     }
@@ -86,11 +86,11 @@ public class Postmeta implements Serializable {
         this.metaValue = metaValue;
     }
 
-    public Posts getPostId() {
+    public Post getPostId() {
         return postId;
     }
 
-    public void setPostId(Posts postId) {
+    public void setPostId(Post postId) {
         this.postId = postId;
     }
 
