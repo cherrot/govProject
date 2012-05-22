@@ -10,6 +10,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -52,9 +54,10 @@ public class TermTaxonomy implements Serializable {
     private int count;
     @Column(name = "taxonomy_parent")
     private Integer taxonomyParent;
-    @Size(max = 45)
-    @Column(length = 45)
-    private String name;
+    @Enumerated(EnumType.STRING)
+    @Size(max = 8)
+    @Column(length = 8)
+    private TermType type;
     @Size(max = 255)
     @Column(length = 255)
     private String description;
@@ -63,6 +66,10 @@ public class TermTaxonomy implements Serializable {
     @JoinColumn(name = "term_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Term termId;
+
+    public enum TermType {
+        POST_TAG, CATEGORY
+    }
 
     public TermTaxonomy() {
     }
@@ -100,12 +107,12 @@ public class TermTaxonomy implements Serializable {
         this.taxonomyParent = taxonomyParent;
     }
 
-    public String getName() {
-        return name;
+    public TermType getType() {
+        return type;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setType(TermType type) {
+        this.type = type;
     }
 
     public String getDescription() {

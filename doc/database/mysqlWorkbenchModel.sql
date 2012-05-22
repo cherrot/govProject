@@ -196,7 +196,8 @@ CREATE  TABLE IF NOT EXISTS `terms` (
   `slug` VARCHAR(200) NOT NULL ,
   `termGroup` INT NULL ,
   PRIMARY KEY (`id`) )
-ENGINE = InnoDB;
+ENGINE = InnoDB
+COMMENT = 'The categories for both posts and links and the tags for pos' /* comment truncated */;
 
 CREATE UNIQUE INDEX `slug_UNIQUE` ON `terms` (`slug` ASC) ;
 
@@ -213,7 +214,7 @@ CREATE  TABLE IF NOT EXISTS `term_taxonomy` (
   `term_id` INT NOT NULL ,
   `count` INT NOT NULL ,
   `taxonomy_parent` INT NULL ,
-  `name` VARCHAR(45) NULL ,
+  `type` VARCHAR(45) NULL ,
   `description` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
   CONSTRAINT `taxonomy_term`
@@ -222,11 +223,11 @@ CREATE  TABLE IF NOT EXISTS `term_taxonomy` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-COMMENT = 'terms 和 term_taxonomy分离解决 分类名、链接分类、tag不能重名的问题';
+COMMENT = 'terms 和 term_taxonomy分离解决 分类名、链接分类、tag不能重名的问题\n\nThis table de' /* comment truncated */;
 
 CREATE INDEX `termID` ON `term_taxonomy` (`term_id` ASC) ;
 
-CREATE INDEX `termID_taxonomy` ON `term_taxonomy` (`term_id` ASC, `name` ASC) ;
+CREATE INDEX `termID_taxonomy` ON `term_taxonomy` (`term_id` ASC, `type` ASC) ;
 
 
 -- -----------------------------------------------------

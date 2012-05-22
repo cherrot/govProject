@@ -4,26 +4,21 @@
  */
 package com.cherrot.govproject.service.impl;
 
-import com.cherrot.govproject.model.Comment;
-import com.cherrot.govproject.model.Commentmeta;
+import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.model.User;
-import com.cherrot.govproject.service.CommentService;
+import com.cherrot.govproject.service.OptionService;
 import com.cherrot.util.pagination.Page;
 import java.util.List;
+
 
 /**
  *
  * @author cherrot
  */
-public class CommentServiceImpl implements CommentService{
+public class OptionServiceImpl implements OptionService{
 
     @Override
-    public void create(Comment comment, List<Commentmeta> commentmetas) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void create(Comment model) {
+    public void create(Option model) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -43,17 +38,17 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> list() {
+    public List<Option> list() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Page<Comment> list(int pageNum) {
+    public Page<Option> list(int pageNum) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Page<Comment> list(int pageNum, int pageSize) {
+    public Page<Option> list(int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

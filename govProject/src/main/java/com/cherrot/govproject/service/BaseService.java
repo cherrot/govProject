@@ -15,7 +15,8 @@ import java.util.List;
  */
 public interface BaseService<Model extends Serializable, PrimaryKey extends Serializable> {
 
-    void create(Model user);
+    void create(Model model);
+    void edit(Model model);
     User find(PrimaryKey id);
     void destroy(PrimaryKey id);
     int getCount();

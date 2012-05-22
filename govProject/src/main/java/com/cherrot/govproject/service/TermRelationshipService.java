@@ -4,10 +4,12 @@
  */
 package com.cherrot.govproject.service;
 
+import com.cherrot.govproject.model.TermRelationship;
+
 /**
  *
  * @author cherrot
  */
-public interface TermRelationshipService {
+public interface TermRelationshipService extends BaseService<TermRelationship, Integer> {
 
 }

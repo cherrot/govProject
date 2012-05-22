@@ -5,7 +5,11 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -89,11 +93,14 @@ public class Term implements Serializable {
     }
 
     public String getSlug() {
+        if(slug == null || slug.equals(""))
+            setSlug(name);
         return slug;
     }
 
     public void setSlug(String slug) {
         this.slug = slug;
+        processSlug(this.slug);
     }
 
     public Integer getTermGroup() {
@@ -111,6 +118,16 @@ public class Term implements Serializable {
 
     public void setTermTaxonomyList(List<TermTaxonomy> termTaxonomyList) {
         this.termTaxonomyList = termTaxonomyList;
+    }
+
+    private void processSlug(String slug){
+        slug = slug.replaceAll("\\.|\\s", "-");
+        try {
+            this.slug = URLEncoder.encode(slug, "UTF-8");
+        }
+        catch (UnsupportedEncodingException ex) {
+            Logger.getLogger(Term.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
