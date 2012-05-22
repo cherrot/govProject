@@ -5,7 +5,6 @@
 package com.cherrot.govproject.service.impl;
 
 import com.cherrot.govproject.model.Option;
-import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.OptionService;
 import com.cherrot.util.pagination.Page;
 import java.util.List;
@@ -23,7 +22,7 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public User find(Integer id) {
+    public Option find(Integer id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -49,6 +48,11 @@ public class OptionServiceImpl implements OptionService{
 
     @Override
     public Page<Option> list(int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void edit(Option model) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -13,6 +13,8 @@ import com.cherrot.govproject.model.Post;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -89,7 +91,7 @@ public class CommentJpaDao implements Serializable, CommentDao {
 
     @Override
     @Transactional
-    public void edit(Comment comment) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Comment comment) throws IllegalOrphanException, NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -253,6 +255,19 @@ public class CommentJpaDao implements Serializable, CommentDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(Comment model) {
+        if (model.getId() == null)
+            create(model);
+        else
+            try {
+            edit(model);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(CommentJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -10,6 +10,8 @@ import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -68,7 +70,7 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 
     @Override
     @Transactional
-    public void edit(Usermeta usermeta) throws NonexistentEntityException, Exception {
+    public void edit(Usermeta usermeta) throws NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -189,6 +191,20 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(Usermeta model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

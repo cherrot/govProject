@@ -21,6 +21,6 @@ public interface TermService extends BaseService<Term, Integer> {
      * @param type "type" property of the TermTaxonomy object
      */
     void create(Term term, TermTaxonomy.TermType type);
-    void createTags(List<String> tags);
-    void createCatagories(List<String> catagories);
+    void createOrEditTags(List<String> tags);
+    void createOrEditCategories(List<String> categories);
 }

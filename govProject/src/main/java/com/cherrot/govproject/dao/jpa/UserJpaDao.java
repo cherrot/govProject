@@ -13,6 +13,8 @@ import com.cherrot.govproject.model.Usermeta;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -98,7 +100,7 @@ public class UserJpaDao implements Serializable, UserDao {
 
     @Override
     @Transactional
-    public void edit(User user) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(User user) throws IllegalOrphanException, NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -266,6 +268,17 @@ public class UserJpaDao implements Serializable, UserDao {
     }
 
     @Override
+    public User findByLogin(String loginName) {
+        return em.createNamedQuery("User.findByLogin", User.class).getSingleResult();
+    }
+
+    @Override
+    public List<User> findEntitiesByUserLevel(int userLevel) {
+        return em.createNamedQuery("User.findByUserLevel", User.class)
+                .setParameter("userLevel", userLevel).getResultList();
+    }
+
+    @Override
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
@@ -278,6 +291,20 @@ public class UserJpaDao implements Serializable, UserDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(User model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

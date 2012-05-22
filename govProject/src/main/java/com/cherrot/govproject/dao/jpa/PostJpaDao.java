@@ -14,6 +14,8 @@ import com.cherrot.govproject.model.User;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -108,7 +110,7 @@ public class PostJpaDao implements Serializable, PostDao {
 
     @Override
     @Transactional
-    public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -307,6 +309,20 @@ public class PostJpaDao implements Serializable, PostDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(Post model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

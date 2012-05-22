@@ -12,8 +12,11 @@ import com.cherrot.govproject.model.TermTaxonomy;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -79,7 +82,7 @@ public class TermJpaDao implements Serializable, TermDao {
 
     @Override
     @Transactional
-    public void edit(Term term) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Term term) throws IllegalOrphanException, NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -212,6 +215,11 @@ public class TermJpaDao implements Serializable, TermDao {
     }
 
     @Override
+    public Term findBySlug(String slug) {
+        return em.createNamedQuery("Term.findBySlug", Term.class).setParameter("slug", slug).getSingleResult();
+    }
+
+    @Override
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
@@ -224,6 +232,25 @@ public class TermJpaDao implements Serializable, TermDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public List<Term> findEntitiesByName(String name) {
+        return em.createNamedQuery("Term.findByName",Term.class).setParameter("name", name).getResultList();
+    }
+
+    @Override
+    public void save(Term model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

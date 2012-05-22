@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -30,14 +31,19 @@ public class UserServiceImpl implements UserService{
     private UsermetaDao usermetaDao;
 
     @Override
+    @Transactional
     public void create(User user) {
         userDao.create(user);
     }
 
     @Override
+    @Transactional
     public void create(User user, List<Usermeta> usermetas) {
-        //TODO validate the user and usermeta!
         userDao.create(user);
+        for (Usermeta usermeta : usermetas) {
+            usermeta.setUserId(user);
+            usermetaDao.create(usermeta);
+        }
     }
 
     @Override
@@ -46,6 +52,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
         try {
             userDao.destroy(id);
@@ -75,6 +82,9 @@ public class UserServiceImpl implements UserService{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-
+    @Override
+    public void edit(User model) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 
 }

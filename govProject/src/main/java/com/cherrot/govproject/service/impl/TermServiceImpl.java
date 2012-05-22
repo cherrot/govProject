@@ -6,20 +6,24 @@ package com.cherrot.govproject.service.impl;
 
 import com.cherrot.govproject.dao.TermDao;
 import com.cherrot.govproject.dao.TermTaxonomyDao;
+import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
+import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.model.TermTaxonomy;
 import com.cherrot.govproject.model.TermTaxonomy.TermType;
-import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.TermService;
 import com.cherrot.util.pagination.Page;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service manages Term and TermTaxonomy.
  * @author cherrot
  */
-public class TermServiceImpl implements TermService{
+public class TermServiceImpl implements TermService {
 
     @Inject
     private TermDao termDao;
@@ -27,6 +31,7 @@ public class TermServiceImpl implements TermService{
     private TermTaxonomyDao termTaxonomyDao;
 
     @Override
+    @Transactional
     public void create(Term term, TermType type) {
         termDao.create(term);
         TermTaxonomy termTaxonomy = new TermTaxonomy();
@@ -36,43 +41,92 @@ public class TermServiceImpl implements TermService{
     }
 
     @Override
-    public void createTags(List<String> tags) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Transactional
+    public void createOrEditTags(List<String> tags) {
+        for (String tag : tags) {
+            List<Term> terms = termDao.findEntitiesByName(tag);
+            Term term = null;
+            if (terms.isEmpty()) {
+                term = new Term();
+                term.setName(tag);
+                termDao.create(term);
+            } else {
+                term = terms.get(0);
+            }
+            TermTaxonomy termTaxonomy = new TermTaxonomy();
+            termTaxonomy.setType(TermType.POST_TAG);
+            termTaxonomy.setTermId(term);
+            termTaxonomyDao.create(termTaxonomy);
+        }
     }
 
     @Override
-    public void createCatagories(List<String> catagories) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Transactional
+    public void createOrEditCategories(List<String> categories) {
+        for (String catagory : categories) {
+            List<Term> terms = termDao.findEntitiesByName(catagory);
+            Term term = null;
+            if (terms.isEmpty()) {
+                term = new Term();
+                term.setName(catagory);
+                termDao.create(term);
+            } else {
+                term = terms.get(0);
+            }
+            TermTaxonomy termTaxonomy = new TermTaxonomy();
+            termTaxonomy.setType(TermType.CATEGORY);
+            termTaxonomy.setTermId(term);
+            termTaxonomyDao.create(termTaxonomy);
+        }
     }
 
+    /**
+     * Create a Term which is a POST_TAG;
+     * @param model
+     */
     @Override
     public void create(Term model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        create(model, TermType.POST_TAG);
     }
 
     @Override
+    @Transactional
     public void edit(Term model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            termDao.edit(model);
+        }
+        catch (IllegalOrphanException | NonexistentEntityException ex) {
+            Logger.getLogger(TermServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(TermServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
-    public User find(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Term find(Integer id) {
+        return termDao.find(id);
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            termDao.destroy(id);
+        }
+        catch (IllegalOrphanException | NonexistentEntityException ex) {
+            Logger.getLogger(TermServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return termDao.getCount();
     }
 
     @Override
     public List<Term> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return termDao.findEntities();
     }
 
     @Override

@@ -13,6 +13,8 @@ import com.cherrot.govproject.model.TermTaxonomy;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -89,7 +91,7 @@ public class TermTaxonomyJpaDao implements Serializable, TermTaxonomyDao {
 
     @Override
     @Transactional
-    public void edit(TermTaxonomy termTaxonomy) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(TermTaxonomy termTaxonomy) throws IllegalOrphanException, NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -253,6 +255,20 @@ public class TermTaxonomyJpaDao implements Serializable, TermTaxonomyDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(TermTaxonomy model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

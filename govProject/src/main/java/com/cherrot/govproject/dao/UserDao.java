@@ -4,12 +4,8 @@
  */
 package com.cherrot.govproject.dao;
 
-import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
-import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
-import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -17,6 +13,8 @@ import javax.persistence.EntityManager;
  */
 public interface UserDao extends BaseDao<User, Integer> {
 
+    User findByLogin(String loginName);
+    List<User> findEntitiesByUserLevel(int userLevel);
 //    void create(User user);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;

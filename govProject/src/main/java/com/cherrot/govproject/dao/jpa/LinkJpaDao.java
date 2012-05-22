@@ -9,6 +9,8 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -58,7 +60,7 @@ public class LinkJpaDao implements Serializable, LinkDao {
 
     @Override
     @Transactional
-    public void edit(Link link) throws NonexistentEntityException, Exception {
+    public void edit(Link link) throws NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -159,6 +161,20 @@ public class LinkJpaDao implements Serializable, LinkDao {
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(Link model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

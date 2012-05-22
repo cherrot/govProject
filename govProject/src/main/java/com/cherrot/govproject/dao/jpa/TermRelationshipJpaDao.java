@@ -14,6 +14,8 @@ import com.cherrot.govproject.model.TermRelationshipPK;
 import com.cherrot.govproject.model.TermTaxonomy;
 import java.io.Serializable;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
@@ -99,7 +101,7 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
 
     @Override
     @Transactional
-    public void edit(TermRelationship termRelationship) throws NonexistentEntityException, Exception {
+    public void edit(TermRelationship termRelationship) throws NonexistentEntityException {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -258,6 +260,20 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
 //        finally {
 //            em.close();
 //        }
+    }
+
+    @Override
+    public void save(TermRelationship model) {
+        if (model.getTermRelationshipPK() == null) {
+            create(model);
+        } else {
+            try {
+                edit(model);
+            }
+            catch (Exception ex) {
+                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
 }

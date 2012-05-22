@@ -28,7 +28,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public User find(Integer id) {
+    public Comment find(Integer id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -54,6 +54,11 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public Page<Comment> list(int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void edit(Comment model) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

@@ -41,7 +41,7 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    public User find(Integer id) {
+    public Link find(Integer id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -67,6 +67,11 @@ public class LinkServiceImpl implements LinkService{
 
     @Override
     public Page<Link> list(int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void edit(Link model) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

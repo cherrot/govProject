@@ -7,7 +7,6 @@ package com.cherrot.govproject.service.impl;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.TermTaxonomy;
-import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.util.pagination.Page;
 import java.util.List;
@@ -34,7 +33,7 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public User find(Integer id) {
+    public Post find(Integer id) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -60,6 +59,11 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public Page<Post> list(int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void edit(Post model) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

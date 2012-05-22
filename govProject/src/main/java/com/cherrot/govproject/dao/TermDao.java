@@ -4,12 +4,8 @@
  */
 package com.cherrot.govproject.dao;
 
-import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
-import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
-import java.io.Serializable;
 import java.util.List;
-import javax.persistence.EntityManager;
 
 /**
  *
@@ -17,6 +13,8 @@ import javax.persistence.EntityManager;
  */
 public interface TermDao extends BaseDao<Term, Integer> {
 
+    List<Term> findEntitiesByName(String name);
+    Term findBySlug(String slug);
 //    void create(Term term);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;
