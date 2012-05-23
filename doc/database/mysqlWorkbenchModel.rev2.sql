@@ -206,49 +206,24 @@ DROP TABLE IF EXISTS `terms` ;
 
 CREATE  TABLE IF NOT EXISTS `terms` (
   `id` INT NOT NULL AUTO_INCREMENT ,
-  `name` VARCHAR(100) NOT NULL ,
-  `slug` VARCHAR(200) NOT NULL ,
-  `termGroup` INT NULL ,
-  PRIMARY KEY (`id`) )
-ENGINE = InnoDB
-COMMENT = 'The categories for both posts and links and the tags for pos' /* comment truncated */;
-
-CREATE UNIQUE INDEX `slug_UNIQUE` ON `terms` (`slug` ASC) ;
-
-CREATE INDEX `name` ON `terms` (`name` ASC) ;
-
-
--- -----------------------------------------------------
--- Table `term_taxonomy`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `term_taxonomy` ;
-
-CREATE  TABLE IF NOT EXISTS `term_taxonomy` (
-  `id` INT NOT NULL AUTO_INCREMENT ,
-  `term_id` INT NOT NULL ,
   `count` INT NOT NULL ,
-  `taxonomy_parent` INT NULL ,
+  `term_parent` INT NULL ,
   `type` VARCHAR(8) NULL ,
+  `name` VARCHAR(100) NULL ,
+  `slug` VARCHAR(200) NOT NULL ,
   `description` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  CONSTRAINT `taxonomy_term`
-    FOREIGN KEY (`term_id` )
-    REFERENCES `terms` (`id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
   CONSTRAINT `taxonomy_parent`
-    FOREIGN KEY (`taxonomy_parent` )
-    REFERENCES `term_taxonomy` (`id` )
+    FOREIGN KEY (`term_parent` )
+    REFERENCES `terms` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'terms 和 term_taxonomy分离解决 分类名、链接分类、tag不能重名的问题\n\nThis table de' /* comment truncated */;
 
-CREATE INDEX `termID` ON `term_taxonomy` (`term_id` ASC) ;
+CREATE INDEX `taxonomy_parent` ON `terms` (`term_parent` ASC) ;
 
-CREATE INDEX `termID_taxonomy` ON `term_taxonomy` (`term_id` ASC, `type` ASC) ;
-
-CREATE INDEX `taxonomy_parent` ON `term_taxonomy` (`taxonomy_parent` ASC) ;
+CREATE UNIQUE INDEX `slug_UNIQUE` ON `terms` (`slug` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -258,9 +233,9 @@ DROP TABLE IF EXISTS `term_relationships` ;
 
 CREATE  TABLE IF NOT EXISTS `term_relationships` (
   `object_id` INT NOT NULL AUTO_INCREMENT ,
-  `taxonomy_id` INT NOT NULL ,
+  `term_id` INT NOT NULL ,
   `termOrder` INT NULL ,
-  PRIMARY KEY (`object_id`, `taxonomy_id`) ,
+  PRIMARY KEY (`object_id`, `term_id`) ,
   CONSTRAINT `relationship_post`
     FOREIGN KEY (`object_id` )
     REFERENCES `posts` (`id` )
@@ -271,9 +246,9 @@ CREATE  TABLE IF NOT EXISTS `term_relationships` (
     REFERENCES `links` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE,
-  CONSTRAINT `relationship_taxonomy`
-    FOREIGN KEY (`taxonomy_id` )
-    REFERENCES `term_taxonomy` (`id` )
+  CONSTRAINT `relationship_term`
+    FOREIGN KEY (`term_id` )
+    REFERENCES `terms` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
@@ -283,7 +258,7 @@ CREATE INDEX `relationship_post` ON `term_relationships` (`object_id` ASC) ;
 
 CREATE INDEX `relationship_link` ON `term_relationships` (`object_id` ASC) ;
 
-CREATE INDEX `relationship_taxonomy` ON `term_relationships` (`taxonomy_id` ASC) ;
+CREATE INDEX `relationship_term` ON `term_relationships` (`term_id` ASC) ;
 
 
 -- -----------------------------------------------------
