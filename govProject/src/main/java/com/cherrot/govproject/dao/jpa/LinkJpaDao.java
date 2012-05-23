@@ -60,7 +60,7 @@ public class LinkJpaDao implements Serializable, LinkDao {
 
     @Override
     @Transactional
-    public void edit(Link link) throws NonexistentEntityException {
+    public void edit(Link link) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();

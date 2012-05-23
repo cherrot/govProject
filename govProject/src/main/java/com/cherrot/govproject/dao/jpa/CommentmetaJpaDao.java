@@ -49,10 +49,10 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Comment commentId = commentmeta.getCommentId();
+            Comment commentId = commentmeta.getComment();
             if (commentId != null) {
                 commentId = em.getReference(commentId.getClass(), commentId.getId());
-                commentmeta.setCommentId(commentId);
+                commentmeta.setComment(commentId);
             }
             em.persist(commentmeta);
             if (commentId != null) {
@@ -70,17 +70,17 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
 
     @Override
     @Transactional
-    public void edit(Commentmeta commentmeta) throws NonexistentEntityException {
+    public void edit(Commentmeta commentmeta) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Commentmeta persistentCommentmeta = em.find(Commentmeta.class, commentmeta.getId());
-            Comment commentIdOld = persistentCommentmeta.getCommentId();
-            Comment commentIdNew = commentmeta.getCommentId();
+            Comment commentIdOld = persistentCommentmeta.getComment();
+            Comment commentIdNew = commentmeta.getComment();
             if (commentIdNew != null) {
                 commentIdNew = em.getReference(commentIdNew.getClass(), commentIdNew.getId());
-                commentmeta.setCommentId(commentIdNew);
+                commentmeta.setComment(commentIdNew);
             }
             commentmeta = em.merge(commentmeta);
             if (commentIdOld != null && !commentIdOld.equals(commentIdNew)) {
@@ -125,7 +125,7 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
             catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.", enfe);
             }
-            Comment commentId = commentmeta.getCommentId();
+            Comment commentId = commentmeta.getComment();
             if (commentId != null) {
                 commentId.getCommentmetaList().remove(commentmeta);
                 commentId = em.merge(commentId);

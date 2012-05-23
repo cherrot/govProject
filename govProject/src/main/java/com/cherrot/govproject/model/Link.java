@@ -42,27 +42,27 @@ public class Link implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(nullable = false, length = 255)
+    @Column(name = "url", nullable = false, length = 255)
     private String url;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "name", nullable = false, length = 45)
     private String name;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(nullable = false, length = 20)
+    @Column(name = "target", nullable = false, length = 20)
     private String target;
     @Size(max = 255)
-    @Column(length = 255)
+    @Column(name = "description", length = 255)
     private String description;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "links")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "link")
     private List<TermRelationship> termRelationshipList;
 
     public Link() {
@@ -131,18 +131,18 @@ public class Link implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Link)) {
+        if (!( object instanceof Link )) {
             return false;
         }
         Link other = (Link) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

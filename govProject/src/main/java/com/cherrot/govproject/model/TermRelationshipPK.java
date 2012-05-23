@@ -22,15 +22,15 @@ public class TermRelationshipPK implements Serializable {
     private int objectId;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "taxonomy_id", nullable = false)
-    private int taxonomyId;
+    @Column(name = "term_id", nullable = false)
+    private int termId;
 
     public TermRelationshipPK() {
     }
 
-    public TermRelationshipPK(int objectId, int taxonomyId) {
+    public TermRelationshipPK(int objectId, int termId) {
         this.objectId = objectId;
-        this.taxonomyId = taxonomyId;
+        this.termId = termId;
     }
 
     public int getObjectId() {
@@ -41,33 +41,33 @@ public class TermRelationshipPK implements Serializable {
         this.objectId = objectId;
     }
 
-    public int getTaxonomyId() {
-        return taxonomyId;
+    public int getTermId() {
+        return termId;
     }
 
-    public void setTaxonomyId(int taxonomyId) {
-        this.taxonomyId = taxonomyId;
+    public void setTermId(int termId) {
+        this.termId = termId;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
         hash += (int) objectId;
-        hash += (int) taxonomyId;
+        hash += (int) termId;
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof TermRelationshipPK)) {
+        if (!( object instanceof TermRelationshipPK )) {
             return false;
         }
         TermRelationshipPK other = (TermRelationshipPK) object;
         if (this.objectId != other.objectId) {
             return false;
         }
-        if (this.taxonomyId != other.taxonomyId) {
+        if (this.termId != other.termId) {
             return false;
         }
         return true;
@@ -75,7 +75,7 @@ public class TermRelationshipPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.TermRelationshipsPK[ objectId=" + objectId + ", taxonomyId=" + taxonomyId + " ]";
+        return "com.cherrot.govproject.model.TermRelationshipPK[ objectId=" + objectId + ", termId=" + termId + " ]";
     }
 
 }

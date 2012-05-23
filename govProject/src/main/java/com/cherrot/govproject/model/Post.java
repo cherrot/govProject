@@ -42,7 +42,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByModifyDate", query = "SELECT p FROM Post p WHERE p.modifyDate = :modifyDate"),
     @NamedQuery(name = "Post.findByCommentStatus", query = "SELECT p FROM Post p WHERE p.commentStatus = :commentStatus"),
     @NamedQuery(name = "Post.findByCommentCount", query = "SELECT p FROM Post p WHERE p.commentCount = :commentCount"),
-    @NamedQuery(name = "Post.findByPostParent", query = "SELECT p FROM Post p WHERE p.postParent = :postParent"),
     @NamedQuery(name = "Post.findByStatus", query = "SELECT p FROM Post p WHERE p.status = :status"),
     @NamedQuery(name = "Post.findByType", query = "SELECT p FROM Post p WHERE p.type = :type"),
     @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
@@ -55,72 +54,75 @@ public class Post implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "createDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "modifyDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date modifyDate;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "commentStatus", nullable = false)
     private boolean commentStatus;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "commentCount", nullable = false)
     private int commentCount;
-    @Column(name = "post_parent")
-    private Integer postParent;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(nullable = false, length = 20)
+    @Column(name = "status", nullable = false, length = 20)
     private String status;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
-    @Column(nullable = false, length = 20)
+    @Column(name = "type", nullable = false, length = 20)
     private String type;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
-    @Column(nullable = false, length = 200)
+    @Column(name = "slug", nullable = false, length = 200)
     private String slug;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(nullable = false, length = 255)
+    @Column(name = "tittle", nullable = false, length = 255)
     private String tittle;
     @Size(max = 20)
-    @Column(length = 20)
+    @Column(name = "password", length = 20)
     private String password;
     @Size(max = 45)
-    @Column(length = 45)
+    @Column(name = "mime", length = 45)
     private String mime;
     @Basic(optional = false)
     @NotNull
     @Lob
     @Size(min = 1, max = 65535)
-    @Column(nullable = false, length = 65535)
+    @Column(name = "content", nullable = false, length = 65535)
     private String content;
     @Lob
     @Size(max = 65535)
-    @Column(length = 65535)
+    @Column(name = "excerpt", length = 65535)
     private String excerpt;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Postmeta> postmetaList;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private User userId;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "posts")
+    private User user;
+    @OneToMany(mappedBy = "post")
+    private List<Post> postList;
+    @JoinColumn(name = "post_parent", referencedColumnName = "id")
+    @ManyToOne
+    private Post postParent;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<TermRelationship> termRelationshipList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "postId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> commentList;
 
     public Post() {
@@ -181,14 +183,6 @@ public class Post implements Serializable {
 
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
-    }
-
-    public Integer getPostParent() {
-        return postParent;
-    }
-
-    public void setPostParent(Integer postParent) {
-        this.postParent = postParent;
     }
 
     public String getStatus() {
@@ -264,12 +258,29 @@ public class Post implements Serializable {
         this.postmetaList = postmetaList;
     }
 
-    public User getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(User userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @XmlTransient
+    public List<Post> getPostList() {
+        return postList;
+    }
+
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
+    }
+
+    public Post getPostParent() {
+        return postParent;
+    }
+
+    public void setPostParent(Post postParent) {
+        this.postParent = postParent;
     }
 
     @XmlTransient
@@ -293,18 +304,18 @@ public class Post implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Post)) {
+        if (!( object instanceof Post )) {
             return false;
         }
         Post other = (Post) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

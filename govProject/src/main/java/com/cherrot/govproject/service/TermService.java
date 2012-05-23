@@ -5,7 +5,7 @@
 package com.cherrot.govproject.service;
 
 import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.TermTaxonomy;
+import com.cherrot.govproject.model.Term.TermType;
 import java.util.List;
 
 /**
@@ -20,7 +20,6 @@ public interface TermService extends BaseService<Term, Integer> {
      * @param term Term(tag, category, etc) object which would be created ()
      * @param type "type" property of the TermTaxonomy object
      */
-    void create(Term term, TermTaxonomy.TermType type);
-    void createOrEditTags(List<String> tags);
-    void createOrEditCategories(List<String> categories);
+    void createTagsByName(List<String> tags);
+    void createCategoriesByName(List<String> categories);
 }

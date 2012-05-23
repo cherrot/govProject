@@ -11,17 +11,21 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.UserService;
+import com.cherrot.util.Constants;
 import com.cherrot.util.pagination.Page;
+import com.cherrot.util.pagination.PageUtil;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
+@Service
 public class UserServiceImpl implements UserService{
 
     @Inject
@@ -41,7 +45,7 @@ public class UserServiceImpl implements UserService{
     public void create(User user, List<Usermeta> usermetas) {
         userDao.create(user);
         for (Usermeta usermeta : usermetas) {
-            usermeta.setUserId(user);
+            usermeta.setUser(user);
             usermetaDao.create(usermeta);
         }
     }
@@ -57,7 +61,10 @@ public class UserServiceImpl implements UserService{
         try {
             userDao.destroy(id);
         }
-        catch (IllegalOrphanException | NonexistentEntityException ex) {
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -74,17 +81,29 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public Page<User> list(int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
     public Page<User> list(int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<User> users = userDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return PageUtil.getPage(getCount(), pageNum, users, pageSize);
     }
 
     @Override
     public void edit(User model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            userDao.edit(model);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

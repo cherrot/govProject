@@ -49,10 +49,10 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post postId = postmeta.getPostId();
+            Post postId = postmeta.getPost();
             if (postId != null) {
                 postId = em.getReference(postId.getClass(), postId.getId());
-                postmeta.setPostId(postId);
+                postmeta.setPost(postId);
             }
             em.persist(postmeta);
             if (postId != null) {
@@ -70,17 +70,17 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
 
     @Override
     @Transactional
-    public void edit(Postmeta postmeta) throws NonexistentEntityException {
+    public void edit(Postmeta postmeta) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Postmeta persistentPostmeta = em.find(Postmeta.class, postmeta.getId());
-            Post postIdOld = persistentPostmeta.getPostId();
-            Post postIdNew = postmeta.getPostId();
+            Post postIdOld = persistentPostmeta.getPost();
+            Post postIdNew = postmeta.getPost();
             if (postIdNew != null) {
                 postIdNew = em.getReference(postIdNew.getClass(), postIdNew.getId());
-                postmeta.setPostId(postIdNew);
+                postmeta.setPost(postIdNew);
             }
             postmeta = em.merge(postmeta);
             if (postIdOld != null && !postIdOld.equals(postIdNew)) {
@@ -125,7 +125,7 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
             catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The postmeta with id " + id + " no longer exists.", enfe);
             }
-            Post postId = postmeta.getPostId();
+            Post postId = postmeta.getPost();
             if (postId != null) {
                 postId.getPostmetaList().remove(postmeta);
                 postId = em.merge(postId);

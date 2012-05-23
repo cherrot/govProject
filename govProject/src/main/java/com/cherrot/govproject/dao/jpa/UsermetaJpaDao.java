@@ -49,10 +49,10 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            User userId = usermeta.getUserId();
+            User userId = usermeta.getUser();
             if (userId != null) {
                 userId = em.getReference(userId.getClass(), userId.getId());
-                usermeta.setUserId(userId);
+                usermeta.setUser(userId);
             }
             em.persist(usermeta);
             if (userId != null) {
@@ -70,17 +70,17 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 
     @Override
     @Transactional
-    public void edit(Usermeta usermeta) throws NonexistentEntityException {
+    public void edit(Usermeta usermeta) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Usermeta persistentUsermeta = em.find(Usermeta.class, usermeta.getId());
-            User userIdOld = persistentUsermeta.getUserId();
-            User userIdNew = usermeta.getUserId();
+            User userIdOld = persistentUsermeta.getUser();
+            User userIdNew = usermeta.getUser();
             if (userIdNew != null) {
                 userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getId());
-                usermeta.setUserId(userIdNew);
+                usermeta.setUser(userIdNew);
             }
             usermeta = em.merge(usermeta);
             if (userIdOld != null && !userIdOld.equals(userIdNew)) {
@@ -125,7 +125,7 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
             catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usermeta with id " + id + " no longer exists.", enfe);
             }
-            User userId = usermeta.getUserId();
+            User userId = usermeta.getUser();
             if (userId != null) {
                 userId.getUsermetaList().remove(usermeta);
                 userId = em.merge(userId);

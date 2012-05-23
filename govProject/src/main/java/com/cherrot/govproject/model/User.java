@@ -48,44 +48,44 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
-    @Column(nullable = false, length = 32)
+    @Column(name = "login", nullable = false, length = 32)
     private String login;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
-    @Column(nullable = false, length = 64)
+    @Column(name = "pass", nullable = false, length = 64)
     private String pass;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "userLevel", nullable = false)
     private int userLevel;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "registerDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date registerDate;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "displayName", nullable = false, length = 45)
     private String displayName;
     // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
-    @Column(nullable = false, length = 100)
+    @Column(name = "email", nullable = false, length = 100)
     private String email;
     @Size(max = 100)
-    @Column(length = 100)
+    @Column(name = "url", length = 100)
     private String url;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Post> postList;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Usermeta> usermetaList;
 
     public User() {
@@ -190,18 +190,18 @@ public class User implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof User)) {
+        if (!( object instanceof User )) {
             return false;
         }
         User other = (User) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

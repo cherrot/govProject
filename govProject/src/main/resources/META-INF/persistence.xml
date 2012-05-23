@@ -14,6 +14,10 @@ PersistenceUnitInfo instance based on the persistence.xml file-->
     <class>com.cherrot.govproject.model.Post</class>
     <class>com.cherrot.govproject.model.Term</class>
     <class>com.cherrot.govproject.model.User</class>
+    <class>com.cherrot.govproject.model.Comment</class>
+    <class>com.cherrot.govproject.model.Usermeta_1</class>
+    <class>com.cherrot.govproject.model.Commentmeta_1</class>
+    <class>com.cherrot.govproject.model.Postmeta_1</class>
     <properties>
       <!--FIXME: Release前将 create-drop改为update-->
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

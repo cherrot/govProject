@@ -60,7 +60,7 @@ public class OptionJpaDao implements Serializable, OptionDao {
 
     @Override
     @Transactional
-    public void edit(Option option) throws NonexistentEntityException {
+    public void edit(Option option) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();

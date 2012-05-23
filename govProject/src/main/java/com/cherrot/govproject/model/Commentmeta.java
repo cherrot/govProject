@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cherrot
  */
 @Entity
+@Table(name = "commentmeta")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Commentmeta.findAll", query = "SELECT c FROM Commentmeta c"),
@@ -34,21 +36,21 @@ public class Commentmeta implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Basic(optional = false)//Basic反映映射， Column反映数据库定义（用于重新生成表）
-    @NotNull //Notnull 用于数据验证
-    @Column(nullable = false)
+    @Basic(optional = false)
+    @NotNull
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "metaKey", nullable = false, length = 45)
     private String metaKey;
     @Size(max = 255)
-    @Column(length = 255)
+    @Column(name = "metaValue", length = 255)
     private String metaValue;
     @JoinColumn(name = "comment_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Comment commentId;
+    private Comment comment;
 
     public Commentmeta() {
     }
@@ -86,29 +88,29 @@ public class Commentmeta implements Serializable {
         this.metaValue = metaValue;
     }
 
-    public Comment getCommentId() {
-        return commentId;
+    public Comment getComment() {
+        return comment;
     }
 
-    public void setCommentId(Comment commentId) {
-        this.commentId = commentId;
+    public void setComment(Comment comment) {
+        this.comment = comment;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Commentmeta)) {
+        if (!( object instanceof Commentmeta )) {
             return false;
         }
         Commentmeta other = (Commentmeta) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

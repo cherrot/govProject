@@ -1,7 +1,6 @@
 package com.cherrot.util.pagination;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;

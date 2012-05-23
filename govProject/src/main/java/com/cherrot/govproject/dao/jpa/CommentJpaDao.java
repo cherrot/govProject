@@ -55,10 +55,10 @@ public class CommentJpaDao implements Serializable, CommentDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post postId = comment.getPostId();
+            Post postId = comment.getPost();
             if (postId != null) {
                 postId = em.getReference(postId.getClass(), postId.getId());
-                comment.setPostId(postId);
+                comment.setPost(postId);
             }
             List<Commentmeta> attachedCommentmetaList = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListCommentmetaToAttach : comment.getCommentmetaList()) {
@@ -72,8 +72,8 @@ public class CommentJpaDao implements Serializable, CommentDao {
                 postId = em.merge(postId);
             }
             for (Commentmeta commentmetaListCommentmeta : comment.getCommentmetaList()) {
-                Comment oldCommentIdOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getCommentId();
-                commentmetaListCommentmeta.setCommentId(comment);
+                Comment oldCommentIdOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getComment();
+                commentmetaListCommentmeta.setComment(comment);
                 commentmetaListCommentmeta = em.merge(commentmetaListCommentmeta);
                 if (oldCommentIdOfCommentmetaListCommentmeta != null) {
                     oldCommentIdOfCommentmetaListCommentmeta.getCommentmetaList().remove(commentmetaListCommentmeta);
@@ -91,14 +91,14 @@ public class CommentJpaDao implements Serializable, CommentDao {
 
     @Override
     @Transactional
-    public void edit(Comment comment) throws IllegalOrphanException, NonexistentEntityException {
+    public void edit(Comment comment) throws IllegalOrphanException, NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Comment persistentComment = em.find(Comment.class, comment.getId());
-            Post postIdOld = persistentComment.getPostId();
-            Post postIdNew = comment.getPostId();
+            Post postIdOld = persistentComment.getPost();
+            Post postIdNew = comment.getPost();
             List<Commentmeta> commentmetaListOld = persistentComment.getCommentmetaList();
             List<Commentmeta> commentmetaListNew = comment.getCommentmetaList();
             List<String> illegalOrphanMessages = null;
@@ -115,7 +115,7 @@ public class CommentJpaDao implements Serializable, CommentDao {
             }
             if (postIdNew != null) {
                 postIdNew = em.getReference(postIdNew.getClass(), postIdNew.getId());
-                comment.setPostId(postIdNew);
+                comment.setPost(postIdNew);
             }
             List<Commentmeta> attachedCommentmetaListNew = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListNewCommentmetaToAttach : commentmetaListNew) {
@@ -135,8 +135,8 @@ public class CommentJpaDao implements Serializable, CommentDao {
             }
             for (Commentmeta commentmetaListNewCommentmeta : commentmetaListNew) {
                 if (!commentmetaListOld.contains(commentmetaListNewCommentmeta)) {
-                    Comment oldCommentIdOfCommentmetaListNewCommentmeta = commentmetaListNewCommentmeta.getCommentId();
-                    commentmetaListNewCommentmeta.setCommentId(comment);
+                    Comment oldCommentIdOfCommentmetaListNewCommentmeta = commentmetaListNewCommentmeta.getComment();
+                    commentmetaListNewCommentmeta.setComment(comment);
                     commentmetaListNewCommentmeta = em.merge(commentmetaListNewCommentmeta);
                     if (oldCommentIdOfCommentmetaListNewCommentmeta != null && !oldCommentIdOfCommentmetaListNewCommentmeta.equals(comment)) {
                         oldCommentIdOfCommentmetaListNewCommentmeta.getCommentmetaList().remove(commentmetaListNewCommentmeta);
@@ -189,7 +189,7 @@ public class CommentJpaDao implements Serializable, CommentDao {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Post postId = comment.getPostId();
+            Post postId = comment.getPost();
             if (postId != null) {
                 postId.getCommentList().remove(comment);
                 postId = em.merge(postId);

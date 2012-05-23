@@ -7,29 +7,29 @@ package com.cherrot.govproject.dao.jpa;
 import com.cherrot.govproject.dao.TermRelationshipDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.dao.exceptions.PreexistingEntityException;
-import com.cherrot.govproject.model.Link;
+import java.io.Serializable;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.model.TermRelationshipPK;
-import com.cherrot.govproject.model.TermTaxonomy;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import javax.transaction.UserTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
-@Repository
 public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao {
 
     @PersistenceContext
@@ -41,25 +41,26 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
 //    private UserTransaction utx = null;
 //    private EntityManagerFactory emf = null;
 //
-//    @Override
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
 
     @Override
     @Transactional
-    public void create(TermRelationship termRelationship) throws PreexistingEntityException{
+    public void create(TermRelationship termRelationship) {
         if (termRelationship.getTermRelationshipPK() == null) {
             termRelationship.setTermRelationshipPK(new TermRelationshipPK());
         }
+        termRelationship.getTermRelationshipPK().setObjectId(termRelationship.getLink().getId());
+        termRelationship.getTermRelationshipPK().setTermId(termRelationship.getTerm().getId());
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            TermTaxonomy termTaxonomy = termRelationship.getTermTaxonomy();
-            if (termTaxonomy != null) {
-                termTaxonomy = em.getReference(termTaxonomy.getClass(), termTaxonomy.getId());
-                termRelationship.setTermTaxonomy(termTaxonomy);
+            Term term = termRelationship.getTerm();
+            if (term != null) {
+                term = em.getReference(term.getClass(), term.getId());
+                termRelationship.setTerm(term);
             }
             Post post = termRelationship.getPost();
             if (post != null) {
@@ -72,9 +73,9 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
                 termRelationship.setLink(link);
             }
             em.persist(termRelationship);
-            if (termTaxonomy != null) {
-                termTaxonomy.getTermRelationshipList().add(termRelationship);
-                termTaxonomy = em.merge(termTaxonomy);
+            if (term != null) {
+                term.getTermRelationshipList().add(termRelationship);
+                term = em.merge(term);
             }
             if (post != null) {
                 post.getTermRelationshipList().add(termRelationship);
@@ -90,7 +91,7 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
             if (find(termRelationship.getTermRelationshipPK()) != null) {
                 throw new PreexistingEntityException("TermRelationship " + termRelationship + " already exists.", ex);
             }
-            throw ex;
+            Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
         }
 //        finally {
 //            if (em != null) {
@@ -101,21 +102,23 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
 
     @Override
     @Transactional
-    public void edit(TermRelationship termRelationship) throws NonexistentEntityException {
+    public void edit(TermRelationship termRelationship) throws NonexistentEntityException, Exception {
+        termRelationship.getTermRelationshipPK().setObjectId(termRelationship.getLink().getId());
+        termRelationship.getTermRelationshipPK().setTermId(termRelationship.getTerm().getId());
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             TermRelationship persistentTermRelationship = em.find(TermRelationship.class, termRelationship.getTermRelationshipPK());
-            TermTaxonomy termTaxonomyOld = persistentTermRelationship.getTermTaxonomy();
-            TermTaxonomy termTaxonomyNew = termRelationship.getTermTaxonomy();
+            Term termOld = persistentTermRelationship.getTerm();
+            Term termNew = termRelationship.getTerm();
             Post postOld = persistentTermRelationship.getPost();
             Post postNew = termRelationship.getPost();
             Link linkOld = persistentTermRelationship.getLink();
             Link linkNew = termRelationship.getLink();
-            if (termTaxonomyNew != null) {
-                termTaxonomyNew = em.getReference(termTaxonomyNew.getClass(), termTaxonomyNew.getId());
-                termRelationship.setTermTaxonomy(termTaxonomyNew);
+            if (termNew != null) {
+                termNew = em.getReference(termNew.getClass(), termNew.getId());
+                termRelationship.setTerm(termNew);
             }
             if (postNew != null) {
                 postNew = em.getReference(postNew.getClass(), postNew.getId());
@@ -126,13 +129,13 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
                 termRelationship.setLink(linkNew);
             }
             termRelationship = em.merge(termRelationship);
-            if (termTaxonomyOld != null && !termTaxonomyOld.equals(termTaxonomyNew)) {
-                termTaxonomyOld.getTermRelationshipList().remove(termRelationship);
-                termTaxonomyOld = em.merge(termTaxonomyOld);
+            if (termOld != null && !termOld.equals(termNew)) {
+                termOld.getTermRelationshipList().remove(termRelationship);
+                termOld = em.merge(termOld);
             }
-            if (termTaxonomyNew != null && !termTaxonomyNew.equals(termTaxonomyOld)) {
-                termTaxonomyNew.getTermRelationshipList().add(termRelationship);
-                termTaxonomyNew = em.merge(termTaxonomyNew);
+            if (termNew != null && !termNew.equals(termOld)) {
+                termNew.getTermRelationshipList().add(termRelationship);
+                termNew = em.merge(termNew);
             }
             if (postOld != null && !postOld.equals(postNew)) {
                 postOld.getTermRelationshipList().remove(termRelationship);
@@ -184,10 +187,10 @@ public class TermRelationshipJpaDao implements Serializable, TermRelationshipDao
             catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The termRelationship with id " + id + " no longer exists.", enfe);
             }
-            TermTaxonomy termTaxonomy = termRelationship.getTermTaxonomy();
-            if (termTaxonomy != null) {
-                termTaxonomy.getTermRelationshipList().remove(termRelationship);
-                termTaxonomy = em.merge(termTaxonomy);
+            Term term = termRelationship.getTerm();
+            if (term != null) {
+                term.getTermRelationshipList().remove(termRelationship);
+                term = em.merge(term);
             }
             Post post = termRelationship.getPost();
             if (post != null) {

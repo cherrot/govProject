@@ -59,10 +59,10 @@ public class PostJpaDao implements Serializable, PostDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            User userId = post.getUserId();
-            if (userId != null) {
-                userId = em.getReference(userId.getClass(), userId.getId());
-                post.setUserId(userId);
+            User user = post.getUser();
+            if (user != null) {
+                user = em.getReference(user.getClass(), user.getId());
+                post.setUser(user);
             }
             List<Postmeta> attachedPostmetaList = new ArrayList<Postmeta>();
             for (Postmeta postmetaListPostmetaToAttach : post.getPostmetaList()) {
@@ -77,13 +77,13 @@ public class PostJpaDao implements Serializable, PostDao {
             }
             post.setCommentList(attachedCommentList);
             em.persist(post);
-            if (userId != null) {
-                userId.getPostList().add(post);
-                userId = em.merge(userId);
+            if (user != null) {
+                user.getPostList().add(post);
+                user = em.merge(user);
             }
             for (Postmeta postmetaListPostmeta : post.getPostmetaList()) {
-                Post oldPostIdOfPostmetaListPostmeta = postmetaListPostmeta.getPostId();
-                postmetaListPostmeta.setPostId(post);
+                Post oldPostIdOfPostmetaListPostmeta = postmetaListPostmeta.getPost();
+                postmetaListPostmeta.setPost(post);
                 postmetaListPostmeta = em.merge(postmetaListPostmeta);
                 if (oldPostIdOfPostmetaListPostmeta != null) {
                     oldPostIdOfPostmetaListPostmeta.getPostmetaList().remove(postmetaListPostmeta);
@@ -91,8 +91,8 @@ public class PostJpaDao implements Serializable, PostDao {
                 }
             }
             for (Comment commentListComment : post.getCommentList()) {
-                Post oldPostIdOfCommentListComment = commentListComment.getPostId();
-                commentListComment.setPostId(post);
+                Post oldPostIdOfCommentListComment = commentListComment.getPost();
+                commentListComment.setPost(post);
                 commentListComment = em.merge(commentListComment);
                 if (oldPostIdOfCommentListComment != null) {
                     oldPostIdOfCommentListComment.getCommentList().remove(commentListComment);
@@ -110,14 +110,14 @@ public class PostJpaDao implements Serializable, PostDao {
 
     @Override
     @Transactional
-    public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException {
+    public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Post persistentPost = em.find(Post.class, post.getId());
-            User userIdOld = persistentPost.getUserId();
-            User userIdNew = post.getUserId();
+            User userIdOld = persistentPost.getUser();
+            User userIdNew = post.getUser();
             List<Postmeta> postmetaListOld = persistentPost.getPostmetaList();
             List<Postmeta> postmetaListNew = post.getPostmetaList();
             List<Comment> commentListOld = persistentPost.getCommentList();
@@ -144,7 +144,7 @@ public class PostJpaDao implements Serializable, PostDao {
             }
             if (userIdNew != null) {
                 userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getId());
-                post.setUserId(userIdNew);
+                post.setUser(userIdNew);
             }
             List<Postmeta> attachedPostmetaListNew = new ArrayList<Postmeta>();
             for (Postmeta postmetaListNewPostmetaToAttach : postmetaListNew) {
@@ -171,8 +171,8 @@ public class PostJpaDao implements Serializable, PostDao {
             }
             for (Postmeta postmetaListNewPostmeta : postmetaListNew) {
                 if (!postmetaListOld.contains(postmetaListNewPostmeta)) {
-                    Post oldPostIdOfPostmetaListNewPostmeta = postmetaListNewPostmeta.getPostId();
-                    postmetaListNewPostmeta.setPostId(post);
+                    Post oldPostIdOfPostmetaListNewPostmeta = postmetaListNewPostmeta.getPost();
+                    postmetaListNewPostmeta.setPost(post);
                     postmetaListNewPostmeta = em.merge(postmetaListNewPostmeta);
                     if (oldPostIdOfPostmetaListNewPostmeta != null && !oldPostIdOfPostmetaListNewPostmeta.equals(post)) {
                         oldPostIdOfPostmetaListNewPostmeta.getPostmetaList().remove(postmetaListNewPostmeta);
@@ -182,8 +182,8 @@ public class PostJpaDao implements Serializable, PostDao {
             }
             for (Comment commentListNewComment : commentListNew) {
                 if (!commentListOld.contains(commentListNewComment)) {
-                    Post oldPostIdOfCommentListNewComment = commentListNewComment.getPostId();
-                    commentListNewComment.setPostId(post);
+                    Post oldPostIdOfCommentListNewComment = commentListNewComment.getPost();
+                    commentListNewComment.setPost(post);
                     commentListNewComment = em.merge(commentListNewComment);
                     if (oldPostIdOfCommentListNewComment != null && !oldPostIdOfCommentListNewComment.equals(post)) {
                         oldPostIdOfCommentListNewComment.getCommentList().remove(commentListNewComment);
@@ -243,10 +243,10 @@ public class PostJpaDao implements Serializable, PostDao {
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            User userId = post.getUserId();
-            if (userId != null) {
-                userId.getPostList().remove(post);
-                userId = em.merge(userId);
+            User user = post.getUser();
+            if (user != null) {
+                user.getPostList().remove(post);
+                user = em.merge(user);
             }
             em.remove(post);
 //            em.getTransaction().commit();

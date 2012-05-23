@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,6 +25,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author cherrot
  */
 @Entity
+@Table(name = "postmeta")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Postmeta.findAll", query = "SELECT p FROM Postmeta p"),
@@ -36,19 +38,19 @@ public class Postmeta implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "metaKey", nullable = false, length = 45)
     private String metaKey;
     @Size(max = 255)
-    @Column(length = 255)
+    @Column(name = "metaValue", length = 255)
     private String metaValue;
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Post postId;
+    private Post post;
 
     public Postmeta() {
     }
@@ -86,29 +88,29 @@ public class Postmeta implements Serializable {
         this.metaValue = metaValue;
     }
 
-    public Post getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(Post postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Postmeta)) {
+        if (!( object instanceof Postmeta )) {
             return false;
         }
         Postmeta other = (Postmeta) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

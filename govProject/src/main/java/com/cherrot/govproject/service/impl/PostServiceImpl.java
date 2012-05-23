@@ -4,26 +4,44 @@
  */
 package com.cherrot.govproject.service.impl;
 
+import com.cherrot.govproject.dao.PostDao;
+import com.cherrot.govproject.dao.PostmetaDao;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.model.TermTaxonomy;
+import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.TermRelationshipService;
+import com.cherrot.govproject.service.TermService;
 import com.cherrot.util.pagination.Page;
 import java.util.List;
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
+@Service
 public class PostServiceImpl implements PostService{
 
+    @Inject
+    private PostDao postDao;
+    @Inject
+    private PostmetaDao postmetaDao;
+    @Inject
+    private TermService termService;
+    @Inject
+    private TermRelationshipService termRelationshipService;
+
     @Override
-    public void create(Post post, List<TermTaxonomy> categories, List<String> tags) {
+    @Transactional
+    public void create(Post post, List<Term> categories, List<String> tags) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public void create(Post post, List<TermTaxonomy> categories, List<String> tags, List<Postmeta> postmetas) {
+    public void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

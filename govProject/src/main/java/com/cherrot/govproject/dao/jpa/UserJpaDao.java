@@ -72,8 +72,8 @@ public class UserJpaDao implements Serializable, UserDao {
             user.setUsermetaList(attachedUsermetaList);
             em.persist(user);
             for (Post postListPost : user.getPostList()) {
-                User oldUserIdOfPostListPost = postListPost.getUserId();
-                postListPost.setUserId(user);
+                User oldUserIdOfPostListPost = postListPost.getUser();
+                postListPost.setUser(user);
                 postListPost = em.merge(postListPost);
                 if (oldUserIdOfPostListPost != null) {
                     oldUserIdOfPostListPost.getPostList().remove(postListPost);
@@ -81,8 +81,8 @@ public class UserJpaDao implements Serializable, UserDao {
                 }
             }
             for (Usermeta usermetaListUsermeta : user.getUsermetaList()) {
-                User oldUserIdOfUsermetaListUsermeta = usermetaListUsermeta.getUserId();
-                usermetaListUsermeta.setUserId(user);
+                User oldUserIdOfUsermetaListUsermeta = usermetaListUsermeta.getUser();
+                usermetaListUsermeta.setUser(user);
                 usermetaListUsermeta = em.merge(usermetaListUsermeta);
                 if (oldUserIdOfUsermetaListUsermeta != null) {
                     oldUserIdOfUsermetaListUsermeta.getUsermetaList().remove(usermetaListUsermeta);
@@ -100,7 +100,7 @@ public class UserJpaDao implements Serializable, UserDao {
 
     @Override
     @Transactional
-    public void edit(User user) throws IllegalOrphanException, NonexistentEntityException {
+    public void edit(User user) throws IllegalOrphanException, NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -147,8 +147,8 @@ public class UserJpaDao implements Serializable, UserDao {
             user = em.merge(user);
             for (Post postListNewPost : postListNew) {
                 if (!postListOld.contains(postListNewPost)) {
-                    User oldUserIdOfPostListNewPost = postListNewPost.getUserId();
-                    postListNewPost.setUserId(user);
+                    User oldUserIdOfPostListNewPost = postListNewPost.getUser();
+                    postListNewPost.setUser(user);
                     postListNewPost = em.merge(postListNewPost);
                     if (oldUserIdOfPostListNewPost != null && !oldUserIdOfPostListNewPost.equals(user)) {
                         oldUserIdOfPostListNewPost.getPostList().remove(postListNewPost);
@@ -158,8 +158,8 @@ public class UserJpaDao implements Serializable, UserDao {
             }
             for (Usermeta usermetaListNewUsermeta : usermetaListNew) {
                 if (!usermetaListOld.contains(usermetaListNewUsermeta)) {
-                    User oldUserIdOfUsermetaListNewUsermeta = usermetaListNewUsermeta.getUserId();
-                    usermetaListNewUsermeta.setUserId(user);
+                    User oldUserIdOfUsermetaListNewUsermeta = usermetaListNewUsermeta.getUser();
+                    usermetaListNewUsermeta.setUser(user);
                     usermetaListNewUsermeta = em.merge(usermetaListNewUsermeta);
                     if (oldUserIdOfUsermetaListNewUsermeta != null && !oldUserIdOfUsermetaListNewUsermeta.equals(user)) {
                         oldUserIdOfUsermetaListNewUsermeta.getUsermetaList().remove(usermetaListNewUsermeta);

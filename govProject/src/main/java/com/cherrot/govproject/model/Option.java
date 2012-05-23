@@ -38,15 +38,15 @@ public class Option implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 64)
-    @Column(nullable = false, length = 64)
+    @Column(name = "optionKey", nullable = false, length = 64)
     private String optionKey;
     @Size(max = 255)
-    @Column(length = 255)
+    @Column(name = "optionValue", length = 255)
     private String optionValue;
 
     public Option() {
@@ -88,18 +88,18 @@ public class Option implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Option)) {
+        if (!( object instanceof Option )) {
             return false;
         }
         Option other = (Option) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;

@@ -45,7 +45,6 @@ public class PageUtil {
         if (start >= totalCount) {
             start = 0;
         }
-
         return start;
     }
 

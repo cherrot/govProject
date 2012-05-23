@@ -6,7 +6,7 @@ package com.cherrot.govproject.service;
 
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.model.TermTaxonomy;
+import com.cherrot.govproject.model.Term;
 import java.util.List;
 
 /**
@@ -15,6 +15,6 @@ import java.util.List;
  */
 public interface PostService extends BaseService<Post, Integer> {
 
-    void create(Post post, List<TermTaxonomy> categories, List<String> tags);
-    void create(Post post, List<TermTaxonomy> categories, List<String> tags, List<Postmeta> postmetas);
+    void create(Post post, List<Term> categories, List<String> tags);
+    void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas);
 }

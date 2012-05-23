@@ -7,28 +7,27 @@ package com.cherrot.govproject.dao.jpa;
 import com.cherrot.govproject.dao.TermDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
-import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.TermTaxonomy;
 import java.io.Serializable;
+import javax.persistence.Query;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
+import com.cherrot.govproject.model.Term;
 import java.util.ArrayList;
 import java.util.List;
+import com.cherrot.govproject.model.TermRelationship;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.Parameter;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
+import javax.transaction.UserTransaction;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
-@Repository
 public class TermJpaDao implements Serializable, TermDao {
 
     @PersistenceContext
@@ -40,7 +39,6 @@ public class TermJpaDao implements Serializable, TermDao {
 //    private UserTransaction utx = null;
 //    private EntityManagerFactory emf = null;
 //
-//    @Override
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
@@ -48,27 +46,54 @@ public class TermJpaDao implements Serializable, TermDao {
     @Override
     @Transactional
     public void create(Term term) {
-        if (term.getTermTaxonomyList() == null) {
-            term.setTermTaxonomyList(new ArrayList<TermTaxonomy>());
+        if (term.getTermList() == null) {
+            term.setTermList(new ArrayList<Term>());
+        }
+        if (term.getTermRelationshipList() == null) {
+            term.setTermRelationshipList(new ArrayList<TermRelationship>());
         }
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            List<TermTaxonomy> attachedTermTaxonomyList = new ArrayList<TermTaxonomy>();
-            for (TermTaxonomy termTaxonomyListTermTaxonomyToAttach : term.getTermTaxonomyList()) {
-                termTaxonomyListTermTaxonomyToAttach = em.getReference(termTaxonomyListTermTaxonomyToAttach.getClass(), termTaxonomyListTermTaxonomyToAttach.getId());
-                attachedTermTaxonomyList.add(termTaxonomyListTermTaxonomyToAttach);
+            Term termParent = term.getTermParent();
+            if (termParent != null) {
+                termParent = em.getReference(termParent.getClass(), termParent.getId());
+                term.setTermParent(termParent);
             }
-            term.setTermTaxonomyList(attachedTermTaxonomyList);
+            List<Term> attachedTermList = new ArrayList<Term>();
+            for (Term termListTermToAttach : term.getTermList()) {
+                termListTermToAttach = em.getReference(termListTermToAttach.getClass(), termListTermToAttach.getId());
+                attachedTermList.add(termListTermToAttach);
+            }
+            term.setTermList(attachedTermList);
+            List<TermRelationship> attachedTermRelationshipList = new ArrayList<TermRelationship>();
+            for (TermRelationship termRelationshipListTermRelationshipToAttach : term.getTermRelationshipList()) {
+                termRelationshipListTermRelationshipToAttach = em.getReference(termRelationshipListTermRelationshipToAttach.getClass(), termRelationshipListTermRelationshipToAttach.getTermRelationshipPK());
+                attachedTermRelationshipList.add(termRelationshipListTermRelationshipToAttach);
+            }
+            term.setTermRelationshipList(attachedTermRelationshipList);
             em.persist(term);
-            for (TermTaxonomy termTaxonomyListTermTaxonomy : term.getTermTaxonomyList()) {
-                Term oldTermIdOfTermTaxonomyListTermTaxonomy = termTaxonomyListTermTaxonomy.getTermId();
-                termTaxonomyListTermTaxonomy.setTermId(term);
-                termTaxonomyListTermTaxonomy = em.merge(termTaxonomyListTermTaxonomy);
-                if (oldTermIdOfTermTaxonomyListTermTaxonomy != null) {
-                    oldTermIdOfTermTaxonomyListTermTaxonomy.getTermTaxonomyList().remove(termTaxonomyListTermTaxonomy);
-                    oldTermIdOfTermTaxonomyListTermTaxonomy = em.merge(oldTermIdOfTermTaxonomyListTermTaxonomy);
+            if (termParent != null) {
+                termParent.getTermList().add(term);
+                termParent = em.merge(termParent);
+            }
+            for (Term termListTerm : term.getTermList()) {
+                Term oldTermParentOfTermListTerm = termListTerm.getTermParent();
+                termListTerm.setTermParent(term);
+                termListTerm = em.merge(termListTerm);
+                if (oldTermParentOfTermListTerm != null) {
+                    oldTermParentOfTermListTerm.getTermList().remove(termListTerm);
+                    oldTermParentOfTermListTerm = em.merge(oldTermParentOfTermListTerm);
+                }
+            }
+            for (TermRelationship termRelationshipListTermRelationship : term.getTermRelationshipList()) {
+                Term oldTermOfTermRelationshipListTermRelationship = termRelationshipListTermRelationship.getTerm();
+                termRelationshipListTermRelationship.setTerm(term);
+                termRelationshipListTermRelationship = em.merge(termRelationshipListTermRelationship);
+                if (oldTermOfTermRelationshipListTermRelationship != null) {
+                    oldTermOfTermRelationshipListTermRelationship.getTermRelationshipList().remove(termRelationshipListTermRelationship);
+                    oldTermOfTermRelationshipListTermRelationship = em.merge(oldTermOfTermRelationshipListTermRelationship);
                 }
             }
 //            em.getTransaction().commit();
@@ -82,42 +107,82 @@ public class TermJpaDao implements Serializable, TermDao {
 
     @Override
     @Transactional
-    public void edit(Term term) throws IllegalOrphanException, NonexistentEntityException {
+    public void edit(Term term) throws IllegalOrphanException, NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Term persistentTerm = em.find(Term.class, term.getId());
-            List<TermTaxonomy> termTaxonomyListOld = persistentTerm.getTermTaxonomyList();
-            List<TermTaxonomy> termTaxonomyListNew = term.getTermTaxonomyList();
+            Term termParentOld = persistentTerm.getTermParent();
+            Term termParentNew = term.getTermParent();
+            List<Term> termListOld = persistentTerm.getTermList();
+            List<Term> termListNew = term.getTermList();
+            List<TermRelationship> termRelationshipListOld = persistentTerm.getTermRelationshipList();
+            List<TermRelationship> termRelationshipListNew = term.getTermRelationshipList();
             List<String> illegalOrphanMessages = null;
-            for (TermTaxonomy termTaxonomyListOldTermTaxonomy : termTaxonomyListOld) {
-                if (!termTaxonomyListNew.contains(termTaxonomyListOldTermTaxonomy)) {
+            for (TermRelationship termRelationshipListOldTermRelationship : termRelationshipListOld) {
+                if (!termRelationshipListNew.contains(termRelationshipListOldTermRelationship)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain TermTaxonomy " + termTaxonomyListOldTermTaxonomy + " since its termId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain TermRelationship " + termRelationshipListOldTermRelationship + " since its term field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            List<TermTaxonomy> attachedTermTaxonomyListNew = new ArrayList<TermTaxonomy>();
-            for (TermTaxonomy termTaxonomyListNewTermTaxonomyToAttach : termTaxonomyListNew) {
-                termTaxonomyListNewTermTaxonomyToAttach = em.getReference(termTaxonomyListNewTermTaxonomyToAttach.getClass(), termTaxonomyListNewTermTaxonomyToAttach.getId());
-                attachedTermTaxonomyListNew.add(termTaxonomyListNewTermTaxonomyToAttach);
+            if (termParentNew != null) {
+                termParentNew = em.getReference(termParentNew.getClass(), termParentNew.getId());
+                term.setTermParent(termParentNew);
             }
-            termTaxonomyListNew = attachedTermTaxonomyListNew;
-            term.setTermTaxonomyList(termTaxonomyListNew);
+            List<Term> attachedTermListNew = new ArrayList<Term>();
+            for (Term termListNewTermToAttach : termListNew) {
+                termListNewTermToAttach = em.getReference(termListNewTermToAttach.getClass(), termListNewTermToAttach.getId());
+                attachedTermListNew.add(termListNewTermToAttach);
+            }
+            termListNew = attachedTermListNew;
+            term.setTermList(termListNew);
+            List<TermRelationship> attachedTermRelationshipListNew = new ArrayList<TermRelationship>();
+            for (TermRelationship termRelationshipListNewTermRelationshipToAttach : termRelationshipListNew) {
+                termRelationshipListNewTermRelationshipToAttach = em.getReference(termRelationshipListNewTermRelationshipToAttach.getClass(), termRelationshipListNewTermRelationshipToAttach.getTermRelationshipPK());
+                attachedTermRelationshipListNew.add(termRelationshipListNewTermRelationshipToAttach);
+            }
+            termRelationshipListNew = attachedTermRelationshipListNew;
+            term.setTermRelationshipList(termRelationshipListNew);
             term = em.merge(term);
-            for (TermTaxonomy termTaxonomyListNewTermTaxonomy : termTaxonomyListNew) {
-                if (!termTaxonomyListOld.contains(termTaxonomyListNewTermTaxonomy)) {
-                    Term oldTermIdOfTermTaxonomyListNewTermTaxonomy = termTaxonomyListNewTermTaxonomy.getTermId();
-                    termTaxonomyListNewTermTaxonomy.setTermId(term);
-                    termTaxonomyListNewTermTaxonomy = em.merge(termTaxonomyListNewTermTaxonomy);
-                    if (oldTermIdOfTermTaxonomyListNewTermTaxonomy != null && !oldTermIdOfTermTaxonomyListNewTermTaxonomy.equals(term)) {
-                        oldTermIdOfTermTaxonomyListNewTermTaxonomy.getTermTaxonomyList().remove(termTaxonomyListNewTermTaxonomy);
-                        oldTermIdOfTermTaxonomyListNewTermTaxonomy = em.merge(oldTermIdOfTermTaxonomyListNewTermTaxonomy);
+            if (termParentOld != null && !termParentOld.equals(termParentNew)) {
+                termParentOld.getTermList().remove(term);
+                termParentOld = em.merge(termParentOld);
+            }
+            if (termParentNew != null && !termParentNew.equals(termParentOld)) {
+                termParentNew.getTermList().add(term);
+                termParentNew = em.merge(termParentNew);
+            }
+            for (Term termListOldTerm : termListOld) {
+                if (!termListNew.contains(termListOldTerm)) {
+                    termListOldTerm.setTermParent(null);
+                    termListOldTerm = em.merge(termListOldTerm);
+                }
+            }
+            for (Term termListNewTerm : termListNew) {
+                if (!termListOld.contains(termListNewTerm)) {
+                    Term oldTermParentOfTermListNewTerm = termListNewTerm.getTermParent();
+                    termListNewTerm.setTermParent(term);
+                    termListNewTerm = em.merge(termListNewTerm);
+                    if (oldTermParentOfTermListNewTerm != null && !oldTermParentOfTermListNewTerm.equals(term)) {
+                        oldTermParentOfTermListNewTerm.getTermList().remove(termListNewTerm);
+                        oldTermParentOfTermListNewTerm = em.merge(oldTermParentOfTermListNewTerm);
+                    }
+                }
+            }
+            for (TermRelationship termRelationshipListNewTermRelationship : termRelationshipListNew) {
+                if (!termRelationshipListOld.contains(termRelationshipListNewTermRelationship)) {
+                    Term oldTermOfTermRelationshipListNewTermRelationship = termRelationshipListNewTermRelationship.getTerm();
+                    termRelationshipListNewTermRelationship.setTerm(term);
+                    termRelationshipListNewTermRelationship = em.merge(termRelationshipListNewTermRelationship);
+                    if (oldTermOfTermRelationshipListNewTermRelationship != null && !oldTermOfTermRelationshipListNewTermRelationship.equals(term)) {
+                        oldTermOfTermRelationshipListNewTermRelationship.getTermRelationshipList().remove(termRelationshipListNewTermRelationship);
+                        oldTermOfTermRelationshipListNewTermRelationship = em.merge(oldTermOfTermRelationshipListNewTermRelationship);
                     }
                 }
             }
@@ -156,15 +221,25 @@ public class TermJpaDao implements Serializable, TermDao {
                 throw new NonexistentEntityException("The term with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
-            List<TermTaxonomy> termTaxonomyListOrphanCheck = term.getTermTaxonomyList();
-            for (TermTaxonomy termTaxonomyListOrphanCheckTermTaxonomy : termTaxonomyListOrphanCheck) {
+            List<TermRelationship> termRelationshipListOrphanCheck = term.getTermRelationshipList();
+            for (TermRelationship termRelationshipListOrphanCheckTermRelationship : termRelationshipListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Term (" + term + ") cannot be destroyed since the TermTaxonomy " + termTaxonomyListOrphanCheckTermTaxonomy + " in its termTaxonomyList field has a non-nullable termId field.");
+                illegalOrphanMessages.add("This Term (" + term + ") cannot be destroyed since the TermRelationship " + termRelationshipListOrphanCheckTermRelationship + " in its termRelationshipList field has a non-nullable term field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            Term termParent = term.getTermParent();
+            if (termParent != null) {
+                termParent.getTermList().remove(term);
+                termParent = em.merge(termParent);
+            }
+            List<Term> termList = term.getTermList();
+            for (Term termListTerm : termList) {
+                termListTerm.setTermParent(null);
+                termListTerm = em.merge(termListTerm);
             }
             em.remove(term);
 //            em.getTransaction().commit();
@@ -215,11 +290,6 @@ public class TermJpaDao implements Serializable, TermDao {
     }
 
     @Override
-    public Term findBySlug(String slug) {
-        return em.createNamedQuery("Term.findBySlug", Term.class).setParameter("slug", slug).getSingleResult();
-    }
-
-    @Override
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
@@ -236,7 +306,20 @@ public class TermJpaDao implements Serializable, TermDao {
 
     @Override
     public List<Term> findEntitiesByName(String name) {
-        return em.createNamedQuery("Term.findByName",Term.class).setParameter("name", name).getResultList();
+        return em.createNamedQuery("Term.findByName", Term.class)
+                .setParameter("name", name).getResultList();
+    }
+
+    @Override
+    public Term findByNameAndType(String name, Term.TermType type) {
+        return em.createNamedQuery("Term.findByNameAndType", Term.class)
+                .setParameter("name", name).setParameter("type", type).getSingleResult();
+    }
+
+    @Override
+    public Term findBySlug(String slug) {
+        return em.createNamedQuery("Term.findBySlug", Term.class)
+                .setParameter("slug", slug).getSingleResult();
     }
 
     @Override

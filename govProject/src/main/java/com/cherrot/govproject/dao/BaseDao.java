@@ -18,7 +18,7 @@ public interface BaseDao<Model extends Serializable, PrimaryKey extends Serializ
     void create(Model model);
     void save(Model model);
     void destroy(PrimaryKey id) throws IllegalOrphanException, NonexistentEntityException;
-    void edit(Model model) throws IllegalOrphanException, NonexistentEntityException;
+    void edit(Model model) throws IllegalOrphanException, NonexistentEntityException, Exception;
     Model find(PrimaryKey id);
     List<Model> findEntities();
     List<Model> findEntities(int maxResults, int firstResult);

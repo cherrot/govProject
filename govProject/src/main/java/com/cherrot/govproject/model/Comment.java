@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Comment.findByCommentDate", query = "SELECT c FROM Comment c WHERE c.commentDate = :commentDate"),
     @NamedQuery(name = "Comment.findByApproved", query = "SELECT c FROM Comment c WHERE c.approved = :approved"),
     @NamedQuery(name = "Comment.findByUserId", query = "SELECT c FROM Comment c WHERE c.userId = :userId"),
-    @NamedQuery(name = "Comment.findByCommentParent", query = "SELECT c FROM Comment c WHERE c.commentParent = :commentParent"),
     @NamedQuery(name = "Comment.findByAuthor", query = "SELECT c FROM Comment c WHERE c.author = :author"),
     @NamedQuery(name = "Comment.findByAuthorEmail", query = "SELECT c FROM Comment c WHERE c.authorEmail = :authorEmail"),
     @NamedQuery(name = "Comment.findByAuthorUrl", query = "SELECT c FROM Comment c WHERE c.authorUrl = :authorUrl"),
@@ -52,52 +51,55 @@ public class Comment implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "commentDate", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date commentDate;
     @Basic(optional = false)
     @NotNull
-    @Column(nullable = false)
+    @Column(name = "approved", nullable = false)
     private boolean approved;
     @Column(name = "user_id")
     private Integer userId;
-    @Column(name = "comment_parent")
-    private Integer commentParent;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "author", nullable = false, length = 45)
     private String author;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
-    @Column(nullable = false, length = 45)
+    @Column(name = "authorEmail", nullable = false, length = 45)
     private String authorEmail;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
-    @Column(nullable = false, length = 200)
+    @Column(name = "authorUrl", nullable = false, length = 200)
     private String authorUrl;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 39)
-    @Column(nullable = false, length = 39)
+    @Column(name = "authorIp", nullable = false, length = 39)
     private String authorIp;
     @Basic(optional = false)
     @NotNull
     @Lob
     @Size(min = 1, max = 65535)
-    @Column(nullable = false, length = 65535)
+    @Column(name = "content", nullable = false, length = 65535)
     private String content;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "commentId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "comment")
     private List<Commentmeta> commentmetaList;
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
-    private Post postId;
+    private Post post;
+    @OneToMany(mappedBy = "comment")
+    private List<Comment> commentList;
+    @JoinColumn(name = "comment_parent", referencedColumnName = "id")
+    @ManyToOne
+    private Comment commentParent;
 
     public Comment() {
     }
@@ -149,14 +151,6 @@ public class Comment implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getCommentParent() {
-        return commentParent;
-    }
-
-    public void setCommentParent(Integer commentParent) {
-        this.commentParent = commentParent;
-    }
-
     public String getAuthor() {
         return author;
     }
@@ -206,29 +200,46 @@ public class Comment implements Serializable {
         this.commentmetaList = commentmetaList;
     }
 
-    public Post getPostId() {
-        return postId;
+    public Post getPost() {
+        return post;
     }
 
-    public void setPostId(Post postId) {
-        this.postId = postId;
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+    @XmlTransient
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
+    }
+
+    public Comment getCommentParent() {
+        return commentParent;
+    }
+
+    public void setCommentParent(Comment commentParent) {
+        this.commentParent = commentParent;
     }
 
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (id != null ? id.hashCode() : 0);
+        hash += ( id != null ? id.hashCode() : 0 );
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Comment)) {
+        if (!( object instanceof Comment )) {
             return false;
         }
         Comment other = (Comment) object;
-        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
+        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
             return false;
         }
         return true;
