@@ -13,68 +13,187 @@ import java.util.List;
  * @author cherrot
  */
 public class Page<Model> {
+
+    private List<Model> models; //对象记录结果集
+    private int modelCount = 0; // 总记录数
+    private int pageSize = 20; // 每页显示记录数
+    private int pageCount = 1; // 总页数
+    private int pageNumber = 1; // 当前页
+
+    private boolean isFirstPage=false;        //是否为第一页
+    private boolean isLastPage=false;         //是否为最后一页
+    private boolean hasPreviousPage=false;   //是否有前一页
+    private boolean hasNextPage=false;       //是否有下一页
+
+    private int navigatePages=8; //导航页码数
+    private int[] navigatePageNumbers;  //所有导航页号
+
+    public Page(int total, int pageNumber) {
+        init(total, pageNumber, pageSize);
+    }
+
+    public Page(int total, int pageNumber, int limit) {
+        init(total, pageNumber, limit);
+    }
+
+    private void init(int total, int pageNumber, int limit) {
+        //设置基本参数
+        this.modelCount=total;
+        this.pageSize=limit;
+        this.pageCount=(this.modelCount-1)/this.pageSize+1;
+
+        //根据输入可能错误的当前号码进行自动纠正
+        if(pageNumber<1){
+            this.pageNumber=1;
+        }else if(pageNumber>this.pageCount){
+            this.pageNumber=this.pageCount;
+        }else{
+            this.pageNumber=pageNumber;
+        }
+
+        //基本参数设定之后进行导航页面的计算
+        calcNavigatePageNumbers();
+
+        //以及页面边界的判定
+        judgePageBoudary();
+    }
+
     /**
-     * Dose this page has pre page.
+     * 计算导航页
      */
-    private boolean hasPre;
+    private void calcNavigatePageNumbers(){
+        //当总页数小于或等于导航页码数时
+        if(pageCount<=navigatePages){
+            navigatePageNumbers=new int[pageCount];
+            for(int i=0;i<pageCount;i++){
+                navigatePageNumbers[i]=i+1;
+            }
+        }else{ //当总页数大于导航页码数时
+            navigatePageNumbers=new int[navigatePages];
+            int startNum=pageNumber-navigatePages/2;
+            int endNum=pageNumber+navigatePages/2;
+
+            if(startNum<1){
+                startNum=1;
+                //(最前navPageCount页
+                for(int i=0;i<navigatePages;i++){
+                    navigatePageNumbers[i]=startNum++;
+                }
+            }else if(endNum>pageCount){
+                endNum=pageCount;
+                //最后navPageCount页
+                for(int i=navigatePages-1;i>=0;i--){
+                    navigatePageNumbers[i]=endNum--;
+                }
+            }else{
+                //所有中间页
+                for(int i=0;i<navigatePages;i++){
+                    navigatePageNumbers[i]=startNum++;
+                }
+            }
+        }
+    }
+
     /**
-     * Dose this page ha next page
+     * 判定页面边界
      */
-    private boolean hasNext;
+    private void judgePageBoudary(){
+        isFirstPage = pageNumber == 1;
+        isLastPage = pageNumber == pageCount && pageNumber!=1;
+        hasPreviousPage = pageNumber!=1;
+        hasNextPage = pageNumber!=pageCount;
+    }
+
+
+    public void setList(List<Model> list) {
+        this.models = list;
+    }
+
     /**
-     * items list include in this page.
+     * 得到当前页的内容
+     * @return {List}
      */
-    private List<Model> items;
+    public List<Model> getList() {
+        return models;
+    }
+
     /**
-     * The page number of this page, start at 1.
-     * e.g. If a page is the 2nd page, the pageNumber is 2.
-     * By convension "number" is 1-indexed, and "index" is 0-indexed.
+     * 得到记录总数
+     * @return {int}
      */
-    private int pageNum;
+    public int getTotal() {
+        return modelCount;
+    }
+
     /**
-     * The PageContext object of this page.
-     * @see PageContext
+     * 得到每页显示多少条记录
+     * @return {int}
      */
-    private PageContext<Model> context;
-
-
-    public boolean isHasPre() {
-        return hasPre;
+    public int getLimit() {
+        return pageSize;
     }
 
-    public void setHasPre(boolean hasPre) {
-        this.hasPre = hasPre;
+    /**
+     * 得到页面总数
+     * @return {int}
+     */
+    public int getPages() {
+        return pageCount;
     }
 
-    public boolean isHasNext() {
-        return hasNext;
+    /**
+     * 得到当前页号
+     * @return {int}
+     */
+    public int getPageNumber() {
+        return pageNumber;
     }
 
-    public void setHasNext(boolean hasNext) {
-        this.hasNext = hasNext;
+
+    /**
+     * 得到所有导航页号
+     * @return {int[]}
+     */
+    public int[] getNavigatePageNumbers() {
+        return navigatePageNumbers;
     }
 
-    public List<Model> getItems() {
-        return items;
+    public boolean isFirstPage() {
+        return isFirstPage;
     }
 
-    public void setItems(List<Model> items) {
-        this.items = items;
+    public boolean isLastPage() {
+        return isLastPage;
     }
 
-    public int getPageNum() {
-        return pageNum;
+    public boolean hasPreviousPage() {
+        return hasPreviousPage;
     }
 
-    public void setPageNum(int pageNum) {
-        this.pageNum = pageNum;
+    public boolean hasNextPage() {
+        return hasNextPage;
     }
 
-    public PageContext<Model> getContext() {
-        return context;
-    }
-
-    public void setContext(PageContext<Model> context) {
-        this.context = context;
+    public String toString(){
+        String str=new String();
+        str= "[" +
+            "total="+modelCount+
+            ",pages="+pageCount+
+            ",pageNumber="+pageNumber+
+            ",limit="+pageSize+
+            //",navigatePages="+navigatePages+
+            ",isFirstPage="+isFirstPage+
+            ",isLastPage="+isLastPage+
+            ",hasPreviousPage="+hasPreviousPage+
+            ",hasNextPage="+hasNextPage+
+            ",navigatePageNumbers=";
+        int len=navigatePageNumbers.length;
+        if(len>0)str+=(navigatePageNumbers[0]);
+        for(int i=1;i<len;i++){
+            str+=(" "+navigatePageNumbers[i]);
+        }
+        //sb+=",list="+list;
+        str+="]";
+        return str;
     }
 }

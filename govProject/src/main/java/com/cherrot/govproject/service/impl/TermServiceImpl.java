@@ -11,7 +11,6 @@ import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.TermService;
 import com.cherrot.util.Constants;
 import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
