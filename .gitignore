@@ -10,6 +10,8 @@
 *.jar
 #忽略临时文件
 *~
+*.bak
+*.old
 #忽略prototype/html/目录
 #**/prototype/html/
 /govProject/target/
