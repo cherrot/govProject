@@ -93,6 +93,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional
     public void edit(User model) {
         try {
             userDao.edit(model);

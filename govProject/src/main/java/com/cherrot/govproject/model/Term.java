@@ -90,7 +90,7 @@ public class Term implements Serializable {
     @Size(max = 255)
     @Column(name = "description", length = 255)
     private String description;
-    @OneToMany(mappedBy = "term")
+    @OneToMany(mappedBy = "termParent")
     private List<Term> termList;
     @JoinColumn(name = "term_parent", referencedColumnName = "id")
     @ManyToOne

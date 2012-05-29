@@ -3,21 +3,16 @@
   <!--The LocalContainerEntityManagerFactoryBean creates a
 PersistenceUnitInfo instance based on the persistence.xml file-->
   <persistence-unit name="acme" transaction-type="RESOURCE_LOCAL">
-    <class>com.cherrot.govproject.model.Postmeta</class>
-    <class>com.cherrot.govproject.model.TermTaxonomy</class>
+    <class>com.cherrot.govproject.model.Comment</class>
     <class>com.cherrot.govproject.model.Commentmeta</class>
-    <class>com.cherrot.govproject.model.Usermeta</class>
-    <class>com.cherrot.govproject.model.Comments</class>
-    <class>com.cherrot.govproject.model.TermRelationship</class>
     <class>com.cherrot.govproject.model.Link</class>
     <class>com.cherrot.govproject.model.Option</class>
     <class>com.cherrot.govproject.model.Post</class>
+    <class>com.cherrot.govproject.model.Postmeta</class>
     <class>com.cherrot.govproject.model.Term</class>
+    <class>com.cherrot.govproject.model.TermRelationship</class>
     <class>com.cherrot.govproject.model.User</class>
-    <class>com.cherrot.govproject.model.Comment</class>
-    <class>com.cherrot.govproject.model.Usermeta_1</class>
-    <class>com.cherrot.govproject.model.Commentmeta_1</class>
-    <class>com.cherrot.govproject.model.Postmeta_1</class>
+    <class>com.cherrot.govproject.model.Usermeta</class>
     <properties>
       <!--FIXME: Release前将 create-drop改为update-->
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

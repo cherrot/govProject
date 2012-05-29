@@ -40,7 +40,7 @@ http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.
     </servlet-mapping>
 
     <welcome-file-list>
-        <welcome-file>home.jsp</welcome-file>
+        <welcome-file></welcome-file>
     </welcome-file-list>
 
 </web-app>

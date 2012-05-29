@@ -95,7 +95,7 @@ public class Comment implements Serializable {
     @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private Post post;
-    @OneToMany(mappedBy = "comment")
+    @OneToMany(mappedBy = "commentParent")
     private List<Comment> commentList;
     @JoinColumn(name = "comment_parent", referencedColumnName = "id")
     @ManyToOne

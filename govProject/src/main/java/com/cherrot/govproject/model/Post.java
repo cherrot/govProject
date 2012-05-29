@@ -115,7 +115,7 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private User user;
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "postParent")
     private List<Post> postList;
     @JoinColumn(name = "post_parent", referencedColumnName = "id")
     @ManyToOne

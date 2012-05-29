@@ -19,7 +19,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author cherrot
  */
 @Controller
-@RequestMapping("/user")
+@RequestMapping("/user/")
 public class LoginController extends BaseController {
 
     @Inject
@@ -31,7 +31,7 @@ public class LoginController extends BaseController {
      * @param user
      * @return
      */
-	@RequestMapping("/doLogin")
+	@RequestMapping("doLogin")
 	public ModelAndView login(HttpServletRequest request, User user) {
 		User dbUser = userService.findByLoginName(user.getLogin());
 		ModelAndView mav = new ModelAndView();
@@ -61,7 +61,7 @@ public class LoginController extends BaseController {
      * @param session
      * @return
      */
-    @RequestMapping("/doLogout")
+    @RequestMapping("doLogout")
     public String logout(HttpSession session) {
 		session.removeAttribute(Constants.USER_CONTEXT);
 		return "/home";
