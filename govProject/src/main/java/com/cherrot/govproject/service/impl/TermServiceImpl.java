@@ -9,8 +9,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -122,12 +121,12 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    public Page<Term> list(int pageNum) {
+    public List<Term> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<Term> list(int pageNum, int pageSize) {
+    public List<Term> list(int pageNum, int pageSize) {
         List<Term> terms = termDao.findEntities(pageSize, (pageNum-1)*pageSize);
         return PageUtil.getPage(getCount(), pageNum, terms, pageSize);
     }

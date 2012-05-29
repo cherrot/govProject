@@ -6,7 +6,6 @@ package com.cherrot.govproject.service.impl;
 
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.service.OptionService;
-import com.cherrot.util.pagination.Page;
 import java.util.List;
 
 
@@ -42,12 +41,12 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public Page<Option> list(int pageNum) {
+    public List<Option> list(int pageNum) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Page<Option> list(int pageNum, int pageSize) {
+    public List<Option> list(int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

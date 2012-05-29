@@ -12,7 +12,6 @@ import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.util.pagination.Page;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
@@ -71,12 +70,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> list(int pageNum) {
+    public List<Post> list(int pageNum) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Page<Post> list(int pageNum, int pageSize) {
+    public List<Post> list(int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
