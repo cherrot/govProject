@@ -84,8 +84,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> list(int pageNum, int pageSize) {
-        List<User> users = userDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, users, pageSize);
+        return userDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override

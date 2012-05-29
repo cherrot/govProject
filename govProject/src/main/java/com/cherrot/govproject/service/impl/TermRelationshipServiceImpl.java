@@ -70,9 +70,7 @@ public class TermRelationshipServiceImpl implements TermRelationshipService{
 
     @Override
     public List<TermRelationship> list(int pageNum, int pageSize) {
-        List<TermRelationship> termRelationships =
-                termRelationshipDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, termRelationships, pageSize);
+        return termRelationshipDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
