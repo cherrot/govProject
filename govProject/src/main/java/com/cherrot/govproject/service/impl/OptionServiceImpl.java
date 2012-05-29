@@ -4,10 +4,19 @@
  */
 package com.cherrot.govproject.service.impl;
 
+import com.cherrot.govproject.dao.OptionDao;
+import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
+import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.service.OptionService;
+import com.cherrot.util.Constants;
 import com.cherrot.util.pagination.Page;
+import com.cherrot.util.pagination.PageUtil;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.inject.Inject;
+import org.springframework.transaction.annotation.Transactional;
 
 
 /**
@@ -16,44 +25,73 @@ import java.util.List;
  */
 public class OptionServiceImpl implements OptionService{
 
+    
+    
+    @Inject
+    private OptionDao optionDao;
+    
+    
     @Override
-    public void create(Option model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Transactional
+    public void create(Option option) {
+        optionDao.create(option);
     }
 
     @Override
     public Option find(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return optionDao.find(id);
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            optionDao.destroy(id);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return optionDao.getCount();
     }
 
     @Override
     public List<Option> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return optionDao.findEntities();
     }
 
     @Override
     public Page<Option> list(int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
     public Page<Option> list(int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Option> options = optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return PageUtil.getPage(getCount(), pageNum, options, pageSize);
     }
 
     @Override
+    @Transactional
     public void edit(Option model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            optionDao.edit(model);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 }

@@ -5,15 +5,22 @@
 package com.cherrot.govproject.service.impl;
 
 import com.cherrot.govproject.dao.LinkDao;
+import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
+import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
+import com.cherrot.util.Constants;
 import com.cherrot.util.pagination.Page;
+import com.cherrot.util.pagination.PageUtil;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -30,47 +37,76 @@ public class LinkServiceImpl implements LinkService{
     private TermService termService;
 
     @Override
+    @Transactional
     public void create(Link link, List<Term> categories) {
-
+        linkDao.create(link);
+        for (Term term : categories) {
+            term.setTermList(categories);
+            termService.create(term);
+        }
+    
     }
 
     @Override
+    @Transactional
     public void create(Link model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        linkDao.create(model);
     }
 
     @Override
     public Link find(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return linkDao.find(id);
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            linkDao.destroy(id);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return linkDao.getCount();
     }
 
     @Override
     public List<Link> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return linkDao.findEntities();
     }
 
     @Override
     public Page<Link> list(int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
     public Page<Link> list(int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Link> links = linkDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return PageUtil.getPage(getCount(), pageNum, links, pageSize);
     }
 
     @Override
+    @Transactional
     public void edit(Link model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+                try {
+            linkDao.edit(model);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

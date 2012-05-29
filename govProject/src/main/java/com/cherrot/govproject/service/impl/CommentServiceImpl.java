@@ -4,62 +4,106 @@
  */
 package com.cherrot.govproject.service.impl;
 
+import com.cherrot.govproject.dao.CommentDao;
+import com.cherrot.govproject.dao.CommentmetaDao;
+import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
+import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
+import com.cherrot.util.Constants;
 import com.cherrot.util.pagination.Page;
+import com.cherrot.util.pagination.PageUtil;
 import java.util.List;
+import javax.inject.Inject;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author cherrot
  */
+@Service
 public class CommentServiceImpl implements CommentService{
+    @Inject
+    private CommentDao commentDao;
+
+    @Inject
+    private CommentmetaDao commentmetaDao;
 
     @Override
+    @Transactional
     public void create(Comment comment, List<Commentmeta> commentmetas) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        commentDao.create(comment);
+        for (Commentmeta commentmeta : commentmetas) {
+            commentmeta.setComment(comment);
+            commentmetaDao.create(commentmeta);
+        }
     }
 
     @Override
-    public void create(Comment model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    @Transactional
+    public void create(Comment comment) {
+        commentDao.create(comment);
     }
 
     @Override
     public Comment find(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return commentDao.find(id);
     }
 
     @Override
+    @Transactional
     public void destroy(Integer id) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            commentDao.destroy(id);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     public int getCount() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return commentDao.getCount();
     }
 
     @Override
     public List<Comment> list() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return commentDao.findEntities();
     }
 
     @Override
     public Page<Comment> list(int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
     public Page<Comment> list(int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return PageUtil.getPage(getCount(), pageNum, comments, pageSize);
     }
 
     @Override
+    @Transactional
     public void edit(Comment model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        try {
+            commentDao.edit(model);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-
 }
