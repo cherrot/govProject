@@ -14,9 +14,7 @@ import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -103,14 +101,13 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Page<Post> list(int pageNum) {
+    public List<Post> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<Post> list(int pageNum, int pageSize) {
-        List<Post> posts = postDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, posts, pageSize);
+    public List<Post> list(int pageNum, int pageSize) {
+        return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override

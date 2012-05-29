@@ -4,7 +4,6 @@
  */
 package com.cherrot.govproject.service;
 
-import com.cherrot.util.pagination.Page;
 import java.io.Serializable;
 import java.util.List;
 
@@ -20,6 +19,6 @@ public interface BaseService<Model extends Serializable, PrimaryKey extends Seri
     void destroy(PrimaryKey id);
     int getCount();
     List<Model> list();
-    Page<Model> list(int pageNum);
-    Page<Model> list(int pageNum, int pageSize);
+    List<Model> list(int pageNum);
+    List<Model> list(int pageNum, int pageSize);
 }

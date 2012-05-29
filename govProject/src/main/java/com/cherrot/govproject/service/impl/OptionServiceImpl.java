@@ -9,9 +9,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.service.OptionService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,14 +65,13 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    public Page<Option> list(int pageNum) {
+    public List<Option> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<Option> list(int pageNum, int pageSize) {
-        List<Option> options = optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, options, pageSize);
+    public List<Option> list(int pageNum, int pageSize) {
+        return optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override

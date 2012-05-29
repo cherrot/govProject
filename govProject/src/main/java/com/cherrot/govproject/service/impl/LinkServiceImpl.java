@@ -12,9 +12,7 @@ import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,14 +81,13 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    public Page<Link> list(int pageNum) {
+    public List<Link> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<Link> list(int pageNum, int pageSize) {
-        List<Link> links = linkDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, links, pageSize);
+    public List<Link> list(int pageNum, int pageSize) {
+        return linkDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override

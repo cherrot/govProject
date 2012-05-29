@@ -10,11 +10,8 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
-import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
@@ -80,14 +77,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Page<Comment> list(int pageNum) {
+    public List<Comment> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<Comment> list(int pageNum, int pageSize) {
-        List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        return PageUtil.getPage(getCount(), pageNum, comments, pageSize);
+    public List<Comment> list(int pageNum, int pageSize) {
+        return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override

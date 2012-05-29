@@ -11,9 +11,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.UserService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
-import com.cherrot.util.pagination.PageUtil;
+import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -80,12 +78,12 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public Page<User> list(int pageNum) {
+    public List<User> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<User> list(int pageNum, int pageSize) {
+    public List<User> list(int pageNum, int pageSize) {
         List<User> users = userDao.findEntities(pageSize, (pageNum-1)*pageSize);
         return PageUtil.getPage(getCount(), pageNum, users, pageSize);
     }
