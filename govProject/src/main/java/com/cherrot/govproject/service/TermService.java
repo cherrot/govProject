@@ -20,6 +20,6 @@ public interface TermService extends BaseService<Term, Integer> {
      * @param term Term(tag, category, etc) object which would be created ()
      * @param type "type" property of the TermTaxonomy object
      */
-    void createTagsByName(List<String> tags);
-    void createCategoriesByName(List<String> categories);
+    List<Term> createTagsByName(List<String> tags);
+    List<Term> createCategoriesByName(List<String> categories);
 }

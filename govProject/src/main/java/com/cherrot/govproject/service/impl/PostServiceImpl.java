@@ -11,6 +11,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
@@ -42,23 +43,31 @@ public class PostServiceImpl implements PostService{
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags) {
         postDao.create(post);
-        for (Term term : categories) {
-            term.setTermList(categories);
-            termService.create(term);
+        for (Term category : categories) {
+            termRelationshipService
+                    .create(new TermRelationship(post.getId(), category.getId()));
+            category.setCount(category.getCount()+1);
         }
-        termService.createTagsByName(tags);
+        List<Term> terms = termService.createTagsByName(tags);
+        for (Term tag : terms) {
+            termRelationshipService.create(new TermRelationship(post.getId(),tag.getId()));
+        }
     }
 
     @Override
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas) {
         postDao.create(post);
-        for (Term term : categories) {
-            term.setTermList(categories);
-            termService.create(term);
-            
+        for (Term category : categories) {
+            termRelationshipService
+                    .create(new TermRelationship(post.getId(), category.getId()));
+            category.setCount(category.getCount()+1);
         }
-        termService.createTagsByName(tags);
+        List<Term> terms = termService.createTagsByName(tags);
+        for (Term tag : terms) {
+            termRelationshipService.create(new TermRelationship(post.getId(),tag.getId()));
+            tag.setCount(tag.getCount()+1);
+        }
         for (Postmeta postmeta : postmetas) {
             postmeta.setPost(post);
             postmetaDao.create(postmeta);
