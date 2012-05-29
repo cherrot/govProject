@@ -127,6 +127,6 @@ public class TermServiceImpl implements TermService {
 
     @Override
     public List<Term> list(int pageNum, int pageSize) {
-        return  termDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return termDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 }

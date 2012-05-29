@@ -9,6 +9,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
@@ -38,9 +39,10 @@ public class LinkServiceImpl implements LinkService{
     @Transactional
     public void create(Link link, List<Term> categories) {
         linkDao.create(link);
-        for (Term term : categories) {
-            term.setTermList(categories);
-            termService.create(term);
+        for(Term category : categories) {
+            termRelationshipService
+                    .create(new TermRelationship(link.getId(), category.getId()));
+            category.setCount(category.getCount()+1);
         }
     
     }
