@@ -14,4 +14,11 @@ public class Constants {
      * Default number of items per page.
      */
     public static final int DEFAULT_PAGE_SIZE = 15;
+
+    /**
+     * Session Attributes
+     */
+    public static final String USER_CONTEXT = "USER_CONTEXT";
+    public static final String ERROR_MSG_KEY = "errorMsg";
+    public static final String LOGIN_TO_URL = "toUrl";
 }
