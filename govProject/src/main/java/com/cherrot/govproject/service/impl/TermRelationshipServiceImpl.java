@@ -10,8 +10,6 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.model.TermRelationshipPK;
 import com.cherrot.govproject.service.TermRelationshipService;
-import com.cherrot.util.Constants;
-import com.cherrot.util.pagination.Page;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -65,12 +63,12 @@ public class TermRelationshipServiceImpl implements TermRelationshipService{
     }
 
     @Override
-    public Page<TermRelationship> list(int pageNum) {
+    public List<TermRelationship> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public Page<TermRelationship> list(int pageNum, int pageSize) {
+    public List<TermRelationship> list(int pageNum, int pageSize) {
         List<TermRelationship> termRelationships =
                 termRelationshipDao.findEntities(pageSize, (pageNum-1)*pageSize);
         return PageUtil.getPage(getCount(), pageNum, termRelationships, pageSize);

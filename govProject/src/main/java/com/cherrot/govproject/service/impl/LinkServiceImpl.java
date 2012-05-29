@@ -10,7 +10,6 @@ import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.util.pagination.Page;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
@@ -60,12 +59,12 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    public Page<Link> list(int pageNum) {
+    public List<Link> list(int pageNum) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public Page<Link> list(int pageNum, int pageSize) {
+    public List<Link> list(int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
