@@ -33,7 +33,7 @@ public class UserServiceImpl implements UserService{
     private UsermetaDao usermetaDao;
 
     @Override
-    @Transactional
+//    @Transactional
     public void create(User user) {
         userDao.create(user);
     }

@@ -10,6 +10,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.TermService;
 import com.cherrot.govproject.util.Constants;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -40,8 +41,9 @@ public class TermServiceImpl implements TermService {
      */
     @Override
     @Transactional
-    public void createTagsByName(List<String> tags) {
+    public List<Term> createTagsByName(List<String> tags) {
         Term term = null;
+        List<Term> terms = new ArrayList<Term>();
         for (String tag : tags) {
             try {
                term = termDao.findByNameAndType(tag, Term.TermType.POST_TAG);
@@ -53,13 +55,16 @@ public class TermServiceImpl implements TermService {
                 term.setType(Term.TermType.POST_TAG);
                 termDao.create(term);
             }
+            terms.add(term);
         }
+        return terms;
     }
 
     @Override
     @Transactional
-    public void createCategoriesByName(List<String> categories) {
+    public List<Term> createCategoriesByName(List<String> categories) {
         Term term = null;
+        List<Term> terms = new ArrayList<Term>();
         for (String category : categories) {
             try {
                term = termDao.findByNameAndType(category, Term.TermType.CATEGORY);
@@ -71,7 +76,9 @@ public class TermServiceImpl implements TermService {
                 term.setType(Term.TermType.CATEGORY);
                 termDao.create(term);
             }
+            terms.add(term);
         }
+        return terms;
     }
 
     @Override

@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -269,7 +270,8 @@ public class UserJpaDao implements Serializable, UserDao {
 
     @Override
     public User findByLogin(String loginName) {
-        return em.createNamedQuery("User.findByLogin", User.class).getSingleResult();
+        return em.createNamedQuery("User.findByLogin", User.class)
+                .setParameter("login", loginName).getSingleResult();
     }
 
     @Override

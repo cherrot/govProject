@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
@@ -21,14 +22,15 @@ import org.springframework.transaction.annotation.Transactional;
  *
  * @author cherrot
  */
+@Service
 public class OptionServiceImpl implements OptionService{
 
-    
-    
+
+
     @Inject
     private OptionDao optionDao;
-    
-    
+
+
     @Override
     @Transactional
     public void create(Option option) {

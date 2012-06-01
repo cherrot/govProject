@@ -11,17 +11,22 @@
         </h1>
         ${errMsg}<br/>
         <br/>
-        <form name="loginForm" action="user/register" method="POST">
+        <form name="loginForm" action="user/doRegister" method="POST">
             <input type="email" name="login" value="" />
             <input type="password" name="pass" value="" />
             <input type="submit" value="register" name="register" />
         </form>
-        <form name="loginForm" action="user/login" method="POST">
+        <form name="loginForm" action="user/doLogin" method="POST">
             <input type="email" name="login" value="" />
             <input type="password" name="pass" value="" />
             <input type="submit" value="login" name="login" />
         </form>
+        ${person.id}<br />${person.login}<br />
         <br/>
-        <a href="person/list">Go to the person list</a>
+        <c:forEach items="${people}" var="person">
+            <a href="edit?id=${person.id}">${person.id} -
+                ${person.login} ${person.pass}</a>
+            <br />
+        </c:forEach>
     </body>
 </html>

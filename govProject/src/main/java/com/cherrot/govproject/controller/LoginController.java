@@ -35,9 +35,8 @@ public class LoginController extends BaseController {
 	public ModelAndView login(HttpServletRequest request, User user) {
 		User dbUser = userService.findByLoginName(user.getLogin());
 		ModelAndView mav = new ModelAndView();
-        // "forward" is unnecessary here because we use jsp.
         // see Spring3 doc: 16.5 Resolving views -- The forward: prefix
-		mav.setViewName("forward:/login");
+		mav.setViewName("forward:/home");
 		if (dbUser == null) {
 			mav.addObject(Constants.ERROR_MSG_KEY, "用户名不存在");
 		} else if ( ! dbUser.getPass().equals(user.getPass()) ) {
@@ -48,7 +47,7 @@ public class LoginController extends BaseController {
 			String toUrl = (String)request.getSession().getAttribute(Constants.LOGIN_TO_URL);
 			request.getSession().removeAttribute(Constants.LOGIN_TO_URL);
 			if(toUrl == null || toUrl.isEmpty()){
-				toUrl = "/home";
+				toUrl = "/";
 			}
 			mav.setViewName("redirect:"+toUrl);
 		}
@@ -64,6 +63,6 @@ public class LoginController extends BaseController {
     @RequestMapping("doLogout")
     public String logout(HttpSession session) {
 		session.removeAttribute(Constants.USER_CONTEXT);
-		return "/home";
+		return "redirect:/";
 	}
 }

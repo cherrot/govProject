@@ -41,7 +41,7 @@ public class Link implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
-    @NotNull
+//    @NotNull
     @Column(name = "id", nullable = false)
     private Integer id;
     @Basic(optional = false)
