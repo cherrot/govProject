@@ -10,7 +10,6 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.model.Post;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,7 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class CommentJpaDao implements Serializable, CommentDao {
+public class CommentJpaDao implements CommentDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -51,14 +50,22 @@ public class CommentJpaDao implements Serializable, CommentDao {
         if (comment.getCommentmetaList() == null) {
             comment.setCommentmetaList(new ArrayList<Commentmeta>());
         }
+        if (comment.getCommentList() == null) {
+            comment.setCommentList(new ArrayList<Comment>());
+        }
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post postId = comment.getPost();
-            if (postId != null) {
-                postId = em.getReference(postId.getClass(), postId.getId());
-                comment.setPost(postId);
+            Post post = comment.getPost();
+            if (post != null) {
+                post = em.getReference(post.getClass(), post.getId());
+                comment.setPost(post);
+            }
+            Comment commentParent = comment.getCommentParent();
+            if (commentParent != null) {
+                commentParent = em.getReference(commentParent.getClass(), commentParent.getId());
+                comment.setCommentParent(commentParent);
             }
             List<Commentmeta> attachedCommentmetaList = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListCommentmetaToAttach : comment.getCommentmetaList()) {
@@ -66,18 +73,37 @@ public class CommentJpaDao implements Serializable, CommentDao {
                 attachedCommentmetaList.add(commentmetaListCommentmetaToAttach);
             }
             comment.setCommentmetaList(attachedCommentmetaList);
+            List<Comment> attachedCommentList = new ArrayList<Comment>();
+            for (Comment commentListCommentToAttach : comment.getCommentList()) {
+                commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
+                attachedCommentList.add(commentListCommentToAttach);
+            }
+            comment.setCommentList(attachedCommentList);
             em.persist(comment);
-            if (postId != null) {
-                postId.getCommentList().add(comment);
-                postId = em.merge(postId);
+            if (post != null) {
+                post.getCommentList().add(comment);
+                post = em.merge(post);
+            }
+            if (commentParent != null) {
+                commentParent.getCommentList().add(comment);
+                commentParent = em.merge(commentParent);
             }
             for (Commentmeta commentmetaListCommentmeta : comment.getCommentmetaList()) {
-                Comment oldCommentIdOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getComment();
+                Comment oldCommentOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getComment();
                 commentmetaListCommentmeta.setComment(comment);
                 commentmetaListCommentmeta = em.merge(commentmetaListCommentmeta);
-                if (oldCommentIdOfCommentmetaListCommentmeta != null) {
-                    oldCommentIdOfCommentmetaListCommentmeta.getCommentmetaList().remove(commentmetaListCommentmeta);
-                    oldCommentIdOfCommentmetaListCommentmeta = em.merge(oldCommentIdOfCommentmetaListCommentmeta);
+                if (oldCommentOfCommentmetaListCommentmeta != null) {
+                    oldCommentOfCommentmetaListCommentmeta.getCommentmetaList().remove(commentmetaListCommentmeta);
+                    oldCommentOfCommentmetaListCommentmeta = em.merge(oldCommentOfCommentmetaListCommentmeta);
+                }
+            }
+            for (Comment commentListComment : comment.getCommentList()) {
+                Comment oldCommentParentOfCommentListComment = commentListComment.getCommentParent();
+                commentListComment.setCommentParent(comment);
+                commentListComment = em.merge(commentListComment);
+                if (oldCommentParentOfCommentListComment != null) {
+                    oldCommentParentOfCommentListComment.getCommentList().remove(commentListComment);
+                    oldCommentParentOfCommentListComment = em.merge(oldCommentParentOfCommentListComment);
                 }
             }
 //            em.getTransaction().commit();
@@ -97,25 +123,33 @@ public class CommentJpaDao implements Serializable, CommentDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Comment persistentComment = em.find(Comment.class, comment.getId());
-            Post postIdOld = persistentComment.getPost();
-            Post postIdNew = comment.getPost();
+            Post postOld = persistentComment.getPost();
+            Post postNew = comment.getPost();
+            Comment commentParentOld = persistentComment.getCommentParent();
+            Comment commentParentNew = comment.getCommentParent();
             List<Commentmeta> commentmetaListOld = persistentComment.getCommentmetaList();
             List<Commentmeta> commentmetaListNew = comment.getCommentmetaList();
+            List<Comment> commentListOld = persistentComment.getCommentList();
+            List<Comment> commentListNew = comment.getCommentList();
             List<String> illegalOrphanMessages = null;
             for (Commentmeta commentmetaListOldCommentmeta : commentmetaListOld) {
                 if (!commentmetaListNew.contains(commentmetaListOldCommentmeta)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Commentmeta " + commentmetaListOldCommentmeta + " since its commentId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Commentmeta " + commentmetaListOldCommentmeta + " since its comment field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            if (postIdNew != null) {
-                postIdNew = em.getReference(postIdNew.getClass(), postIdNew.getId());
-                comment.setPost(postIdNew);
+            if (postNew != null) {
+                postNew = em.getReference(postNew.getClass(), postNew.getId());
+                comment.setPost(postNew);
+            }
+            if (commentParentNew != null) {
+                commentParentNew = em.getReference(commentParentNew.getClass(), commentParentNew.getId());
+                comment.setCommentParent(commentParentNew);
             }
             List<Commentmeta> attachedCommentmetaListNew = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListNewCommentmetaToAttach : commentmetaListNew) {
@@ -124,23 +158,55 @@ public class CommentJpaDao implements Serializable, CommentDao {
             }
             commentmetaListNew = attachedCommentmetaListNew;
             comment.setCommentmetaList(commentmetaListNew);
-            comment = em.merge(comment);
-            if (postIdOld != null && !postIdOld.equals(postIdNew)) {
-                postIdOld.getCommentList().remove(comment);
-                postIdOld = em.merge(postIdOld);
+            List<Comment> attachedCommentListNew = new ArrayList<Comment>();
+            for (Comment commentListNewCommentToAttach : commentListNew) {
+                commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
+                attachedCommentListNew.add(commentListNewCommentToAttach);
             }
-            if (postIdNew != null && !postIdNew.equals(postIdOld)) {
-                postIdNew.getCommentList().add(comment);
-                postIdNew = em.merge(postIdNew);
+            commentListNew = attachedCommentListNew;
+            comment.setCommentList(commentListNew);
+            comment = em.merge(comment);
+            if (postOld != null && !postOld.equals(postNew)) {
+                postOld.getCommentList().remove(comment);
+                postOld = em.merge(postOld);
+            }
+            if (postNew != null && !postNew.equals(postOld)) {
+                postNew.getCommentList().add(comment);
+                postNew = em.merge(postNew);
+            }
+            if (commentParentOld != null && !commentParentOld.equals(commentParentNew)) {
+                commentParentOld.getCommentList().remove(comment);
+                commentParentOld = em.merge(commentParentOld);
+            }
+            if (commentParentNew != null && !commentParentNew.equals(commentParentOld)) {
+                commentParentNew.getCommentList().add(comment);
+                commentParentNew = em.merge(commentParentNew);
             }
             for (Commentmeta commentmetaListNewCommentmeta : commentmetaListNew) {
                 if (!commentmetaListOld.contains(commentmetaListNewCommentmeta)) {
-                    Comment oldCommentIdOfCommentmetaListNewCommentmeta = commentmetaListNewCommentmeta.getComment();
+                    Comment oldCommentOfCommentmetaListNewCommentmeta = commentmetaListNewCommentmeta.getComment();
                     commentmetaListNewCommentmeta.setComment(comment);
                     commentmetaListNewCommentmeta = em.merge(commentmetaListNewCommentmeta);
-                    if (oldCommentIdOfCommentmetaListNewCommentmeta != null && !oldCommentIdOfCommentmetaListNewCommentmeta.equals(comment)) {
-                        oldCommentIdOfCommentmetaListNewCommentmeta.getCommentmetaList().remove(commentmetaListNewCommentmeta);
-                        oldCommentIdOfCommentmetaListNewCommentmeta = em.merge(oldCommentIdOfCommentmetaListNewCommentmeta);
+                    if (oldCommentOfCommentmetaListNewCommentmeta != null && !oldCommentOfCommentmetaListNewCommentmeta.equals(comment)) {
+                        oldCommentOfCommentmetaListNewCommentmeta.getCommentmetaList().remove(commentmetaListNewCommentmeta);
+                        oldCommentOfCommentmetaListNewCommentmeta = em.merge(oldCommentOfCommentmetaListNewCommentmeta);
+                    }
+                }
+            }
+            for (Comment commentListOldComment : commentListOld) {
+                if (!commentListNew.contains(commentListOldComment)) {
+                    commentListOldComment.setCommentParent(null);
+                    commentListOldComment = em.merge(commentListOldComment);
+                }
+            }
+            for (Comment commentListNewComment : commentListNew) {
+                if (!commentListOld.contains(commentListNewComment)) {
+                    Comment oldCommentParentOfCommentListNewComment = commentListNewComment.getCommentParent();
+                    commentListNewComment.setCommentParent(comment);
+                    commentListNewComment = em.merge(commentListNewComment);
+                    if (oldCommentParentOfCommentListNewComment != null && !oldCommentParentOfCommentListNewComment.equals(comment)) {
+                        oldCommentParentOfCommentListNewComment.getCommentList().remove(commentListNewComment);
+                        oldCommentParentOfCommentListNewComment = em.merge(oldCommentParentOfCommentListNewComment);
                     }
                 }
             }
@@ -174,8 +240,7 @@ public class CommentJpaDao implements Serializable, CommentDao {
             try {
                 comment = em.getReference(Comment.class, id);
                 comment.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The comment with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
@@ -184,15 +249,25 @@ public class CommentJpaDao implements Serializable, CommentDao {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This Comment (" + comment + ") cannot be destroyed since the Commentmeta " + commentmetaListOrphanCheckCommentmeta + " in its commentmetaList field has a non-nullable commentId field.");
+                illegalOrphanMessages.add("This Comment (" + comment + ") cannot be destroyed since the Commentmeta " + commentmetaListOrphanCheckCommentmeta + " in its commentmetaList field has a non-nullable comment field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
-            Post postId = comment.getPost();
-            if (postId != null) {
-                postId.getCommentList().remove(comment);
-                postId = em.merge(postId);
+            Post post = comment.getPost();
+            if (post != null) {
+                post.getCommentList().remove(comment);
+                post = em.merge(post);
+            }
+            Comment commentParent = comment.getCommentParent();
+            if (commentParent != null) {
+                commentParent.getCommentList().remove(comment);
+                commentParent = em.merge(commentParent);
+            }
+            List<Comment> commentList = comment.getCommentList();
+            for (Comment commentListComment : commentList) {
+                commentListComment.setCommentParent(null);
+                commentListComment = em.merge(commentListComment);
             }
             em.remove(comment);
 //            em.getTransaction().commit();

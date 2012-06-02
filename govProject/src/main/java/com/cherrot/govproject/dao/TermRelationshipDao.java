@@ -6,12 +6,13 @@ package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.model.TermRelationshipPK;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface TermRelationshipDao extends BaseDao<TermRelationship, TermRelationshipPK> {
+public interface TermRelationshipDao extends Serializable, BaseDao<TermRelationship, TermRelationshipPK> {
 
 //    void create(TermRelationship termRelationship);
 //

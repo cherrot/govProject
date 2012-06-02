@@ -8,16 +8,15 @@ import com.cherrot.govproject.dao.UserDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
-import javax.persistence.Parameter;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
@@ -30,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class UserJpaDao implements Serializable, UserDao {
+public class UserJpaDao implements UserDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -49,6 +48,9 @@ public class UserJpaDao implements Serializable, UserDao {
     @Override
     @Transactional
     public void create(User user) {
+        if (user.getSiteLogList() == null) {
+            user.setSiteLogList(new ArrayList<SiteLog>());
+        }
         if (user.getPostList() == null) {
             user.setPostList(new ArrayList<Post>());
         }
@@ -59,6 +61,12 @@ public class UserJpaDao implements Serializable, UserDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
+            List<SiteLog> attachedSiteLogList = new ArrayList<SiteLog>();
+            for (SiteLog siteLogListSiteLogToAttach : user.getSiteLogList()) {
+                siteLogListSiteLogToAttach = em.getReference(siteLogListSiteLogToAttach.getClass(), siteLogListSiteLogToAttach.getId());
+                attachedSiteLogList.add(siteLogListSiteLogToAttach);
+            }
+            user.setSiteLogList(attachedSiteLogList);
             List<Post> attachedPostList = new ArrayList<Post>();
             for (Post postListPostToAttach : user.getPostList()) {
                 postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
@@ -72,22 +80,31 @@ public class UserJpaDao implements Serializable, UserDao {
             }
             user.setUsermetaList(attachedUsermetaList);
             em.persist(user);
+            for (SiteLog siteLogListSiteLog : user.getSiteLogList()) {
+                User oldUserOfSiteLogListSiteLog = siteLogListSiteLog.getUser();
+                siteLogListSiteLog.setUser(user);
+                siteLogListSiteLog = em.merge(siteLogListSiteLog);
+                if (oldUserOfSiteLogListSiteLog != null) {
+                    oldUserOfSiteLogListSiteLog.getSiteLogList().remove(siteLogListSiteLog);
+                    oldUserOfSiteLogListSiteLog = em.merge(oldUserOfSiteLogListSiteLog);
+                }
+            }
             for (Post postListPost : user.getPostList()) {
-                User oldUserIdOfPostListPost = postListPost.getUser();
+                User oldUserOfPostListPost = postListPost.getUser();
                 postListPost.setUser(user);
                 postListPost = em.merge(postListPost);
-                if (oldUserIdOfPostListPost != null) {
-                    oldUserIdOfPostListPost.getPostList().remove(postListPost);
-                    oldUserIdOfPostListPost = em.merge(oldUserIdOfPostListPost);
+                if (oldUserOfPostListPost != null) {
+                    oldUserOfPostListPost.getPostList().remove(postListPost);
+                    oldUserOfPostListPost = em.merge(oldUserOfPostListPost);
                 }
             }
             for (Usermeta usermetaListUsermeta : user.getUsermetaList()) {
-                User oldUserIdOfUsermetaListUsermeta = usermetaListUsermeta.getUser();
+                User oldUserOfUsermetaListUsermeta = usermetaListUsermeta.getUser();
                 usermetaListUsermeta.setUser(user);
                 usermetaListUsermeta = em.merge(usermetaListUsermeta);
-                if (oldUserIdOfUsermetaListUsermeta != null) {
-                    oldUserIdOfUsermetaListUsermeta.getUsermetaList().remove(usermetaListUsermeta);
-                    oldUserIdOfUsermetaListUsermeta = em.merge(oldUserIdOfUsermetaListUsermeta);
+                if (oldUserOfUsermetaListUsermeta != null) {
+                    oldUserOfUsermetaListUsermeta.getUsermetaList().remove(usermetaListUsermeta);
+                    oldUserOfUsermetaListUsermeta = em.merge(oldUserOfUsermetaListUsermeta);
                 }
             }
 //            em.getTransaction().commit();
@@ -107,17 +124,27 @@ public class UserJpaDao implements Serializable, UserDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             User persistentUser = em.find(User.class, user.getId());
+            List<SiteLog> siteLogListOld = persistentUser.getSiteLogList();
+            List<SiteLog> siteLogListNew = user.getSiteLogList();
             List<Post> postListOld = persistentUser.getPostList();
             List<Post> postListNew = user.getPostList();
             List<Usermeta> usermetaListOld = persistentUser.getUsermetaList();
             List<Usermeta> usermetaListNew = user.getUsermetaList();
             List<String> illegalOrphanMessages = null;
+            for (SiteLog siteLogListOldSiteLog : siteLogListOld) {
+                if (!siteLogListNew.contains(siteLogListOldSiteLog)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain SiteLog " + siteLogListOldSiteLog + " since its user field is not nullable.");
+                }
+            }
             for (Post postListOldPost : postListOld) {
                 if (!postListNew.contains(postListOldPost)) {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Post " + postListOldPost + " since its userId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Post " + postListOldPost + " since its user field is not nullable.");
                 }
             }
             for (Usermeta usermetaListOldUsermeta : usermetaListOld) {
@@ -125,12 +152,19 @@ public class UserJpaDao implements Serializable, UserDao {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Usermeta " + usermetaListOldUsermeta + " since its userId field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Usermeta " + usermetaListOldUsermeta + " since its user field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
+            List<SiteLog> attachedSiteLogListNew = new ArrayList<SiteLog>();
+            for (SiteLog siteLogListNewSiteLogToAttach : siteLogListNew) {
+                siteLogListNewSiteLogToAttach = em.getReference(siteLogListNewSiteLogToAttach.getClass(), siteLogListNewSiteLogToAttach.getId());
+                attachedSiteLogListNew.add(siteLogListNewSiteLogToAttach);
+            }
+            siteLogListNew = attachedSiteLogListNew;
+            user.setSiteLogList(siteLogListNew);
             List<Post> attachedPostListNew = new ArrayList<Post>();
             for (Post postListNewPostToAttach : postListNew) {
                 postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
@@ -146,25 +180,36 @@ public class UserJpaDao implements Serializable, UserDao {
             usermetaListNew = attachedUsermetaListNew;
             user.setUsermetaList(usermetaListNew);
             user = em.merge(user);
+            for (SiteLog siteLogListNewSiteLog : siteLogListNew) {
+                if (!siteLogListOld.contains(siteLogListNewSiteLog)) {
+                    User oldUserOfSiteLogListNewSiteLog = siteLogListNewSiteLog.getUser();
+                    siteLogListNewSiteLog.setUser(user);
+                    siteLogListNewSiteLog = em.merge(siteLogListNewSiteLog);
+                    if (oldUserOfSiteLogListNewSiteLog != null && !oldUserOfSiteLogListNewSiteLog.equals(user)) {
+                        oldUserOfSiteLogListNewSiteLog.getSiteLogList().remove(siteLogListNewSiteLog);
+                        oldUserOfSiteLogListNewSiteLog = em.merge(oldUserOfSiteLogListNewSiteLog);
+                    }
+                }
+            }
             for (Post postListNewPost : postListNew) {
                 if (!postListOld.contains(postListNewPost)) {
-                    User oldUserIdOfPostListNewPost = postListNewPost.getUser();
+                    User oldUserOfPostListNewPost = postListNewPost.getUser();
                     postListNewPost.setUser(user);
                     postListNewPost = em.merge(postListNewPost);
-                    if (oldUserIdOfPostListNewPost != null && !oldUserIdOfPostListNewPost.equals(user)) {
-                        oldUserIdOfPostListNewPost.getPostList().remove(postListNewPost);
-                        oldUserIdOfPostListNewPost = em.merge(oldUserIdOfPostListNewPost);
+                    if (oldUserOfPostListNewPost != null && !oldUserOfPostListNewPost.equals(user)) {
+                        oldUserOfPostListNewPost.getPostList().remove(postListNewPost);
+                        oldUserOfPostListNewPost = em.merge(oldUserOfPostListNewPost);
                     }
                 }
             }
             for (Usermeta usermetaListNewUsermeta : usermetaListNew) {
                 if (!usermetaListOld.contains(usermetaListNewUsermeta)) {
-                    User oldUserIdOfUsermetaListNewUsermeta = usermetaListNewUsermeta.getUser();
+                    User oldUserOfUsermetaListNewUsermeta = usermetaListNewUsermeta.getUser();
                     usermetaListNewUsermeta.setUser(user);
                     usermetaListNewUsermeta = em.merge(usermetaListNewUsermeta);
-                    if (oldUserIdOfUsermetaListNewUsermeta != null && !oldUserIdOfUsermetaListNewUsermeta.equals(user)) {
-                        oldUserIdOfUsermetaListNewUsermeta.getUsermetaList().remove(usermetaListNewUsermeta);
-                        oldUserIdOfUsermetaListNewUsermeta = em.merge(oldUserIdOfUsermetaListNewUsermeta);
+                    if (oldUserOfUsermetaListNewUsermeta != null && !oldUserOfUsermetaListNewUsermeta.equals(user)) {
+                        oldUserOfUsermetaListNewUsermeta.getUsermetaList().remove(usermetaListNewUsermeta);
+                        oldUserOfUsermetaListNewUsermeta = em.merge(oldUserOfUsermetaListNewUsermeta);
                     }
                 }
             }
@@ -198,24 +243,30 @@ public class UserJpaDao implements Serializable, UserDao {
             try {
                 user = em.getReference(User.class, id);
                 user.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The user with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;
+            List<SiteLog> siteLogListOrphanCheck = user.getSiteLogList();
+            for (SiteLog siteLogListOrphanCheckSiteLog : siteLogListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the SiteLog " + siteLogListOrphanCheckSiteLog + " in its siteLogList field has a non-nullable user field.");
+            }
             List<Post> postListOrphanCheck = user.getPostList();
             for (Post postListOrphanCheckPost : postListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Post " + postListOrphanCheckPost + " in its postList field has a non-nullable userId field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Post " + postListOrphanCheckPost + " in its postList field has a non-nullable user field.");
             }
             List<Usermeta> usermetaListOrphanCheck = user.getUsermetaList();
             for (Usermeta usermetaListOrphanCheckUsermeta : usermetaListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
-                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Usermeta " + usermetaListOrphanCheckUsermeta + " in its usermetaList field has a non-nullable userId field.");
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Usermeta " + usermetaListOrphanCheckUsermeta + " in its usermetaList field has a non-nullable user field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);

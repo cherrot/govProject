@@ -5,12 +5,13 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Link;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface LinkDao extends BaseDao<Link, Integer> {
+public interface LinkDao extends Serializable, BaseDao<Link, Integer> {
 
 //    void create(Link link);
 //

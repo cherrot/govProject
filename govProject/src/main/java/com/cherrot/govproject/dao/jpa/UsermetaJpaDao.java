@@ -8,7 +8,6 @@ import com.cherrot.govproject.dao.UsermetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class UsermetaJpaDao implements Serializable, UsermetaDao {
+public class UsermetaJpaDao implements UsermetaDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -49,15 +48,15 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            User userId = usermeta.getUser();
-            if (userId != null) {
-                userId = em.getReference(userId.getClass(), userId.getId());
-                usermeta.setUser(userId);
+            User user = usermeta.getUser();
+            if (user != null) {
+                user = em.getReference(user.getClass(), user.getId());
+                usermeta.setUser(user);
             }
             em.persist(usermeta);
-            if (userId != null) {
-                userId.getUsermetaList().add(usermeta);
-                userId = em.merge(userId);
+            if (user != null) {
+                user.getUsermetaList().add(usermeta);
+                user = em.merge(user);
             }
 //            em.getTransaction().commit();
 //        }
@@ -76,20 +75,20 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Usermeta persistentUsermeta = em.find(Usermeta.class, usermeta.getId());
-            User userIdOld = persistentUsermeta.getUser();
-            User userIdNew = usermeta.getUser();
-            if (userIdNew != null) {
-                userIdNew = em.getReference(userIdNew.getClass(), userIdNew.getId());
-                usermeta.setUser(userIdNew);
+            User userOld = persistentUsermeta.getUser();
+            User userNew = usermeta.getUser();
+            if (userNew != null) {
+                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                usermeta.setUser(userNew);
             }
             usermeta = em.merge(usermeta);
-            if (userIdOld != null && !userIdOld.equals(userIdNew)) {
-                userIdOld.getUsermetaList().remove(usermeta);
-                userIdOld = em.merge(userIdOld);
+            if (userOld != null && !userOld.equals(userNew)) {
+                userOld.getUsermetaList().remove(usermeta);
+                userOld = em.merge(userOld);
             }
-            if (userIdNew != null && !userIdNew.equals(userIdOld)) {
-                userIdNew.getUsermetaList().add(usermeta);
-                userIdNew = em.merge(userIdNew);
+            if (userNew != null && !userNew.equals(userOld)) {
+                userNew.getUsermetaList().add(usermeta);
+                userNew = em.merge(userNew);
             }
 //            em.getTransaction().commit();
         }
@@ -121,14 +120,13 @@ public class UsermetaJpaDao implements Serializable, UsermetaDao {
             try {
                 usermeta = em.getReference(Usermeta.class, id);
                 usermeta.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The usermeta with id " + id + " no longer exists.", enfe);
             }
-            User userId = usermeta.getUser();
-            if (userId != null) {
-                userId.getUsermetaList().remove(usermeta);
-                userId = em.merge(userId);
+            User user = usermeta.getUser();
+            if (user != null) {
+                user.getUsermetaList().remove(usermeta);
+                user = em.merge(user);
             }
             em.remove(usermeta);
 //            em.getTransaction().commit();

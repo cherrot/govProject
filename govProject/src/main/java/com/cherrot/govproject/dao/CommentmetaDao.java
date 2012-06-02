@@ -5,12 +5,13 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Commentmeta;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface CommentmetaDao extends BaseDao<Commentmeta, Integer> {
+public interface CommentmetaDao extends Serializable, BaseDao<Commentmeta, Integer> {
 //
 //    void create(Commentmeta commentmeta);
 //

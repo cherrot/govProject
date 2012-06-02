@@ -7,21 +7,18 @@ package com.cherrot.govproject.dao.jpa;
 import com.cherrot.govproject.dao.TermDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
-import java.io.Serializable;
-import javax.persistence.Query;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.TermRelationship;
 import java.util.ArrayList;
 import java.util.List;
-import com.cherrot.govproject.model.TermRelationship;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
+import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class TermJpaDao implements Serializable, TermDao {
+public class TermJpaDao implements TermDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -218,8 +215,7 @@ public class TermJpaDao implements Serializable, TermDao {
             try {
                 term = em.getReference(Term.class, id);
                 term.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The term with id " + id + " no longer exists.", enfe);
             }
             List<String> illegalOrphanMessages = null;

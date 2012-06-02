@@ -5,13 +5,14 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Term;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author cherrot
  */
-public interface TermDao extends BaseDao<Term, Integer> {
+public interface TermDao extends Serializable, BaseDao<Term, Integer> {
 
     List<Term> findEntitiesByName(String name);
     Term findByNameAndType(String name, Term.TermType type);

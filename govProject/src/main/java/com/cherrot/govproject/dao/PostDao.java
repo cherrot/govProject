@@ -5,12 +5,13 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Post;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface PostDao extends BaseDao<Post, Integer> {
+public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
 //    void create(Post post);
 //

@@ -8,7 +8,6 @@ import com.cherrot.govproject.dao.PostmetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class PostmetaJpaDao implements Serializable, PostmetaDao {
+public class PostmetaJpaDao implements PostmetaDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -49,15 +48,15 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post postId = postmeta.getPost();
-            if (postId != null) {
-                postId = em.getReference(postId.getClass(), postId.getId());
-                postmeta.setPost(postId);
+            Post post = postmeta.getPost();
+            if (post != null) {
+                post = em.getReference(post.getClass(), post.getId());
+                postmeta.setPost(post);
             }
             em.persist(postmeta);
-            if (postId != null) {
-                postId.getPostmetaList().add(postmeta);
-                postId = em.merge(postId);
+            if (post != null) {
+                post.getPostmetaList().add(postmeta);
+                post = em.merge(post);
             }
 //            em.getTransaction().commit();
 //        }
@@ -76,20 +75,20 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Postmeta persistentPostmeta = em.find(Postmeta.class, postmeta.getId());
-            Post postIdOld = persistentPostmeta.getPost();
-            Post postIdNew = postmeta.getPost();
-            if (postIdNew != null) {
-                postIdNew = em.getReference(postIdNew.getClass(), postIdNew.getId());
-                postmeta.setPost(postIdNew);
+            Post postOld = persistentPostmeta.getPost();
+            Post postNew = postmeta.getPost();
+            if (postNew != null) {
+                postNew = em.getReference(postNew.getClass(), postNew.getId());
+                postmeta.setPost(postNew);
             }
             postmeta = em.merge(postmeta);
-            if (postIdOld != null && !postIdOld.equals(postIdNew)) {
-                postIdOld.getPostmetaList().remove(postmeta);
-                postIdOld = em.merge(postIdOld);
+            if (postOld != null && !postOld.equals(postNew)) {
+                postOld.getPostmetaList().remove(postmeta);
+                postOld = em.merge(postOld);
             }
-            if (postIdNew != null && !postIdNew.equals(postIdOld)) {
-                postIdNew.getPostmetaList().add(postmeta);
-                postIdNew = em.merge(postIdNew);
+            if (postNew != null && !postNew.equals(postOld)) {
+                postNew.getPostmetaList().add(postmeta);
+                postNew = em.merge(postNew);
             }
 //            em.getTransaction().commit();
         }
@@ -121,14 +120,13 @@ public class PostmetaJpaDao implements Serializable, PostmetaDao {
             try {
                 postmeta = em.getReference(Postmeta.class, id);
                 postmeta.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The postmeta with id " + id + " no longer exists.", enfe);
             }
-            Post postId = postmeta.getPost();
-            if (postId != null) {
-                postId.getPostmetaList().remove(postmeta);
-                postId = em.merge(postId);
+            Post post = postmeta.getPost();
+            if (post != null) {
+                post.getPostmetaList().remove(postmeta);
+                post = em.merge(post);
             }
             em.remove(postmeta);
 //            em.getTransaction().commit();

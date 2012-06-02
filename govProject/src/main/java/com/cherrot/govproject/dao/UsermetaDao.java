@@ -5,12 +5,13 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Usermeta;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface UsermetaDao extends BaseDao<Usermeta, Integer> {
+public interface UsermetaDao extends Serializable, BaseDao<Usermeta, Integer> {
 
 //    void create(Usermeta usermeta);
 //

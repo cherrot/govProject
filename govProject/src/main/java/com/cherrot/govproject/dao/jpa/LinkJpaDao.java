@@ -7,7 +7,7 @@ package com.cherrot.govproject.dao.jpa;
 import com.cherrot.govproject.dao.LinkDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
-import java.io.Serializable;
+import com.cherrot.govproject.model.LinkCategory;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class LinkJpaDao implements Serializable, LinkDao {
+public class LinkJpaDao implements LinkDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -48,7 +48,16 @@ public class LinkJpaDao implements Serializable, LinkDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
+            LinkCategory linkCategory = link.getLinkCategory();
+            if (linkCategory != null) {
+                linkCategory = em.getReference(linkCategory.getClass(), linkCategory.getId());
+                link.setLinkCategory(linkCategory);
+            }
             em.persist(link);
+            if (linkCategory != null) {
+                linkCategory.getLinkList().add(link);
+                linkCategory = em.merge(linkCategory);
+            }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -65,7 +74,22 @@ public class LinkJpaDao implements Serializable, LinkDao {
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
+            Link persistentLink = em.find(Link.class, link.getId());
+            LinkCategory linkCategoryOld = persistentLink.getLinkCategory();
+            LinkCategory linkCategoryNew = link.getLinkCategory();
+            if (linkCategoryNew != null) {
+                linkCategoryNew = em.getReference(linkCategoryNew.getClass(), linkCategoryNew.getId());
+                link.setLinkCategory(linkCategoryNew);
+            }
             link = em.merge(link);
+            if (linkCategoryOld != null && !linkCategoryOld.equals(linkCategoryNew)) {
+                linkCategoryOld.getLinkList().remove(link);
+                linkCategoryOld = em.merge(linkCategoryOld);
+            }
+            if (linkCategoryNew != null && !linkCategoryNew.equals(linkCategoryOld)) {
+                linkCategoryNew.getLinkList().add(link);
+                linkCategoryNew = em.merge(linkCategoryNew);
+            }
 //            em.getTransaction().commit();
         }
         catch (Exception ex) {
@@ -96,9 +120,13 @@ public class LinkJpaDao implements Serializable, LinkDao {
             try {
                 link = em.getReference(Link.class, id);
                 link.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The link with id " + id + " no longer exists.", enfe);
+            }
+            LinkCategory linkCategory = link.getLinkCategory();
+            if (linkCategory != null) {
+                linkCategory.getLinkList().remove(link);
+                linkCategory = em.merge(linkCategory);
             }
             em.remove(link);
 //            em.getTransaction().commit();

@@ -4,75 +4,93 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
-import com.cherrot.govproject.dao.OptionDao;
+import com.cherrot.govproject.dao.SiteLogDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
-import com.cherrot.govproject.model.Option;
+import com.cherrot.govproject.model.SiteLog;
+import com.cherrot.govproject.model.User;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author cherrot
  */
-@Repository
-public class OptionJpaDao implements OptionDao {
+public class SiteLogJpaDao implements SiteLogDao {
 
     @PersistenceContext
     private EntityManager em;
-//    public OptionJpaDao(UserTransaction utx, EntityManagerFactory emf) {
+//    public SiteLogJpaDao(UserTransaction utx, EntityManagerFactory emf) {
 //        this.utx = utx;
 //        this.emf = emf;
 //    }
 //    private UserTransaction utx = null;
 //    private EntityManagerFactory emf = null;
 //
-//    @Override
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
 
-    @Override
     @Transactional
-    public void create(Option option) {
+    @Override
+    public void create(SiteLog siteLog) {
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            em.persist(option);
+            User user = siteLog.getUser();
+            if (user != null) {
+                user = em.getReference(user.getClass(), user.getId());
+                siteLog.setUser(user);
+            }
+            em.persist(siteLog);
+            if (user != null) {
+                user.getSiteLogList().add(siteLog);
+                user = em.merge(user);
+            }
 //            em.getTransaction().commit();
-//        }
-//        finally {
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
 //        }
     }
 
-    @Override
     @Transactional
-    public void edit(Option option) throws NonexistentEntityException, Exception {
+    @Override
+    public void edit(SiteLog siteLog) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            option = em.merge(option);
+            SiteLog persistentSiteLog = em.find(SiteLog.class, siteLog.getId());
+            User userOld = persistentSiteLog.getUser();
+            User userNew = siteLog.getUser();
+            if (userNew != null) {
+                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                siteLog.setUser(userNew);
+            }
+            siteLog = em.merge(siteLog);
+            if (userOld != null && !userOld.equals(userNew)) {
+                userOld.getSiteLogList().remove(siteLog);
+                userOld = em.merge(userOld);
+            }
+            if (userNew != null && !userNew.equals(userOld)) {
+                userNew.getSiteLogList().add(siteLog);
+                userNew = em.merge(userNew);
+            }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
-                Integer id = option.getId();
+                Integer id = siteLog.getId();
                 if (find(id) == null) {
-                    throw new NonexistentEntityException("The option with id " + id + " no longer exists.");
+                    throw new NonexistentEntityException("The siteLog with id " + id + " no longer exists.");
                 }
             }
             throw ex;
@@ -84,24 +102,28 @@ public class OptionJpaDao implements OptionDao {
 //        }
     }
 
-    @Override
     @Transactional
+    @Override
     public void destroy(Integer id) throws NonexistentEntityException {
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Option option;
+            SiteLog siteLog;
             try {
-                option = em.getReference(Option.class, id);
-                option.getId();
+                siteLog = em.getReference(SiteLog.class, id);
+                siteLog.getId();
             } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The option with id " + id + " no longer exists.", enfe);
+                throw new NonexistentEntityException("The siteLog with id " + id + " no longer exists.", enfe);
             }
-            em.remove(option);
-//            em.getTransaction().commit();
-//        }
-//        finally {
+            User user = siteLog.getUser();
+            if (user != null) {
+                user.getSiteLogList().remove(siteLog);
+                user = em.merge(user);
+            }
+            em.remove(siteLog);
+            em.getTransaction().commit();
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
@@ -109,39 +131,37 @@ public class OptionJpaDao implements OptionDao {
     }
 
     @Override
-    public List<Option> findEntities() {
+    public List<SiteLog> findEntities() {
         return findEntities(true, -1, -1);
     }
 
     @Override
-    public List<Option> findEntities(int maxResults, int firstResult) {
+    public List<SiteLog> findEntities(int maxResults, int firstResult) {
         return findEntities(false, maxResults, firstResult);
     }
 
-    private List<Option> findEntities(boolean all, int maxResults, int firstResult) {
+    private List<SiteLog> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Option.class));
+            cq.select(cq.from(SiteLog.class));
             Query q = em.createQuery(cq);
             if (!all) {
                 q.setMaxResults(maxResults);
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-//        }
-//        finally {
+//        } finally {
 //            em.close();
 //        }
     }
 
     @Override
-    public Option find(Integer id) {
+    public SiteLog find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Option.class, id);
-//        }
-//        finally {
+            return em.find(SiteLog.class, id);
+//        } finally {
 //            em.close();
 //        }
     }
@@ -151,27 +171,24 @@ public class OptionJpaDao implements OptionDao {
 //        EntityManager em = getEntityManager();
 //        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Option> rt = cq.from(Option.class);
+            Root<SiteLog> rt = cq.from(SiteLog.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
-//        }
-//        finally {
+            return ((Long) q.getSingleResult()).intValue();
+//        } finally {
 //            em.close();
 //        }
     }
 
     @Override
-    public void save(Option model) {
-        if (model.getId() == null) {
+    public void save(SiteLog model) {
+        if (model.getId() == null)
             create(model);
-        } else {
+        else
             try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            edit(model);
+        }
+        catch (Exception ex) {
         }
     }
 

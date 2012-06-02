@@ -5,13 +5,14 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.User;
+import java.io.Serializable;
 import java.util.List;
 
 /**
  *
  * @author cherrot
  */
-public interface UserDao extends BaseDao<User, Integer> {
+public interface UserDao extends Serializable, BaseDao<User, Integer> {
 
     User findByLogin(String loginName);
     List<User> findEntitiesByUserLevel(int userLevel);

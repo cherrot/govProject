@@ -8,7 +8,6 @@ import com.cherrot.govproject.dao.CommentmetaDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Repository
-public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
+public class CommentmetaJpaDao implements CommentmetaDao {
 
     @PersistenceContext
     private EntityManager em;
@@ -49,15 +48,15 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Comment commentId = commentmeta.getComment();
-            if (commentId != null) {
-                commentId = em.getReference(commentId.getClass(), commentId.getId());
-                commentmeta.setComment(commentId);
+            Comment comment = commentmeta.getComment();
+            if (comment != null) {
+                comment = em.getReference(comment.getClass(), comment.getId());
+                commentmeta.setComment(comment);
             }
             em.persist(commentmeta);
-            if (commentId != null) {
-                commentId.getCommentmetaList().add(commentmeta);
-                commentId = em.merge(commentId);
+            if (comment != null) {
+                comment.getCommentmetaList().add(commentmeta);
+                comment = em.merge(comment);
             }
 //            em.getTransaction().commit();
 //        }
@@ -76,20 +75,20 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Commentmeta persistentCommentmeta = em.find(Commentmeta.class, commentmeta.getId());
-            Comment commentIdOld = persistentCommentmeta.getComment();
-            Comment commentIdNew = commentmeta.getComment();
-            if (commentIdNew != null) {
-                commentIdNew = em.getReference(commentIdNew.getClass(), commentIdNew.getId());
-                commentmeta.setComment(commentIdNew);
+            Comment commentOld = persistentCommentmeta.getComment();
+            Comment commentNew = commentmeta.getComment();
+            if (commentNew != null) {
+                commentNew = em.getReference(commentNew.getClass(), commentNew.getId());
+                commentmeta.setComment(commentNew);
             }
             commentmeta = em.merge(commentmeta);
-            if (commentIdOld != null && !commentIdOld.equals(commentIdNew)) {
-                commentIdOld.getCommentmetaList().remove(commentmeta);
-                commentIdOld = em.merge(commentIdOld);
+            if (commentOld != null && !commentOld.equals(commentNew)) {
+                commentOld.getCommentmetaList().remove(commentmeta);
+                commentOld = em.merge(commentOld);
             }
-            if (commentIdNew != null && !commentIdNew.equals(commentIdOld)) {
-                commentIdNew.getCommentmetaList().add(commentmeta);
-                commentIdNew = em.merge(commentIdNew);
+            if (commentNew != null && !commentNew.equals(commentOld)) {
+                commentNew.getCommentmetaList().add(commentmeta);
+                commentNew = em.merge(commentNew);
             }
 //            em.getTransaction().commit();
         }
@@ -121,14 +120,13 @@ public class CommentmetaJpaDao implements Serializable, CommentmetaDao {
             try {
                 commentmeta = em.getReference(Commentmeta.class, id);
                 commentmeta.getId();
-            }
-            catch (EntityNotFoundException enfe) {
+            } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.", enfe);
             }
-            Comment commentId = commentmeta.getComment();
-            if (commentId != null) {
-                commentId.getCommentmetaList().remove(commentmeta);
-                commentId = em.merge(commentId);
+            Comment comment = commentmeta.getComment();
+            if (comment != null) {
+                comment.getCommentmetaList().remove(commentmeta);
+                comment = em.merge(comment);
             }
             em.remove(commentmeta);
 //            em.getTransaction().commit();

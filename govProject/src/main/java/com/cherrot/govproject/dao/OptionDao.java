@@ -5,12 +5,13 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Option;
+import java.io.Serializable;
 
 /**
  *
  * @author cherrot
  */
-public interface OptionDao extends BaseDao<Option, Integer> {
+public interface OptionDao extends Serializable, BaseDao<Option, Integer> {
 
 //    void create(Option option);
 //

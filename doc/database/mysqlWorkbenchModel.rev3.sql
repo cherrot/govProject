@@ -20,9 +20,10 @@ CREATE  TABLE IF NOT EXISTS `users` (
   `displayName` VARCHAR(45) NOT NULL ,
   `email` VARCHAR(100) NOT NULL ,
   `url` VARCHAR(100) NULL ,
-  PRIMARY KEY (`id`) ,
-  INDEX `login` (`login` ASC) )
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
+
+CREATE INDEX `login` ON `users` (`login` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -47,11 +48,6 @@ CREATE  TABLE IF NOT EXISTS `posts` (
   `content` TEXT NOT NULL ,
   `excerpt` TEXT NULL COMMENT '文章摘要' ,
   PRIMARY KEY (`id`) ,
-  INDEX `post_users` (`user_id` ASC) ,
-  INDEX `slug` (`slug` ASC) ,
-  INDEX `parent` (`post_parent` ASC) ,
-  INDEX `type_status_date` (`type` ASC, `status` ASC, `createDate` ASC, `id` ASC) ,
-  INDEX `post_parents` (`post_parent` ASC) ,
   CONSTRAINT `post_user`
     FOREIGN KEY (`user_id` )
     REFERENCES `users` (`id` )
@@ -63,6 +59,16 @@ CREATE  TABLE IF NOT EXISTS `posts` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE INDEX `post_users` ON `posts` (`user_id` ASC) ;
+
+CREATE INDEX `slug` ON `posts` (`slug` ASC) ;
+
+CREATE INDEX `parent` ON `posts` (`post_parent` ASC) ;
+
+CREATE INDEX `type_status_date` ON `posts` (`type` ASC, `status` ASC, `createDate` ASC, `id` ASC) ;
+
+CREATE INDEX `post_parents` ON `posts` (`post_parent` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -83,11 +89,6 @@ CREATE  TABLE IF NOT EXISTS `comments` (
   `authorIp` VARCHAR(39) NOT NULL ,
   `content` TEXT NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `comment_posts` (`post_id` ASC) ,
-  INDEX `approved` (`approved` ASC) ,
-  INDEX `date` (`commentDate` ASC) ,
-  INDEX `parent` (`comment_parent` ASC) ,
-  INDEX `comment_parents` (`comment_parent` ASC) ,
   CONSTRAINT `comment_post`
     FOREIGN KEY (`post_id` )
     REFERENCES `posts` (`id` )
@@ -103,6 +104,16 @@ DEFAULT CHARACTER SET = big5
 COLLATE = big5_chinese_ci
 COMMENT = '文章评论';
 
+CREATE INDEX `comment_posts` ON `comments` (`post_id` ASC) ;
+
+CREATE INDEX `approved` ON `comments` (`approved` ASC) ;
+
+CREATE INDEX `date` ON `comments` (`commentDate` ASC) ;
+
+CREATE INDEX `parent` ON `comments` (`comment_parent` ASC) ;
+
+CREATE INDEX `comment_parents` ON `comments` (`comment_parent` ASC) ;
+
 
 -- -----------------------------------------------------
 -- Table `commentmeta`
@@ -115,14 +126,16 @@ CREATE  TABLE IF NOT EXISTS `commentmeta` (
   `metaKey` VARCHAR(45) NOT NULL ,
   `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `commentmeta_comment` (`comment_id` ASC) ,
-  INDEX `key` (`metaKey` ASC) ,
   CONSTRAINT `commentmeta_comment`
     FOREIGN KEY (`comment_id` )
     REFERENCES `comments` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+CREATE INDEX `commentmeta_comment` ON `commentmeta` (`comment_id` ASC) ;
+
+CREATE INDEX `key` ON `commentmeta` (`metaKey` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -136,14 +149,16 @@ CREATE  TABLE IF NOT EXISTS `postmeta` (
   `metaKey` VARCHAR(45) NOT NULL ,
   `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `postmeta_post` (`post_id` ASC) ,
-  INDEX `key` (`metaKey` ASC) ,
   CONSTRAINT `postmeta_post`
     FOREIGN KEY (`post_id` )
     REFERENCES `posts` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+CREATE INDEX `postmeta_post` ON `postmeta` (`post_id` ASC) ;
+
+CREATE INDEX `key` ON `postmeta` (`metaKey` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -157,14 +172,16 @@ CREATE  TABLE IF NOT EXISTS `usermeta` (
   `metaKey` VARCHAR(45) NOT NULL ,
   `metaValue` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `usermeta_user` (`user_id` ASC) ,
-  INDEX `key` (`metaKey` ASC) ,
   CONSTRAINT `usermeta_user`
     FOREIGN KEY (`user_id` )
     REFERENCES `users` (`id` )
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB;
+
+CREATE INDEX `usermeta_user` ON `usermeta` (`user_id` ASC) ;
+
+CREATE INDEX `key` ON `usermeta` (`metaKey` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -194,13 +211,14 @@ CREATE  TABLE IF NOT EXISTS `links` (
   `target` VARCHAR(20) NOT NULL ,
   `description` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `link_category_id` (`category_id` ASC) ,
   CONSTRAINT `link_category_id`
     FOREIGN KEY (`category_id` )
     REFERENCES `link_categories` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE INDEX `link_category_id` ON `links` (`category_id` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -217,8 +235,6 @@ CREATE  TABLE IF NOT EXISTS `terms` (
   `slug` VARCHAR(200) NOT NULL ,
   `description` VARCHAR(255) NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `term_parents` (`term_parent` ASC) ,
-  UNIQUE INDEX `slug_UNIQUE` (`slug` ASC) ,
   CONSTRAINT `term_parent`
     FOREIGN KEY (`term_parent` )
     REFERENCES `terms` (`id` )
@@ -226,6 +242,10 @@ CREATE  TABLE IF NOT EXISTS `terms` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
 COMMENT = 'terms 和 term_taxonomy分离解决 分类名、链接分类、tag不能重名的问题\n\nThis table de' /* comment truncated */;
+
+CREATE INDEX `term_parents` ON `terms` (`term_parent` ASC) ;
+
+CREATE UNIQUE INDEX `slug_UNIQUE` ON `terms` (`slug` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -238,8 +258,6 @@ CREATE  TABLE IF NOT EXISTS `term_relationships` (
   `term_id` INT NOT NULL ,
   `termOrder` INT NULL ,
   PRIMARY KEY (`post_id`, `term_id`) ,
-  INDEX `relationship_post` (`post_id` ASC) ,
-  INDEX `relationship_term` (`term_id` ASC) ,
   CONSTRAINT `relationship_post`
     FOREIGN KEY (`post_id` )
     REFERENCES `posts` (`id` )
@@ -253,6 +271,10 @@ CREATE  TABLE IF NOT EXISTS `term_relationships` (
 ENGINE = InnoDB
 COMMENT = 'http://codex.wordpress.org/Database_Description 和 http://cod' /* comment truncated */;
 
+CREATE INDEX `relationship_post` ON `term_relationships` (`post_id` ASC) ;
+
+CREATE INDEX `relationship_term` ON `term_relationships` (`term_id` ASC) ;
+
 
 -- -----------------------------------------------------
 -- Table `options`
@@ -263,9 +285,10 @@ CREATE  TABLE IF NOT EXISTS `options` (
   `id` INT NOT NULL AUTO_INCREMENT ,
   `optionKey` VARCHAR(64) NOT NULL ,
   `optionValue` VARCHAR(255) NULL ,
-  PRIMARY KEY (`id`) ,
-  UNIQUE INDEX `key_UNIQUE` (`optionKey` ASC) )
+  PRIMARY KEY (`id`) )
 ENGINE = InnoDB;
+
+CREATE UNIQUE INDEX `key_UNIQUE` ON `options` (`optionKey` ASC) ;
 
 
 -- -----------------------------------------------------
@@ -279,13 +302,14 @@ CREATE  TABLE IF NOT EXISTS `site_logs` (
   `user_id` INT NOT NULL ,
   `logOperation` VARCHAR(255) NOT NULL ,
   PRIMARY KEY (`id`) ,
-  INDEX `user_site_log` (`user_id` ASC) ,
   CONSTRAINT `user_site_log`
     FOREIGN KEY (`user_id` )
     REFERENCES `users` (`id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
+
+CREATE INDEX `user_site_log` ON `site_logs` (`user_id` ASC) ;
 
 
 
