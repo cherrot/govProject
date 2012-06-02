@@ -21,6 +21,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -50,6 +51,8 @@ public class User implements Serializable {
 //    @NotNull
     @Column(name = "id", nullable = false)
     private Integer id;
+    //if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
@@ -74,7 +77,8 @@ public class User implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "displayName", nullable = false, length = 45)
     private String displayName;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")//if the field contains email address consider using this annotation to enforce field validation
+    //if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 100)
@@ -205,9 +209,13 @@ public class User implements Serializable {
         return hash;
     }
 
+    /**
+     * Warning - this method won't work in the case the id fields are not set
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof User)) {
             return false;
         }
@@ -222,5 +230,5 @@ public class User implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.User[ id=" + id + " ]";
     }
-    
+
 }

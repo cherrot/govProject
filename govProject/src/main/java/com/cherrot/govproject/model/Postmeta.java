@@ -103,9 +103,13 @@ public class Postmeta implements Serializable {
         return hash;
     }
 
+    /**
+     * Warning - this method won't work in the case the id fields are not set
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Postmeta)) {
             return false;
         }
@@ -120,5 +124,5 @@ public class Postmeta implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Postmeta[ id=" + id + " ]";
     }
-    
+
 }

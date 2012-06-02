@@ -133,9 +133,13 @@ public class Link implements Serializable {
         return hash;
     }
 
+    /**
+     * Warning - this method won't work in the case the id fields are not set
+     * @param object
+     * @return
+     */
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Link)) {
             return false;
         }
@@ -150,5 +154,5 @@ public class Link implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Link[ id=" + id + " ]";
     }
-    
+
 }
