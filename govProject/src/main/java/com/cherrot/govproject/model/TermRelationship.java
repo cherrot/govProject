@@ -17,14 +17,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cherrot
+ * @author sai
  */
 @Entity
 @Table(name = "term_relationships")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "TermRelationship.findAll", query = "SELECT t FROM TermRelationship t"),
-    @NamedQuery(name = "TermRelationship.findByObjectId", query = "SELECT t FROM TermRelationship t WHERE t.termRelationshipPK.objectId = :objectId"),
+    @NamedQuery(name = "TermRelationship.findByPostId", query = "SELECT t FROM TermRelationship t WHERE t.termRelationshipPK.postId = :postId"),
     @NamedQuery(name = "TermRelationship.findByTermId", query = "SELECT t FROM TermRelationship t WHERE t.termRelationshipPK.termId = :termId"),
     @NamedQuery(name = "TermRelationship.findByTermOrder", query = "SELECT t FROM TermRelationship t WHERE t.termOrder = :termOrder")})
 public class TermRelationship implements Serializable {
@@ -36,12 +36,9 @@ public class TermRelationship implements Serializable {
     @JoinColumn(name = "term_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Term term;
-    @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
     @ManyToOne(optional = false)
     private Post post;
-    @JoinColumn(name = "object_id", referencedColumnName = "id", nullable = false, insertable = false, updatable = false)
-    @ManyToOne(optional = false)
-    private Link link;
 
     public TermRelationship() {
     }
@@ -50,8 +47,8 @@ public class TermRelationship implements Serializable {
         this.termRelationshipPK = termRelationshipPK;
     }
 
-    public TermRelationship(int objectId, int termId) {
-        this.termRelationshipPK = new TermRelationshipPK(objectId, termId);
+    public TermRelationship(int postId, int termId) {
+        this.termRelationshipPK = new TermRelationshipPK(postId, termId);
     }
 
     public TermRelationshipPK getTermRelationshipPK() {
@@ -86,29 +83,21 @@ public class TermRelationship implements Serializable {
         this.post = post;
     }
 
-    public Link getLink() {
-        return link;
-    }
-
-    public void setLink(Link link) {
-        this.link = link;
-    }
-
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += ( termRelationshipPK != null ? termRelationshipPK.hashCode() : 0 );
+        hash += (termRelationshipPK != null ? termRelationshipPK.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!( object instanceof TermRelationship )) {
+        if (!(object instanceof TermRelationship)) {
             return false;
         }
         TermRelationship other = (TermRelationship) object;
-        if (( this.termRelationshipPK == null && other.termRelationshipPK != null ) || ( this.termRelationshipPK != null && !this.termRelationshipPK.equals(other.termRelationshipPK) )) {
+        if ((this.termRelationshipPK == null && other.termRelationshipPK != null) || (this.termRelationshipPK != null && !this.termRelationshipPK.equals(other.termRelationshipPK))) {
             return false;
         }
         return true;
@@ -118,5 +107,5 @@ public class TermRelationship implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.TermRelationship[ termRelationshipPK=" + termRelationshipPK + " ]";
     }
-
+    
 }

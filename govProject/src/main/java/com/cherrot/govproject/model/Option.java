@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author cherrot
+ * @author sai
  */
 @Entity
 @Table(name = "options", uniqueConstraints = {
@@ -88,18 +88,18 @@ public class Option implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += ( id != null ? id.hashCode() : 0 );
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!( object instanceof Option )) {
+        if (!(object instanceof Option)) {
             return false;
         }
         Option other = (Option) object;
-        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -109,5 +109,5 @@ public class Option implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Option[ id=" + id + " ]";
     }
-
+    
 }

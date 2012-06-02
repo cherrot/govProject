@@ -12,14 +12,14 @@ import javax.validation.constraints.NotNull;
 
 /**
  *
- * @author cherrot
+ * @author sai
  */
 @Embeddable
 public class TermRelationshipPK implements Serializable {
     @Basic(optional = false)
     @NotNull
-    @Column(name = "object_id", nullable = false)
-    private int objectId;
+    @Column(name = "post_id", nullable = false)
+    private int postId;
     @Basic(optional = false)
     @NotNull
     @Column(name = "term_id", nullable = false)
@@ -28,17 +28,17 @@ public class TermRelationshipPK implements Serializable {
     public TermRelationshipPK() {
     }
 
-    public TermRelationshipPK(int objectId, int termId) {
-        this.objectId = objectId;
+    public TermRelationshipPK(int postId, int termId) {
+        this.postId = postId;
         this.termId = termId;
     }
 
-    public int getObjectId() {
-        return objectId;
+    public int getPostId() {
+        return postId;
     }
 
-    public void setObjectId(int objectId) {
-        this.objectId = objectId;
+    public void setPostId(int postId) {
+        this.postId = postId;
     }
 
     public int getTermId() {
@@ -52,7 +52,7 @@ public class TermRelationshipPK implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += (int) objectId;
+        hash += (int) postId;
         hash += (int) termId;
         return hash;
     }
@@ -60,11 +60,11 @@ public class TermRelationshipPK implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!( object instanceof TermRelationshipPK )) {
+        if (!(object instanceof TermRelationshipPK)) {
             return false;
         }
         TermRelationshipPK other = (TermRelationshipPK) object;
-        if (this.objectId != other.objectId) {
+        if (this.postId != other.postId) {
             return false;
         }
         if (this.termId != other.termId) {
@@ -75,7 +75,7 @@ public class TermRelationshipPK implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.TermRelationshipPK[ objectId=" + objectId + ", termId=" + termId + " ]";
+        return "com.cherrot.govproject.model.TermRelationshipPK[ postId=" + postId + ", termId=" + termId + " ]";
     }
-
+    
 }

@@ -33,7 +33,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cherrot
+ * @author sai
  */
 @Entity
 @Table(name = "terms", uniqueConstraints = {
@@ -154,7 +154,6 @@ public class Term implements Serializable {
      */
     public void setSlug(String slug) {
         processSlug(slug);
-        this.slug = slug;
     }
 
     public String getDescription() {
@@ -194,18 +193,18 @@ public class Term implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += ( id != null ? id.hashCode() : 0 );
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!( object instanceof Term )) {
+        if (!(object instanceof Term)) {
             return false;
         }
         Term other = (Term) object;
-        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -215,5 +214,5 @@ public class Term implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Term[ id=" + id + " ]";
     }
-
+    
 }

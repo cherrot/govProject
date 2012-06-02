@@ -5,36 +5,37 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
  * @author sai
  */
 @Entity
-@Table(name = "links")
+@Table(name = "link_categories")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Link.findAll", query = "SELECT l FROM Link l"),
-    @NamedQuery(name = "Link.findById", query = "SELECT l FROM Link l WHERE l.id = :id"),
-    @NamedQuery(name = "Link.findByUrl", query = "SELECT l FROM Link l WHERE l.url = :url"),
-    @NamedQuery(name = "Link.findByName", query = "SELECT l FROM Link l WHERE l.name = :name"),
-    @NamedQuery(name = "Link.findByTarget", query = "SELECT l FROM Link l WHERE l.target = :target"),
-    @NamedQuery(name = "Link.findByDescription", query = "SELECT l FROM Link l WHERE l.description = :description")})
-public class Link implements Serializable {
+    @NamedQuery(name = "LinkCategory.findAll", query = "SELECT l FROM LinkCategory l"),
+    @NamedQuery(name = "LinkCategory.findById", query = "SELECT l FROM LinkCategory l WHERE l.id = :id"),
+    @NamedQuery(name = "LinkCategory.findByCount", query = "SELECT l FROM LinkCategory l WHERE l.count = :count"),
+    @NamedQuery(name = "LinkCategory.findByName", query = "SELECT l FROM LinkCategory l WHERE l.name = :name"),
+    @NamedQuery(name = "LinkCategory.findByDescription", query = "SELECT l FROM LinkCategory l WHERE l.description = :description")})
+public class LinkCategory implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,38 +45,27 @@ public class Link implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 255)
-    @Column(name = "url", nullable = false, length = 255)
-    private String url;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "name", nullable = false, length = 45)
+    @Column(name = "count", nullable = false)
+    private int count;
+    @Size(max = 100)
+    @Column(name = "name", length = 100)
     private String name;
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 20)
-    @Column(name = "target", nullable = false, length = 20)
-    private String target;
     @Size(max = 255)
     @Column(name = "description", length = 255)
     private String description;
-    @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
-    @ManyToOne(optional = false)
-    private LinkCategory linkCategory;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "linkCategory")
+    private List<Link> linkList;
 
-    public Link() {
+    public LinkCategory() {
     }
 
-    public Link(Integer id) {
+    public LinkCategory(Integer id) {
         this.id = id;
     }
 
-    public Link(Integer id, String url, String name, String target) {
+    public LinkCategory(Integer id, int count) {
         this.id = id;
-        this.url = url;
-        this.name = name;
-        this.target = target;
+        this.count = count;
     }
 
     public Integer getId() {
@@ -86,12 +76,12 @@ public class Link implements Serializable {
         this.id = id;
     }
 
-    public String getUrl() {
-        return url;
+    public int getCount() {
+        return count;
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public String getName() {
@@ -102,14 +92,6 @@ public class Link implements Serializable {
         this.name = name;
     }
 
-    public String getTarget() {
-        return target;
-    }
-
-    public void setTarget(String target) {
-        this.target = target;
-    }
-
     public String getDescription() {
         return description;
     }
@@ -118,12 +100,13 @@ public class Link implements Serializable {
         this.description = description;
     }
 
-    public LinkCategory getLinkCategory() {
-        return linkCategory;
+    @XmlTransient
+    public List<Link> getLinkList() {
+        return linkList;
     }
 
-    public void setLinkCategory(LinkCategory linkCategory) {
-        this.linkCategory = linkCategory;
+    public void setLinkList(List<Link> linkList) {
+        this.linkList = linkList;
     }
 
     @Override
@@ -136,10 +119,10 @@ public class Link implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Link)) {
+        if (!(object instanceof LinkCategory)) {
             return false;
         }
-        Link other = (Link) object;
+        LinkCategory other = (LinkCategory) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -148,7 +131,7 @@ public class Link implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Link[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.LinkCategory[ id=" + id + " ]";
     }
     
 }

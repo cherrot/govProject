@@ -5,6 +5,7 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +17,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -25,14 +28,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @author sai
  */
 @Entity
-@Table(name = "usermeta")
+@Table(name = "site_logs")
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Usermeta.findAll", query = "SELECT u FROM Usermeta u"),
-    @NamedQuery(name = "Usermeta.findById", query = "SELECT u FROM Usermeta u WHERE u.id = :id"),
-    @NamedQuery(name = "Usermeta.findByMetaKey", query = "SELECT u FROM Usermeta u WHERE u.metaKey = :metaKey"),
-    @NamedQuery(name = "Usermeta.findByMetaValue", query = "SELECT u FROM Usermeta u WHERE u.metaValue = :metaValue")})
-public class Usermeta implements Serializable {
+    @NamedQuery(name = "SiteLog.findAll", query = "SELECT s FROM SiteLog s"),
+    @NamedQuery(name = "SiteLog.findById", query = "SELECT s FROM SiteLog s WHERE s.id = :id"),
+    @NamedQuery(name = "SiteLog.findByLogDate", query = "SELECT s FROM SiteLog s WHERE s.logDate = :logDate"),
+    @NamedQuery(name = "SiteLog.findByLogOperation", query = "SELECT s FROM SiteLog s WHERE s.logOperation = :logOperation")})
+public class SiteLog implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,26 +45,29 @@ public class Usermeta implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 45)
-    @Column(name = "metaKey", nullable = false, length = 45)
-    private String metaKey;
-    @Size(max = 255)
-    @Column(name = "metaValue", length = 255)
-    private String metaValue;
+    @Column(name = "logDate", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date logDate;
+    @Basic(optional = false)
+    @NotNull
+    @Size(min = 1, max = 255)
+    @Column(name = "logOperation", nullable = false, length = 255)
+    private String logOperation;
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private User user;
 
-    public Usermeta() {
+    public SiteLog() {
     }
 
-    public Usermeta(Integer id) {
+    public SiteLog(Integer id) {
         this.id = id;
     }
 
-    public Usermeta(Integer id, String metaKey) {
+    public SiteLog(Integer id, Date logDate, String logOperation) {
         this.id = id;
-        this.metaKey = metaKey;
+        this.logDate = logDate;
+        this.logOperation = logOperation;
     }
 
     public Integer getId() {
@@ -72,20 +78,20 @@ public class Usermeta implements Serializable {
         this.id = id;
     }
 
-    public String getMetaKey() {
-        return metaKey;
+    public Date getLogDate() {
+        return logDate;
     }
 
-    public void setMetaKey(String metaKey) {
-        this.metaKey = metaKey;
+    public void setLogDate(Date logDate) {
+        this.logDate = logDate;
     }
 
-    public String getMetaValue() {
-        return metaValue;
+    public String getLogOperation() {
+        return logOperation;
     }
 
-    public void setMetaValue(String metaValue) {
-        this.metaValue = metaValue;
+    public void setLogOperation(String logOperation) {
+        this.logOperation = logOperation;
     }
 
     public User getUser() {
@@ -106,10 +112,10 @@ public class Usermeta implements Serializable {
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!(object instanceof Usermeta)) {
+        if (!(object instanceof SiteLog)) {
             return false;
         }
-        Usermeta other = (Usermeta) object;
+        SiteLog other = (SiteLog) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
@@ -118,7 +124,7 @@ public class Usermeta implements Serializable {
 
     @Override
     public String toString() {
-        return "com.cherrot.govproject.model.Usermeta[ id=" + id + " ]";
+        return "com.cherrot.govproject.model.SiteLog[ id=" + id + " ]";
     }
     
 }

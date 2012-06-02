@@ -13,9 +13,11 @@ PersistenceUnitInfo instance based on the persistence.xml file-->
     <class>com.cherrot.govproject.model.TermRelationship</class>
     <class>com.cherrot.govproject.model.User</class>
     <class>com.cherrot.govproject.model.Usermeta</class>
+    <class>com.cherrot.govproject.model.SiteLog</class>
+    <class>com.cherrot.govproject.model.LinkCategory</class>
     <properties>
       <!--FIXME: Release前将 create-drop改为update-->
-<!--      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
+      <!--      <property name="hibernate.hbm2ddl.auto" value="create-drop"/>-->
       <property name="hibernate.hbm2ddl.auto" value="update"/>
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.transaction.flush_before_completion" value="true"/>

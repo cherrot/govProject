@@ -30,7 +30,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author cherrot
+ * @author sai
  */
 @Entity
 @Table(name = "comments")
@@ -228,18 +228,18 @@ public class Comment implements Serializable {
     @Override
     public int hashCode() {
         int hash = 0;
-        hash += ( id != null ? id.hashCode() : 0 );
+        hash += (id != null ? id.hashCode() : 0);
         return hash;
     }
 
     @Override
     public boolean equals(Object object) {
         // TODO: Warning - this method won't work in the case the id fields are not set
-        if (!( object instanceof Comment )) {
+        if (!(object instanceof Comment)) {
             return false;
         }
         Comment other = (Comment) object;
-        if (( this.id == null && other.id != null ) || ( this.id != null && !this.id.equals(other.id) )) {
+        if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }
         return true;
@@ -249,5 +249,5 @@ public class Comment implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Comment[ id=" + id + " ]";
     }
-
+    
 }
