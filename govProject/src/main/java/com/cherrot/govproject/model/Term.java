@@ -20,6 +20,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -95,8 +96,8 @@ public class Term implements Serializable {
     @JoinColumn(name = "term_parent", referencedColumnName = "id")
     @ManyToOne
     private Term termParent;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "term")
-    private List<TermRelationship> termRelationshipList;
+    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "term")
+    private List<Post> posts;
 
     public Term() {
     }
