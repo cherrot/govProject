@@ -8,6 +8,7 @@ import com.cherrot.govproject.dao.LinkDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
+import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.service.LinkService;
@@ -37,14 +38,9 @@ public class LinkServiceImpl implements LinkService{
 
     @Override
     @Transactional
-    public void create(Link link, List<Term> categories) {
-        linkDao.create(link);
-        for(Term category : categories) {
-            termRelationshipService
-                    .create(new TermRelationship(link.getId(), category.getId()));
-            category.setCount(category.getCount()+1);
-        }
-    
+    public void create(Link link, List<LinkCategory> categories) {
+        //TODO unfinished
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -107,5 +103,11 @@ public class LinkServiceImpl implements LinkService{
         catch (Exception ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public List<LinkCategory> listCategories() {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

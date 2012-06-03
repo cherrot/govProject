@@ -22,4 +22,11 @@ public interface TermService extends BaseService<Term, Integer> {
      */
     List<Term> createTagsByName(List<String> tags);
     List<Term> createCategoriesByName(List<String> categories);
+
+    List<Term> listByType(TermType type);
+    List<Term> listByType(TermType type, int pageNum);
+    List<Term> listByType(TermType type, int pageNum, int pageSize);
+    List<Term> listByTypeOrderByCount(TermType type);
+    List<Term> listByTypeOrderByCount(TermType type, int pageNum);
+    List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize);
 }

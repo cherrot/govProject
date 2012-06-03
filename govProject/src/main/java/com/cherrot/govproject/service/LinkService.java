@@ -5,7 +5,7 @@
 package com.cherrot.govproject.service;
 
 import com.cherrot.govproject.model.Link;
-import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.LinkCategory;
 import java.util.List;
 
 /**
@@ -14,5 +14,6 @@ import java.util.List;
  */
 public interface LinkService extends BaseService<Link, Integer> {
 
-    void create(Link link, List<Term> categories);
+    void create(Link link, List<LinkCategory> categories);
+    List<LinkCategory> listCategories();
 }

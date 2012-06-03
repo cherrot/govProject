@@ -31,7 +31,7 @@ public class RegisterController extends BaseController {
     }
 
     @RequestMapping("doRegister")
-    public String register(HttpServletRequest request, @ModelAttribute("user")User user) {
+    public String register(HttpServletRequest request, @Valid @ModelAttribute("user")User user) {
         user.setDisplayName(user.getLogin().split("@")[0]);
         user.setEmail(user.getLogin());
         userService.create(user);

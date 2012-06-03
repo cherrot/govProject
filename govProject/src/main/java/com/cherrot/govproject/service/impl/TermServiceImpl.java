@@ -8,6 +8,7 @@ import com.cherrot.govproject.dao.TermDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.Term.TermType;
 import com.cherrot.govproject.service.TermService;
 import com.cherrot.govproject.util.Constants;
 import java.util.ArrayList;
@@ -135,5 +136,41 @@ public class TermServiceImpl implements TermService {
     @Override
     public List<Term> list(int pageNum, int pageSize) {
         return termDao.findEntities(pageSize, (pageNum-1)*pageSize);
+    }
+
+    @Override
+    public List<Term> listByType(TermType type) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Term> listByType(TermType type, int pageNum) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Term> listByType(TermType type, int pageNum, int pageSize) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Term> listByTypeOrderByCount(TermType type) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Term> listByTypeOrderByCount(TermType type, int pageNum) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize) {
+        //TODO unfinished
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
