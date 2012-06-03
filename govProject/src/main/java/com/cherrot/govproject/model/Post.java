@@ -15,7 +15,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -120,8 +122,9 @@ public class Post implements Serializable {
     @JoinColumn(name = "post_parent", referencedColumnName = "id")
     @ManyToOne
     private Post postParent;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    private List<TermRelationship> termRelationshipList;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "postList")
+    @JoinTable(name="term_relationships", inverseJoinColumns=@JoinColumn(name="term_id", referencedColumnName="id"))
+    private List<Term> termList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> commentList;
 
@@ -285,11 +288,11 @@ public class Post implements Serializable {
 
     @XmlTransient
     public List<TermRelationship> getTermRelationshipList() {
-        return termRelationshipList;
+        return termList;
     }
 
     public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
-        this.termRelationshipList = termRelationshipList;
+        this.termList = termRelationshipList;
     }
 
     @XmlTransient

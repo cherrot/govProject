@@ -25,6 +25,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -96,8 +97,15 @@ public class Term implements Serializable {
     @JoinColumn(name = "term_parent", referencedColumnName = "id")
     @ManyToOne
     private Term termParent;
-    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "term")
-    private List<Post> posts;
+    /**
+     * If you choose to map the relationship in both directions, then one 
+     * direction must be defined as the owner and the other must use 
+     * the mappedBy attribute to define its mapping. 
+     * This also avoids having to duplicate the JoinTable information in both places.
+     */
+    @OrderColumn(name="termOrder")
+    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}/*, mappedBy = "termList"*/)
+    private List<Post> postList;
 
     public Term() {
     }
