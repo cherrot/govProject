@@ -60,12 +60,12 @@ public class SiteLog implements Serializable {
     public SiteLog() {
     }
 
-    public SiteLog(Integer id) {
-        this.id = id;
-    }
+//    public SiteLog(Integer id) {
+//        this.id = id;
+//    }
 
-    public SiteLog(Integer id, Date logDate, String logOperation) {
-        this.id = id;
+    public SiteLog(/*Integer id,*/ Date logDate, String logOperation) {
+//        this.id = id;
         this.logDate = logDate;
         this.logOperation = logOperation;
     }

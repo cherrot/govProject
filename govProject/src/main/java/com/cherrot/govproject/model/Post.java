@@ -128,12 +128,12 @@ public class Post implements Serializable {
     public Post() {
     }
 
-    public Post(Integer id) {
-        this.id = id;
-    }
+//    public Post(Integer id) {
+//        this.id = id;
+//    }
 
-    public Post(Integer id, Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
-        this.id = id;
+    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
+//        this.id = id;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
         this.commentStatus = commentStatus;

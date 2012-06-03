@@ -11,16 +11,16 @@
         </h1>
         ${errMsg}<br/>
         <br/>
-        <form name="loginForm" action="user/doRegister" method="POST">
-            <input type="email" name="login" value="" />
-            <input type="password" name="pass" value="" />
+        <form:form name="registerForm" modelAttribute="user" action="user/doRegister">
+            <input type="email" name="login" />
+            <input type="password" name="pass" />
             <input type="submit" value="register" name="register" />
-        </form>
-        <form name="loginForm" action="user/doLogin" method="POST">
-            <input type="email" name="login" value="" />
-            <input type="password" name="pass" value="" />
-            <input type="submit" value="login" name="login" />
-        </form>
+        </form:form>
+        <form:form name="loginForm" action="user/doLogin" method="POST">
+            <input type="email" name="username" />
+            <input type="password" name="password" />
+            <input type="submit" name="login" value="login" />
+        </form:form>
         ${person.id}<br />${person.login}<br />
         <br/>
         <c:forEach items="${people}" var="person">

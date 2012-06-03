@@ -55,12 +55,12 @@ public class Commentmeta implements Serializable {
     public Commentmeta() {
     }
 
-    public Commentmeta(Integer id) {
-        this.id = id;
-    }
+//    public Commentmeta(Integer id) {
+//        this.id = id;
+//    }
 
-    public Commentmeta(Integer id, String metaKey) {
-        this.id = id;
+    public Commentmeta(/*Integer id,*/ String metaKey) {
+//        this.id = id;
         this.metaKey = metaKey;
     }
 

@@ -9,7 +9,9 @@ import com.cherrot.govproject.service.UserService;
 import java.util.Date;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
@@ -23,12 +25,15 @@ public class RegisterController extends BaseController {
     @Inject
     UserService userService;
 
+    @ModelAttribute("user")
+    public User getUser() {
+        return new User(null, null, 0, new Date(), "", "");
+    }
+
     @RequestMapping("doRegister")
-    public String register(HttpServletRequest request, User user) {
+    public String register(HttpServletRequest request, @ModelAttribute("user")User user) {
         user.setDisplayName(user.getLogin().split("@")[0]);
         user.setEmail(user.getLogin());
-        user.setRegisterDate(new Date());
-        user.setUserLevel(1000);
         userService.create(user);
         setSessionUser(request.getSession(), user);
         return "redirect:/";

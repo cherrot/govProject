@@ -52,12 +52,12 @@ public class Option implements Serializable {
     public Option() {
     }
 
-    public Option(Integer id) {
-        this.id = id;
-    }
+//    public Option(Integer id) {
+//        this.id = id;
+//    }
 
-    public Option(Integer id, String optionKey) {
-        this.id = id;
+    public Option(/*Integer id,*/ String optionKey) {
+//        this.id = id;
         this.optionKey = optionKey;
     }
 

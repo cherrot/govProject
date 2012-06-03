@@ -11,7 +11,9 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -32,14 +34,16 @@ public class LoginController extends BaseController {
      * @return
      */
 	@RequestMapping("doLogin")
-	public ModelAndView login(HttpServletRequest request, User user) {
-		User dbUser = userService.findByLoginName(user.getLogin());
+	public ModelAndView login(HttpServletRequest request,
+        @RequestParam("username")String username, @RequestParam("password")String password) {
+
+		User dbUser = userService.findByLoginName(username);
 		ModelAndView mav = new ModelAndView();
         // see Spring3 doc: 16.5 Resolving views -- The forward: prefix
-		mav.setViewName("forward:/home");
+		mav.setViewName("/home");
 		if (dbUser == null) {
 			mav.addObject(Constants.ERROR_MSG_KEY, "用户名不存在");
-		} else if ( ! dbUser.getPass().equals(user.getPass()) ) {
+		} else if ( ! dbUser.getPass().equals(password) ) {
 			mav.addObject(Constants.ERROR_MSG_KEY, "用户密码不正确");
 		} else {
 			setSessionUser(request.getSession(),dbUser);

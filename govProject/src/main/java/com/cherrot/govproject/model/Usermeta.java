@@ -55,12 +55,12 @@ public class Usermeta implements Serializable {
     public Usermeta() {
     }
 
-    public Usermeta(Integer id) {
-        this.id = id;
-    }
+//    public Usermeta(Integer id) {
+//        this.id = id;
+//    }
 
-    public Usermeta(Integer id, String metaKey) {
-        this.id = id;
+    public Usermeta(/*Integer id,*/ String metaKey) {
+//        this.id = id;
         this.metaKey = metaKey;
     }
 

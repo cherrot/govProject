@@ -55,12 +55,12 @@ public class Postmeta implements Serializable {
     public Postmeta() {
     }
 
-    public Postmeta(Integer id) {
-        this.id = id;
-    }
+//    public Postmeta(Integer id) {
+//        this.id = id;
+//    }
 
-    public Postmeta(Integer id, String metaKey) {
-        this.id = id;
+    public Postmeta(/*Integer id,*/ String metaKey) {
+//        this.id = id;
         this.metaKey = metaKey;
     }
 

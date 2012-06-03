@@ -67,12 +67,12 @@ public class Link implements Serializable {
     public Link() {
     }
 
-    public Link(Integer id) {
-        this.id = id;
-    }
+//    public Link(Integer id) {
+//        this.id = id;
+//    }
 
-    public Link(Integer id, String url, String name, String target) {
-        this.id = id;
+    public Link(/*Integer id,*/ String url, String name, String target) {
+//        this.id = id;
         this.url = url;
         this.name = name;
         this.target = target;

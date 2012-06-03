@@ -104,12 +104,12 @@ public class Comment implements Serializable {
     public Comment() {
     }
 
-    public Comment(Integer id) {
-        this.id = id;
-    }
+//    public Comment(Integer id) {
+//        this.id = id;
+//    }
 
-    public Comment(Integer id, Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
-        this.id = id;
+    public Comment(/*Integer id,*/ Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
+//        this.id = id;
         this.commentDate = commentDate;
         this.approved = approved;
         this.author = author;
@@ -235,7 +235,7 @@ public class Comment implements Serializable {
     /**
      * Warning - this method won't work in the case the id fields are not set
      * @param object
-     * @return 
+     * @return
      */
     @Override
     public boolean equals(Object object) {

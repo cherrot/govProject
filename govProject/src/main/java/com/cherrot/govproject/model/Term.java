@@ -101,12 +101,12 @@ public class Term implements Serializable {
     public Term() {
     }
 
-    public Term(Integer id) {
-        this.id = id;
-    }
+//    public Term(Integer id) {
+//        this.id = id;
+//    }
 
-    public Term(Integer id, int count, String slug) {
-        this.id = id;
+    public Term(/*Integer id,*/ int count, String slug) {
+//        this.id = id;
         this.count = count;
         this.slug = slug;
     }
