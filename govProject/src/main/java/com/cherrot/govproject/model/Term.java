@@ -98,13 +98,14 @@ public class Term implements Serializable {
     @ManyToOne
     private Term termParent;
     /**
-     * If you choose to map the relationship in both directions, then one 
-     * direction must be defined as the owner and the other must use 
-     * the mappedBy attribute to define its mapping. 
+     * If you choose to map the relationship in both directions, then one
+     * direction must be defined as the owner and the other must use
+     * the mappedBy attribute to define its mapping.
      * This also avoids having to duplicate the JoinTable information in both places.
+     * Post.java为主控端， Term.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
     @OrderColumn(name="termOrder")
-    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}/*, mappedBy = "termList"*/)
+    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "termList")
     private List<Post> postList;
 
     public Term() {
@@ -191,12 +192,12 @@ public class Term implements Serializable {
     }
 
     @XmlTransient
-    public List<TermRelationship> getTermRelationshipList() {
-        return termRelationshipList;
+    public List<Post> getPostList() {
+        return postList;
     }
 
-    public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
-        this.termRelationshipList = termRelationshipList;
+    public void setPostList(List<Post> postList) {
+        this.postList = postList;
     }
 
     @Override

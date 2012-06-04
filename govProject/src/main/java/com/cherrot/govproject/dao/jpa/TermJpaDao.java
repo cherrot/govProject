@@ -5,10 +5,9 @@
 package com.cherrot.govproject.dao.jpa;
 
 import com.cherrot.govproject.dao.TermDao;
-import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
+import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.TermRelationship;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -24,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author cherrot
+ * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Repository
 public class TermJpaDao implements TermDao {
@@ -48,8 +47,8 @@ public class TermJpaDao implements TermDao {
         if (term.getTermList() == null) {
             term.setTermList(new ArrayList<Term>());
         }
-        if (term.getTermRelationshipList() == null) {
-            term.setTermRelationshipList(new ArrayList<TermRelationship>());
+        if (term.getPostList() == null) {
+            term.setPostList(new ArrayList<Post>());
         }
 //        EntityManager em = null;
 //        try {
@@ -66,12 +65,12 @@ public class TermJpaDao implements TermDao {
                 attachedTermList.add(termListTermToAttach);
             }
             term.setTermList(attachedTermList);
-            List<TermRelationship> attachedTermRelationshipList = new ArrayList<TermRelationship>();
-            for (TermRelationship termRelationshipListTermRelationshipToAttach : term.getTermRelationshipList()) {
-                termRelationshipListTermRelationshipToAttach = em.getReference(termRelationshipListTermRelationshipToAttach.getClass(), termRelationshipListTermRelationshipToAttach.getTermRelationshipPK());
-                attachedTermRelationshipList.add(termRelationshipListTermRelationshipToAttach);
+            List<Post> attachedPostList = new ArrayList<Post>();
+            for (Post postListPostToAttach : term.getPostList()) {
+                postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+                attachedPostList.add(postListPostToAttach);
             }
-            term.setTermRelationshipList(attachedTermRelationshipList);
+            term.setPostList(attachedPostList);
             em.persist(term);
             if (termParent != null) {
                 termParent.getTermList().add(term);
@@ -86,18 +85,12 @@ public class TermJpaDao implements TermDao {
                     oldTermParentOfTermListTerm = em.merge(oldTermParentOfTermListTerm);
                 }
             }
-            for (TermRelationship termRelationshipListTermRelationship : term.getTermRelationshipList()) {
-                Term oldTermOfTermRelationshipListTermRelationship = termRelationshipListTermRelationship.getTerm();
-                termRelationshipListTermRelationship.setTerm(term);
-                termRelationshipListTermRelationship = em.merge(termRelationshipListTermRelationship);
-                if (oldTermOfTermRelationshipListTermRelationship != null) {
-                    oldTermOfTermRelationshipListTermRelationship.getTermRelationshipList().remove(termRelationshipListTermRelationship);
-                    oldTermOfTermRelationshipListTermRelationship = em.merge(oldTermOfTermRelationshipListTermRelationship);
-                }
+            for (Post postListPost : term.getPostList()) {
+                postListPost.getTermList().add(term);
+                postListPost = em.merge(postListPost);
             }
 //            em.getTransaction().commit();
-//        }
-//        finally {
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
@@ -106,7 +99,7 @@ public class TermJpaDao implements TermDao {
 
     @Override
     @Transactional
-    public void edit(Term term) throws IllegalOrphanException, NonexistentEntityException, Exception {
+    public void edit(Term term) throws NonexistentEntityException, Exception {
 //        EntityManager em = null;
         try {
 //            em = getEntityManager();
@@ -116,20 +109,8 @@ public class TermJpaDao implements TermDao {
             Term termParentNew = term.getTermParent();
             List<Term> termListOld = persistentTerm.getTermList();
             List<Term> termListNew = term.getTermList();
-            List<TermRelationship> termRelationshipListOld = persistentTerm.getTermRelationshipList();
-            List<TermRelationship> termRelationshipListNew = term.getTermRelationshipList();
-            List<String> illegalOrphanMessages = null;
-            for (TermRelationship termRelationshipListOldTermRelationship : termRelationshipListOld) {
-                if (!termRelationshipListNew.contains(termRelationshipListOldTermRelationship)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain TermRelationship " + termRelationshipListOldTermRelationship + " since its term field is not nullable.");
-                }
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
+            List<Post> postListOld = persistentTerm.getPostList();
+            List<Post> postListNew = term.getPostList();
             if (termParentNew != null) {
                 termParentNew = em.getReference(termParentNew.getClass(), termParentNew.getId());
                 term.setTermParent(termParentNew);
@@ -141,13 +122,13 @@ public class TermJpaDao implements TermDao {
             }
             termListNew = attachedTermListNew;
             term.setTermList(termListNew);
-            List<TermRelationship> attachedTermRelationshipListNew = new ArrayList<TermRelationship>();
-            for (TermRelationship termRelationshipListNewTermRelationshipToAttach : termRelationshipListNew) {
-                termRelationshipListNewTermRelationshipToAttach = em.getReference(termRelationshipListNewTermRelationshipToAttach.getClass(), termRelationshipListNewTermRelationshipToAttach.getTermRelationshipPK());
-                attachedTermRelationshipListNew.add(termRelationshipListNewTermRelationshipToAttach);
+            List<Post> attachedPostListNew = new ArrayList<Post>();
+            for (Post postListNewPostToAttach : postListNew) {
+                postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
+                attachedPostListNew.add(postListNewPostToAttach);
             }
-            termRelationshipListNew = attachedTermRelationshipListNew;
-            term.setTermRelationshipList(termRelationshipListNew);
+            postListNew = attachedPostListNew;
+            term.setPostList(postListNew);
             term = em.merge(term);
             if (termParentOld != null && !termParentOld.equals(termParentNew)) {
                 termParentOld.getTermList().remove(term);
@@ -174,20 +155,20 @@ public class TermJpaDao implements TermDao {
                     }
                 }
             }
-            for (TermRelationship termRelationshipListNewTermRelationship : termRelationshipListNew) {
-                if (!termRelationshipListOld.contains(termRelationshipListNewTermRelationship)) {
-                    Term oldTermOfTermRelationshipListNewTermRelationship = termRelationshipListNewTermRelationship.getTerm();
-                    termRelationshipListNewTermRelationship.setTerm(term);
-                    termRelationshipListNewTermRelationship = em.merge(termRelationshipListNewTermRelationship);
-                    if (oldTermOfTermRelationshipListNewTermRelationship != null && !oldTermOfTermRelationshipListNewTermRelationship.equals(term)) {
-                        oldTermOfTermRelationshipListNewTermRelationship.getTermRelationshipList().remove(termRelationshipListNewTermRelationship);
-                        oldTermOfTermRelationshipListNewTermRelationship = em.merge(oldTermOfTermRelationshipListNewTermRelationship);
-                    }
+            for (Post postListOldPost : postListOld) {
+                if (!postListNew.contains(postListOldPost)) {
+                    postListOldPost.getTermList().remove(term);
+                    postListOldPost = em.merge(postListOldPost);
+                }
+            }
+            for (Post postListNewPost : postListNew) {
+                if (!postListOld.contains(postListNewPost)) {
+                    postListNewPost.getTermList().add(term);
+                    postListNewPost = em.merge(postListNewPost);
                 }
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = term.getId();
@@ -206,7 +187,7 @@ public class TermJpaDao implements TermDao {
 
     @Override
     @Transactional
-    public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
+    public void destroy(Integer id) throws NonexistentEntityException {
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
@@ -218,17 +199,6 @@ public class TermJpaDao implements TermDao {
             } catch (EntityNotFoundException enfe) {
                 throw new NonexistentEntityException("The term with id " + id + " no longer exists.", enfe);
             }
-            List<String> illegalOrphanMessages = null;
-            List<TermRelationship> termRelationshipListOrphanCheck = term.getTermRelationshipList();
-            for (TermRelationship termRelationshipListOrphanCheckTermRelationship : termRelationshipListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Term (" + term + ") cannot be destroyed since the TermRelationship " + termRelationshipListOrphanCheckTermRelationship + " in its termRelationshipList field has a non-nullable term field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
             Term termParent = term.getTermParent();
             if (termParent != null) {
                 termParent.getTermList().remove(term);
@@ -239,10 +209,14 @@ public class TermJpaDao implements TermDao {
                 termListTerm.setTermParent(null);
                 termListTerm = em.merge(termListTerm);
             }
+            List<Post> postList = term.getPostList();
+            for (Post postListPost : postList) {
+                postListPost.getTermList().remove(term);
+                postListPost = em.merge(postListPost);
+            }
             em.remove(term);
 //            em.getTransaction().commit();
-//        }
-//        finally {
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
@@ -270,8 +244,7 @@ public class TermJpaDao implements TermDao {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-//        }
-//        finally {
+//        } finally {
 //            em.close();
 //        }
     }
@@ -281,8 +254,7 @@ public class TermJpaDao implements TermDao {
 //        EntityManager em = getEntityManager();
 //        try {
             return em.find(Term.class, id);
-//        }
-//        finally {
+//        } finally {
 //            em.close();
 //        }
     }
@@ -295,9 +267,8 @@ public class TermJpaDao implements TermDao {
             Root<Term> rt = cq.from(Term.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
-//        }
-//        finally {
+            return ((Long) q.getSingleResult()).intValue();
+//        } finally {
 //            em.close();
 //        }
     }
@@ -333,5 +304,4 @@ public class TermJpaDao implements TermDao {
             }
         }
     }
-
 }
