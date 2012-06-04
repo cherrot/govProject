@@ -10,7 +10,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.model.TermRelationship;
+import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.model.User;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
- * @author cherrot
+ * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Repository
 public class PostJpaDao implements PostDao {
@@ -41,7 +41,6 @@ public class PostJpaDao implements PostDao {
 //    private UserTransaction utx = null;
 //    private EntityManagerFactory emf = null;
 //
-//    @Override
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
@@ -55,8 +54,8 @@ public class PostJpaDao implements PostDao {
         if (post.getPostList() == null) {
             post.setPostList(new ArrayList<Post>());
         }
-        if (post.getTermRelationshipList() == null) {
-            post.setTermRelationshipList(new ArrayList<TermRelationship>());
+        if (post.getTermList() == null) {
+            post.setTermList(new ArrayList<Term>());
         }
         if (post.getCommentList() == null) {
             post.setCommentList(new ArrayList<Comment>());
@@ -87,12 +86,12 @@ public class PostJpaDao implements PostDao {
                 attachedPostList.add(postListPostToAttach);
             }
             post.setPostList(attachedPostList);
-            List<TermRelationship> attachedTermRelationshipList = new ArrayList<TermRelationship>();
-            for (TermRelationship termRelationshipListTermRelationshipToAttach : post.getTermRelationshipList()) {
-                termRelationshipListTermRelationshipToAttach = em.getReference(termRelationshipListTermRelationshipToAttach.getClass(), termRelationshipListTermRelationshipToAttach.getTermRelationshipPK());
-                attachedTermRelationshipList.add(termRelationshipListTermRelationshipToAttach);
+            List<Term> attachedTermList = new ArrayList<Term>();
+            for (Term termListTermToAttach : post.getTermList()) {
+                termListTermToAttach = em.getReference(termListTermToAttach.getClass(), termListTermToAttach.getId());
+                attachedTermList.add(termListTermToAttach);
             }
-            post.setTermRelationshipList(attachedTermRelationshipList);
+            post.setTermList(attachedTermList);
             List<Comment> attachedCommentList = new ArrayList<Comment>();
             for (Comment commentListCommentToAttach : post.getCommentList()) {
                 commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
@@ -126,14 +125,9 @@ public class PostJpaDao implements PostDao {
                     oldPostParentOfPostListPost = em.merge(oldPostParentOfPostListPost);
                 }
             }
-            for (TermRelationship termRelationshipListTermRelationship : post.getTermRelationshipList()) {
-                Post oldPostOfTermRelationshipListTermRelationship = termRelationshipListTermRelationship.getPost();
-                termRelationshipListTermRelationship.setPost(post);
-                termRelationshipListTermRelationship = em.merge(termRelationshipListTermRelationship);
-                if (oldPostOfTermRelationshipListTermRelationship != null) {
-                    oldPostOfTermRelationshipListTermRelationship.getTermRelationshipList().remove(termRelationshipListTermRelationship);
-                    oldPostOfTermRelationshipListTermRelationship = em.merge(oldPostOfTermRelationshipListTermRelationship);
-                }
+            for (Term termListTerm : post.getTermList()) {
+                termListTerm.getPostList().add(post);
+                termListTerm = em.merge(termListTerm);
             }
             for (Comment commentListComment : post.getCommentList()) {
                 Post oldPostOfCommentListComment = commentListComment.getPost();
@@ -145,8 +139,7 @@ public class PostJpaDao implements PostDao {
                 }
             }
 //            em.getTransaction().commit();
-//        }
-//        finally {
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
@@ -169,8 +162,8 @@ public class PostJpaDao implements PostDao {
             List<Postmeta> postmetaListNew = post.getPostmetaList();
             List<Post> postListOld = persistentPost.getPostList();
             List<Post> postListNew = post.getPostList();
-            List<TermRelationship> termRelationshipListOld = persistentPost.getTermRelationshipList();
-            List<TermRelationship> termRelationshipListNew = post.getTermRelationshipList();
+            List<Term> termListOld = persistentPost.getTermList();
+            List<Term> termListNew = post.getTermList();
             List<Comment> commentListOld = persistentPost.getCommentList();
             List<Comment> commentListNew = post.getCommentList();
             List<String> illegalOrphanMessages = null;
@@ -179,15 +172,7 @@ public class PostJpaDao implements PostDao {
                     if (illegalOrphanMessages == null) {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
-                    illegalOrphanMessages.add("You must retain Postmeta " + postmetaListOldPostmeta + " since its postId field is not nullable.");
-                }
-            }
-            for (TermRelationship termRelationshipListOldTermRelationship : termRelationshipListOld) {
-                if (!termRelationshipListNew.contains(termRelationshipListOldTermRelationship)) {
-                    if (illegalOrphanMessages == null) {
-                        illegalOrphanMessages = new ArrayList<String>();
-                    }
-                    illegalOrphanMessages.add("You must retain TermRelationship " + termRelationshipListOldTermRelationship + " since its post field is not nullable.");
+                    illegalOrphanMessages.add("You must retain Postmeta " + postmetaListOldPostmeta + " since its post field is not nullable.");
                 }
             }
             for (Comment commentListOldComment : commentListOld) {
@@ -223,13 +208,13 @@ public class PostJpaDao implements PostDao {
             }
             postListNew = attachedPostListNew;
             post.setPostList(postListNew);
-            List<TermRelationship> attachedTermRelationshipListNew = new ArrayList<TermRelationship>();
-            for (TermRelationship termRelationshipListNewTermRelationshipToAttach : termRelationshipListNew) {
-                termRelationshipListNewTermRelationshipToAttach = em.getReference(termRelationshipListNewTermRelationshipToAttach.getClass(), termRelationshipListNewTermRelationshipToAttach.getTermRelationshipPK());
-                attachedTermRelationshipListNew.add(termRelationshipListNewTermRelationshipToAttach);
+            List<Term> attachedTermListNew = new ArrayList<Term>();
+            for (Term termListNewTermToAttach : termListNew) {
+                termListNewTermToAttach = em.getReference(termListNewTermToAttach.getClass(), termListNewTermToAttach.getId());
+                attachedTermListNew.add(termListNewTermToAttach);
             }
-            termRelationshipListNew = attachedTermRelationshipListNew;
-            post.setTermRelationshipList(termRelationshipListNew);
+            termListNew = attachedTermListNew;
+            post.setTermList(termListNew);
             List<Comment> attachedCommentListNew = new ArrayList<Comment>();
             for (Comment commentListNewCommentToAttach : commentListNew) {
                 commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
@@ -282,15 +267,16 @@ public class PostJpaDao implements PostDao {
                     }
                 }
             }
-            for (TermRelationship termRelationshipListNewTermRelationship : termRelationshipListNew) {
-                if (!termRelationshipListOld.contains(termRelationshipListNewTermRelationship)) {
-                    Post oldPostOfTermRelationshipListNewTermRelationship = termRelationshipListNewTermRelationship.getPost();
-                    termRelationshipListNewTermRelationship.setPost(post);
-                    termRelationshipListNewTermRelationship = em.merge(termRelationshipListNewTermRelationship);
-                    if (oldPostOfTermRelationshipListNewTermRelationship != null && !oldPostOfTermRelationshipListNewTermRelationship.equals(post)) {
-                        oldPostOfTermRelationshipListNewTermRelationship.getTermRelationshipList().remove(termRelationshipListNewTermRelationship);
-                        oldPostOfTermRelationshipListNewTermRelationship = em.merge(oldPostOfTermRelationshipListNewTermRelationship);
-                    }
+            for (Term termListOldTerm : termListOld) {
+                if (!termListNew.contains(termListOldTerm)) {
+                    termListOldTerm.getPostList().remove(post);
+                    termListOldTerm = em.merge(termListOldTerm);
+                }
+            }
+            for (Term termListNewTerm : termListNew) {
+                if (!termListOld.contains(termListNewTerm)) {
+                    termListNewTerm.getPostList().add(post);
+                    termListNewTerm = em.merge(termListNewTerm);
                 }
             }
             for (Comment commentListNewComment : commentListNew) {
@@ -305,8 +291,7 @@ public class PostJpaDao implements PostDao {
                 }
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = post.getId();
@@ -345,13 +330,6 @@ public class PostJpaDao implements PostDao {
                 }
                 illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Postmeta " + postmetaListOrphanCheckPostmeta + " in its postmetaList field has a non-nullable post field.");
             }
-            List<TermRelationship> termRelationshipListOrphanCheck = post.getTermRelationshipList();
-            for (TermRelationship termRelationshipListOrphanCheckTermRelationship : termRelationshipListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the TermRelationship " + termRelationshipListOrphanCheckTermRelationship + " in its termRelationshipList field has a non-nullable post field.");
-            }
             List<Comment> commentListOrphanCheck = post.getCommentList();
             for (Comment commentListOrphanCheckComment : commentListOrphanCheck) {
                 if (illegalOrphanMessages == null) {
@@ -377,10 +355,14 @@ public class PostJpaDao implements PostDao {
                 postListPost.setPostParent(null);
                 postListPost = em.merge(postListPost);
             }
+            List<Term> termList = post.getTermList();
+            for (Term termListTerm : termList) {
+                termListTerm.getPostList().remove(post);
+                termListTerm = em.merge(termListTerm);
+            }
             em.remove(post);
 //            em.getTransaction().commit();
-//        }
-//        finally {
+//        } finally {
 //            if (em != null) {
 //                em.close();
 //            }
@@ -408,8 +390,7 @@ public class PostJpaDao implements PostDao {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-//        }
-//        finally {
+//        } finally {
 //            em.close();
 //        }
     }
@@ -419,8 +400,7 @@ public class PostJpaDao implements PostDao {
 //        EntityManager em = getEntityManager();
 //        try {
             return em.find(Post.class, id);
-//        }
-//        finally {
+//        } finally {
 //            em.close();
 //        }
     }
@@ -433,9 +413,8 @@ public class PostJpaDao implements PostDao {
             Root<Post> rt = cq.from(Post.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
-//        }
-//        finally {
+            return ((Long) q.getSingleResult()).intValue();
+//        } finally {
 //            em.close();
 //        }
     }

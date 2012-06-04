@@ -4,16 +4,13 @@
  */
 package com.cherrot.govproject.service.impl;
 
+import com.cherrot.govproject.dao.LinkCategoryDao;
 import com.cherrot.govproject.dao.LinkDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.LinkCategory;
-import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.service.LinkService;
-import com.cherrot.govproject.service.TermRelationshipService;
-import com.cherrot.govproject.service.TermService;
 import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,11 +27,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class LinkServiceImpl implements LinkService{
 
     @Inject
-    private TermRelationshipService termRelationshipService;
-    @Inject
     private LinkDao linkDao;
     @Inject
-    private TermService termService;
+    private LinkCategoryDao linkCategoryDao;
 
     @Override
     @Transactional

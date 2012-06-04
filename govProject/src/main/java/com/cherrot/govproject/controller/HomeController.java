@@ -7,7 +7,6 @@ package com.cherrot.govproject.controller;
 import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.LinkService;
-import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
 import java.util.List;
 import javax.inject.Inject;
@@ -25,8 +24,6 @@ public class HomeController {
     @Inject
     TermService termService;
     @Inject
-    TermRelationshipService termRelationshipService;
-    @Inject
     LinkService linkService;
 
     @RequestMapping("/")
@@ -34,7 +31,6 @@ public class HomeController {
         ModelAndView mav = new ModelAndView("home");
         List<Term> categories = termService.listByTypeOrderByCount(Term.TermType.CATEGORY);
         mav.addObject("categories", categories);
-        //FIXME fix many to many relationship between posts and terms
         List<LinkCategory> linkCategories = linkService.listCategories();
         mav.addObject("linkCategories", linkCategories);
         return mav;

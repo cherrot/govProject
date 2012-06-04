@@ -1,16 +1,15 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
     <head>
-        <% String mainContentimage="./mainContentimage.jpg";%>
-        <% String mainContentsString="这里是介绍性的文字";%>
     </head>
     <body>
         <div id="mainContentimage">
-            <img src=<%=mainContentimage%> />
+            <img src="<c:url value="/resources/images/mainContentimage.jpg"/>" />
         </div> 
         <div id="mainContentString">
-            <%=mainContentsString%>    
+            text here 
         </div>
     </body>
 </html>

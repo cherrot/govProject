@@ -122,12 +122,13 @@ public class Post implements Serializable {
     @JoinColumn(name = "post_parent", referencedColumnName = "id")
     @ManyToOne
     private Post postParent;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH}, mappedBy = "postList")
-    @JoinTable(name="term_relationships", inverseJoinColumns=@JoinColumn(name="term_id", referencedColumnName="id"))
-    private List<Term> termList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
     private List<Comment> commentList;
-
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name="term_relationships",
+            inverseJoinColumns=@JoinColumn(name="term_id"),
+            joinColumns=@JoinColumn(name="post_id"))
+    private List<Term> termList;
     public Post() {
     }
 
@@ -287,12 +288,12 @@ public class Post implements Serializable {
     }
 
     @XmlTransient
-    public List<TermRelationship> getTermRelationshipList() {
+    public List<Term> getTermList() {
         return termList;
     }
 
-    public void setTermRelationshipList(List<TermRelationship> termRelationshipList) {
-        this.termList = termRelationshipList;
+    public void setTermList(List<Term> termList) {
+        this.termList = termList;
     }
 
     @XmlTransient

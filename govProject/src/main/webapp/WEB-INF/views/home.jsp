@@ -1,15 +1,18 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ page session="false" %>
+<!DOCTYPE html>
 <html>
     <head>
-        <title>Home</title>
+        <title>testpage</title>
     </head>
     <body>
-        <h1>User test</h1>
-        ${errMsg}
-        <br/>
-
+        <%@include file="header.jspf" %>
+        <div id="sidebar" >
+             <%@include file="sidebar.jspf" %>
+        </div>  
+        <div id="mainContent" >
+             <%@include file="mainContent_list.jspf" %> 
+        </div>
         <ul>
             <c:forEach items="${categories}" var="category">
                 <li><a href="${category.slug}">${category.name}</a></li>
@@ -24,4 +27,9 @@
             </ul>
         </c:forEach>
     </body>
+    <footer>
+        <div id="footer">
+        <%@include file="footer.jspf" %>
+        </div>
+    </footer>
 </html>

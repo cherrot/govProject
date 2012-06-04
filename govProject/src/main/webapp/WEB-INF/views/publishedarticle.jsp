@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <%@include file="header.jsp" %>
+        <%@include file="header.jspf" %>
     </head>
     <body>
         <div id="publisaleftsidebar"></div>

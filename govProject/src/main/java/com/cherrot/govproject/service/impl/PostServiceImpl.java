@@ -11,9 +11,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.TermRelationship;
 import com.cherrot.govproject.service.PostService;
-import com.cherrot.govproject.service.TermRelationshipService;
 import com.cherrot.govproject.service.TermService;
 import com.cherrot.govproject.util.Constants;
 import java.util.List;
@@ -36,42 +34,21 @@ public class PostServiceImpl implements PostService{
     private PostmetaDao postmetaDao;
     @Inject
     private TermService termService;
-    @Inject
-    private TermRelationshipService termRelationshipService;
 
     @Override
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags) {
-        postDao.create(post);
-        for (Term category : categories) {
-            termRelationshipService
-                    .create(new TermRelationship(post.getId(), category.getId()));
-            category.setCount(category.getCount()+1);
-        }
-        List<Term> terms = termService.createTagsByName(tags);
-        for (Term tag : terms) {
-            termRelationshipService.create(new TermRelationship(post.getId(),tag.getId()));
-        }
+        create(post, categories, tags, null);
     }
 
     @Override
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas) {
+        post.setTermList(categories);
+        post.setPostmetaList(postmetas);
+        List<Term> tagTerms = termService.createTagsByName(tags);
+        addTermList(post, tagTerms);
         postDao.create(post);
-        for (Term category : categories) {
-            termRelationshipService
-                    .create(new TermRelationship(post.getId(), category.getId()));
-            category.setCount(category.getCount()+1);
-        }
-        List<Term> terms = termService.createTagsByName(tags);
-        for (Term tag : terms) {
-            termRelationshipService.create(new TermRelationship(post.getId(),tag.getId()));
-            tag.setCount(tag.getCount()+1);
-        }
-        for (Postmeta postmeta : postmetas) {
-            postmeta.setPost(post);
-            postmetaDao.create(postmeta);
-        }
     }
 
     @Override
@@ -134,6 +111,16 @@ public class PostServiceImpl implements PostService{
         catch (Exception ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+
+    @Override
+    public void addTerm(Post post, Term term) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void addTermList(Post post, List<Term> termList) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
 }
