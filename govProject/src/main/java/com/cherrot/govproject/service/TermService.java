@@ -27,7 +27,7 @@ public interface TermService extends BaseService<Term, Integer> {
     List<Term> listByType(TermType type, boolean withPosts, boolean withTerms);
     List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms);
     List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderByCount(TermType type, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderByCount(TermType type, int pageNum, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderbyCount(TermType type, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderbyCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
 }

@@ -18,7 +18,7 @@ public interface TermDao extends Serializable, BaseDao<Term, Integer> {
     Term findBySlug(String slug);
     List<Term> findEntitiesByType(Term.TermType type);
     List<Term> findEntitiesByType(Term.TermType type, int maxResults, int firstResult);
-    List<Term> findEntitiesByTypeOrderByCount(Term.TermType type);
-    List<Term> findEntitiesByTypeOrderByCount(Term.TermType type, int maxResults, int firstResult);
+    List<Term> findEntitiesByTypeOrderbyCount(Term.TermType type);
+    List<Term> findEntitiesByTypeOrderbyCount(Term.TermType type, int maxResults, int firstResult);
 
 }

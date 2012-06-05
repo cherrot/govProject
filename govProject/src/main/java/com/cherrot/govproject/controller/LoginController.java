@@ -11,7 +11,6 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -37,7 +36,7 @@ public class LoginController extends BaseController {
 	public ModelAndView login(HttpServletRequest request,
         @RequestParam("username")String username, @RequestParam("password")String password) {
 
-		User dbUser = userService.findByLoginName(username);
+		User dbUser = userService.findByLoginName(username, false, false, false);
 		ModelAndView mav = new ModelAndView();
         // see Spring3 doc: 16.5 Resolving views -- The forward: prefix
 		mav.setViewName("/home");

@@ -139,4 +139,14 @@ public class PostServiceImpl implements PostService {
         return post;
     }
 
+    @Override
+    public List<Post> listNewestPostsByTerm(Term term, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTermOrderbyCreateDate(term, pageSize, (pageNum-1)*pageSize);
+    }
+
+    @Override
+    public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
+        return postDao.findEntitiesByCategoryNameOrderbyCreateDate(categoryName, pageSize, (pageNum-1)*pageSize);
+    }
+
 }

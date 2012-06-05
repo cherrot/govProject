@@ -29,16 +29,6 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
 
     @PersistenceContext
     private EntityManager em;
-//    public LinkCategoryJpaDao(UserTransaction utx, EntityManagerFactory emf) {
-//        this.utx = utx;
-//        this.emf = emf;
-//    }
-//    private UserTransaction utx = null;
-//    private EntityManagerFactory emf = null;
-//
-//    public EntityManager getEntityManager() {
-//        return emf.createEntityManager();
-//    }
 
     @Transactional
     @Override
@@ -46,41 +36,28 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
         if (linkCategory.getLinkList() == null) {
             linkCategory.setLinkList(new ArrayList<Link>());
         }
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
-            List<Link> attachedLinkList = new ArrayList<Link>();
-            for (Link linkListLinkToAttach : linkCategory.getLinkList()) {
-                linkListLinkToAttach = em.getReference(linkListLinkToAttach.getClass(), linkListLinkToAttach.getId());
-                attachedLinkList.add(linkListLinkToAttach);
+        List<Link> attachedLinkList = new ArrayList<Link>();
+        for (Link linkListLinkToAttach : linkCategory.getLinkList()) {
+            linkListLinkToAttach = em.getReference(linkListLinkToAttach.getClass(), linkListLinkToAttach.getId());
+            attachedLinkList.add(linkListLinkToAttach);
+        }
+        linkCategory.setLinkList(attachedLinkList);
+        em.persist(linkCategory);
+        for (Link linkListLink : linkCategory.getLinkList()) {
+            LinkCategory oldLinkCategoryOfLinkListLink = linkListLink.getLinkCategory();
+            linkListLink.setLinkCategory(linkCategory);
+            linkListLink = em.merge(linkListLink);
+            if (oldLinkCategoryOfLinkListLink != null) {
+                oldLinkCategoryOfLinkListLink.getLinkList().remove(linkListLink);
+                oldLinkCategoryOfLinkListLink = em.merge(oldLinkCategoryOfLinkListLink);
             }
-            linkCategory.setLinkList(attachedLinkList);
-            em.persist(linkCategory);
-            for (Link linkListLink : linkCategory.getLinkList()) {
-                LinkCategory oldLinkCategoryOfLinkListLink = linkListLink.getLinkCategory();
-                linkListLink.setLinkCategory(linkCategory);
-                linkListLink = em.merge(linkListLink);
-                if (oldLinkCategoryOfLinkListLink != null) {
-                    oldLinkCategoryOfLinkListLink.getLinkList().remove(linkListLink);
-                    oldLinkCategoryOfLinkListLink = em.merge(oldLinkCategoryOfLinkListLink);
-                }
-            }
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
+        }
     }
 
     @Transactional
     @Override
     public void edit(LinkCategory linkCategory) throws IllegalOrphanException, NonexistentEntityException, Exception {
-//        EntityManager em = null;
         try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
             LinkCategory persistentLinkCategory = em.find(LinkCategory.class, linkCategory.getId());
             List<Link> linkListOld = persistentLinkCategory.getLinkList();
             List<Link> linkListNew = linkCategory.getLinkList();
@@ -115,7 +92,6 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
                     }
                 }
             }
-//            em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -126,45 +102,30 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
             }
             throw ex;
         }
-//        finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
     }
 
     @Transactional
     @Override
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
-            LinkCategory linkCategory;
-            try {
-                linkCategory = em.getReference(LinkCategory.class, id);
-                linkCategory.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The linkCategory with id " + id + " no longer exists.", enfe);
+        LinkCategory linkCategory;
+        try {
+            linkCategory = em.getReference(LinkCategory.class, id);
+            linkCategory.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The linkCategory with id " + id + " no longer exists.", enfe);
+        }
+        List<String> illegalOrphanMessages = null;
+        List<Link> linkListOrphanCheck = linkCategory.getLinkList();
+        for (Link linkListOrphanCheckLink : linkListOrphanCheck) {
+            if (illegalOrphanMessages == null) {
+                illegalOrphanMessages = new ArrayList<String>();
             }
-            List<String> illegalOrphanMessages = null;
-            List<Link> linkListOrphanCheck = linkCategory.getLinkList();
-            for (Link linkListOrphanCheckLink : linkListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This LinkCategory (" + linkCategory + ") cannot be destroyed since the Link " + linkListOrphanCheckLink + " in its linkList field has a non-nullable linkCategory field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            em.remove(linkCategory);
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
+            illegalOrphanMessages.add("This LinkCategory (" + linkCategory + ") cannot be destroyed since the Link " + linkListOrphanCheckLink + " in its linkList field has a non-nullable linkCategory field.");
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
+        em.remove(linkCategory);
     }
 
     @Override
@@ -178,53 +139,39 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
     }
 
     private List<LinkCategory> findEntities(boolean all, int maxResults, int firstResult) {
-//        EntityManager em = getEntityManager();
-//        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(LinkCategory.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-//        } finally {
-//            em.close();
-//        }
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(LinkCategory.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
     }
 
     @Override
     public LinkCategory find(Integer id) {
-//        EntityManager em = getEntityManager();
-//        try {
-            return em.find(LinkCategory.class, id);
-//        } finally {
-//            em.close();
-//        }
+        return em.find(LinkCategory.class, id);
     }
 
     @Override
     public int getCount() {
-//        EntityManager em = getEntityManager();
-//        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<LinkCategory> rt = cq.from(LinkCategory.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-//        } finally {
-//            em.close();
-//        }
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<LinkCategory> rt = cq.from(LinkCategory.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
     }
 
     @Override
     public void save(LinkCategory model) {
-        if (model.getId() == null)
+        if (model.getId() == null) {
             create(model);
-        else
+        } else {
             try {
-            edit(model);
-        } catch (Exception ex) {
+                edit(model);
+            } catch (Exception ex) {
+            }
         }
     }
 }

@@ -5,7 +5,9 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.Term;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  *
@@ -13,6 +15,8 @@ import java.io.Serializable;
  */
 public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
+    List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult);
+    List<Post> findEntitiesByCategoryNameOrderbyCreateDate(String categoryName, int maxResults, int firstResult);
 //    void create(Post post);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;

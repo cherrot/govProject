@@ -103,7 +103,7 @@ public class TermServiceImpl implements TermService {
     public Term find(Integer id) {
         return termDao.find(id);
     }
-    
+
     @Override
     public Term find(Integer id, boolean withPosts, boolean withTerms) {
         Term term = find(id);
@@ -166,20 +166,20 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type, boolean withPosts, boolean withTerms) {
-        List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type);
+    public List<Term> listByTypeOrderbyCount(TermType type, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByTypeOrderbyCount(type);
         processDependency(terms, withPosts, withTerms);
         return terms;
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
-        return listByTypeOrderByCount(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
+    public List<Term> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
+        return listByTypeOrderbyCount(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
-        List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type, pageSize, (pageNum-1)*pageSize);
+    public List<Term> listByTypeOrderbyCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByTypeOrderbyCount(type, pageSize, (pageNum-1)*pageSize);
         processDependency(terms, withPosts, withTerms);
         return terms;
     }

@@ -49,7 +49,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
     @NamedQuery(name = "Post.findByTittle", query = "SELECT p FROM Post p WHERE p.tittle = :tittle"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
-    @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime")})
+    @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
+    @NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t IN (:term) ORDER BY p.createDate"),
+    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate")
+
+})
 public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

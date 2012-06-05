@@ -261,16 +261,16 @@ public class TermJpaDao implements TermDao {
     }
 
     @Override
-    public List<Term> findEntitiesByTypeOrderByCount(TermType type) {
-//        return em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+    public List<Term> findEntitiesByTypeOrderbyCount(TermType type) {
+//        return em.createNamedQuery("Term.findEntitiesByTypeOrderbyCount", Term.class)
 //            .setParameter("type", type).getResultList();
-        return em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+        return em.createNamedQuery("Term.findEntitiesByTypeOrderbyCount", Term.class)
             .setParameter("type", type).getResultList();
     }
 
     @Override
-    public List<Term> findEntitiesByTypeOrderByCount(TermType type, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+    public List<Term> findEntitiesByTypeOrderbyCount(TermType type, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Term.findEntitiesByTypeOrderbyCount", Term.class)
             .setParameter("type", type);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);

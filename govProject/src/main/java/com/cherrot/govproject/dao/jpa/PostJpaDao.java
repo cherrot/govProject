@@ -397,26 +397,16 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public Post find(Integer id) {
-//        EntityManager em = getEntityManager();
-//        try {
             return em.find(Post.class, id);
-//        } finally {
-//            em.close();
-//        }
     }
 
     @Override
     public int getCount() {
-//        EntityManager em = getEntityManager();
-//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Post> rt = cq.from(Post.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-//        } finally {
-//            em.close();
-//        }
     }
 
     @Override
@@ -431,6 +421,24 @@ public class PostJpaDao implements PostDao {
                 Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findEntitiesByTermOrderbyCreateDate", Post.class);
+        q.setParameter("term", term);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Post> findEntitiesByCategoryNameOrderbyCreateDate(String categoryName, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findEntitiesByCategoryNameOrderbyCreateDate", Post.class);
+        q.setParameter("category", categoryName);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
     }
 
 }

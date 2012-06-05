@@ -107,7 +107,9 @@ public class LinkServiceImpl implements LinkService{
         List<LinkCategory> linkCategories = linkCategoryDao.findEntities();
         if(withLinks){
             for (LinkCategory linkCategory : linkCategories) {
-                linkCategory.getLinkList();
+                List<Link> links = linkCategory.getLinkList();
+//                for (Link link :links)
+//                System.err.println(link.getId());
             }
         }
         return linkCategories;

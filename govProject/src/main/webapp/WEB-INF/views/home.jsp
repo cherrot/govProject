@@ -14,17 +14,23 @@
     </div>
     <ul>
       <c:forEach items="${categories}" var="category">
-        <li><a href="${category.slug}">${category.name}</a></li>
+        <li><a href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
       </c:forEach>
     </ul>
 
-    <c:forEach items="${linkCategories}" var="category">
-      <ul>
-        <c:forEach items="${category.linkList}" var="link">
-          <li><a href="${link.url}" target="${link.target}" title="${link.description}" >${link.name}</a></li>
+    <c:forEach items="${categories}" var="category">
+      <ol>
+        <c:forEach items="${requestScope[category.name]}" var="post">
+          <li>${post.title}</li>
         </c:forEach>
-      </ul>
+      </ol>
     </c:forEach>
+
+    <c:forEach items="${linkCategories}" var="category">
+      <h3>${category.name}</h3>
+      
+    </c:forEach>
+
   </body>
   <div id="footer">
     <%@include file="jspf/footer.jspf" %>
