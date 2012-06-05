@@ -29,7 +29,7 @@ public class HomeController {
     @RequestMapping("/")
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("home");
-        List<Term> categories = termService.listByTypeOrderByCount(Term.TermType.CATEGORY);
+        List<Term> categories = termService.listByTypeOrderByCount(Term.TermType.CATEGORY, true, false);
         for(Term term : categories)
             term.getPostList();
         mav.addObject("categories", categories);

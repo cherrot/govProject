@@ -103,6 +103,14 @@ public class TermServiceImpl implements TermService {
     public Term find(Integer id) {
         return termDao.find(id);
     }
+    
+    @Override
+    public Term find(Integer id, boolean withPosts, boolean withTerms) {
+        Term term = find(id);
+        if (withPosts) term.getPostList();
+        if (withTerms) term.getTermList();
+        return term;
+    }
 
     @Override
     @Transactional
@@ -141,7 +149,7 @@ public class TermServiceImpl implements TermService {
     @Override
     public List<Term> listByType(TermType type, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByType(type);
-        getDependency(terms, withPosts, withTerms);
+        processDependency(terms, withPosts, withTerms);
         return terms;
     }
 
@@ -153,14 +161,14 @@ public class TermServiceImpl implements TermService {
     @Override
     public List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByType(type, pageSize, (pageNum-1)*pageSize);
-        getDependency(terms, withPosts, withTerms);
+        processDependency(terms, withPosts, withTerms);
         return terms;
     }
 
     @Override
     public List<Term> listByTypeOrderByCount(TermType type, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type);
-        getDependency(terms, withPosts, withTerms);
+        processDependency(terms, withPosts, withTerms);
         return terms;
     }
 
@@ -172,11 +180,11 @@ public class TermServiceImpl implements TermService {
     @Override
     public List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type, pageSize, (pageNum-1)*pageSize);
-        getDependency(terms, withPosts, withTerms);
+        processDependency(terms, withPosts, withTerms);
         return terms;
     }
 
-    private void getDependency(List<Term> terms, boolean withPosts, boolean withTerms) {
+    private void processDependency(List<Term> terms, boolean withPosts, boolean withTerms) {
         if (withPosts || withTerms) {
             for (Term term : terms) {
                 if (withPosts) term.getPostList();
@@ -185,11 +193,4 @@ public class TermServiceImpl implements TermService {
         }
     }
 
-    @Override
-    public Term find(Integer id, boolean withPosts, boolean withTerms) {
-        Term term = find(id);
-        if (withPosts) term.getPostList();
-        if (withTerms) term.getTermList();
-        return term;
-    }
 }

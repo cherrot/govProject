@@ -15,5 +15,6 @@ import java.util.List;
 public interface UserService extends BaseService<User, Integer> {
 
     void create(User user, List<Usermeta> usermetas);
-    User findByLoginName(String loginName);
+    User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas);
+    User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas);
 }

@@ -54,8 +54,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findByLoginName(String loginName) {
-        return userDao.findByLogin(loginName);
+    public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+        User user = find(id);
+        processDependency(user, withSiteLogs, withPosts, withUsermetas);
+        return user;
+    }
+
+    @Override
+    public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+        User user = userDao.findByLogin(loginName);
+        processDependency(user, withSiteLogs, withPosts, withUsermetas);
+        return user;
     }
 
     @Override
@@ -109,4 +118,9 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+        if (withSiteLogs) user.getSiteLogList();
+        if (withPosts) user.getPostList();
+        if (withUsermetas) user.getUsermetaList();
+    }
 }
