@@ -5,7 +5,6 @@
 package com.cherrot.govproject.service.impl;
 
 import com.cherrot.govproject.dao.PostDao;
-import com.cherrot.govproject.dao.PostmetaDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
@@ -26,12 +25,10 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class PostServiceImpl implements PostService{
+public class PostServiceImpl implements PostService {
 
     @Inject
     private PostDao postDao;
-    @Inject
-    private PostmetaDao postmetaDao;
     @Inject
     private TermService termService;
 
@@ -115,12 +112,31 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public void addTerm(Post post, Term term) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        post.getTermList().add(term);
     }
 
     @Override
-    public void addTermList(Post post, List<Term> termList) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void addTermList(Post post, List<Term> terms) {
+        post.getTermList().addAll(terms);
+    }
+
+    @Override
+    public void removeTerm(Post post, Term term) {
+        post.getTermList().remove(term);
+    }
+
+    @Override
+    public void removeTermList(Post post, List<Term> terms) {
+        post.getTermList().removeAll(terms);
+    }
+
+    @Override
+    public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms) {
+        Post post = find(id);
+        if (withComments) post.getCommentList();
+        if (withPostmetas) post.getPostmetaList();
+        if (withTerms) post.getTermList();
+        return post;
     }
 
 }

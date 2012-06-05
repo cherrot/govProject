@@ -8,6 +8,7 @@ import com.cherrot.govproject.dao.TermDao;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.Term.TermType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,16 +31,6 @@ public class TermJpaDao implements TermDao {
 
     @PersistenceContext
     private EntityManager em;
-//    public TermJpaDao(UserTransaction utx, EntityManagerFactory emf) {
-//        this.utx = utx;
-//        this.emf = emf;
-//    }
-//    private UserTransaction utx = null;
-//    private EntityManagerFactory emf = null;
-//
-//    public EntityManager getEntityManager() {
-//        return emf.createEntityManager();
-//    }
 
     @Override
     @Transactional
@@ -50,60 +41,47 @@ public class TermJpaDao implements TermDao {
         if (term.getPostList() == null) {
             term.setPostList(new ArrayList<Post>());
         }
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
-            Term termParent = term.getTermParent();
-            if (termParent != null) {
-                termParent = em.getReference(termParent.getClass(), termParent.getId());
-                term.setTermParent(termParent);
+        Term termParent = term.getTermParent();
+        if (termParent != null) {
+            termParent = em.getReference(termParent.getClass(), termParent.getId());
+            term.setTermParent(termParent);
+        }
+        List<Term> attachedTermList = new ArrayList<Term>();
+        for (Term termListTermToAttach : term.getTermList()) {
+            termListTermToAttach = em.getReference(termListTermToAttach.getClass(), termListTermToAttach.getId());
+            attachedTermList.add(termListTermToAttach);
+        }
+        term.setTermList(attachedTermList);
+        List<Post> attachedPostList = new ArrayList<Post>();
+        for (Post postListPostToAttach : term.getPostList()) {
+            postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+            attachedPostList.add(postListPostToAttach);
+        }
+        term.setPostList(attachedPostList);
+        em.persist(term);
+        if (termParent != null) {
+            termParent.getTermList().add(term);
+            termParent = em.merge(termParent);
+        }
+        for (Term termListTerm : term.getTermList()) {
+            Term oldTermParentOfTermListTerm = termListTerm.getTermParent();
+            termListTerm.setTermParent(term);
+            termListTerm = em.merge(termListTerm);
+            if (oldTermParentOfTermListTerm != null) {
+                oldTermParentOfTermListTerm.getTermList().remove(termListTerm);
+                oldTermParentOfTermListTerm = em.merge(oldTermParentOfTermListTerm);
             }
-            List<Term> attachedTermList = new ArrayList<Term>();
-            for (Term termListTermToAttach : term.getTermList()) {
-                termListTermToAttach = em.getReference(termListTermToAttach.getClass(), termListTermToAttach.getId());
-                attachedTermList.add(termListTermToAttach);
-            }
-            term.setTermList(attachedTermList);
-            List<Post> attachedPostList = new ArrayList<Post>();
-            for (Post postListPostToAttach : term.getPostList()) {
-                postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
-                attachedPostList.add(postListPostToAttach);
-            }
-            term.setPostList(attachedPostList);
-            em.persist(term);
-            if (termParent != null) {
-                termParent.getTermList().add(term);
-                termParent = em.merge(termParent);
-            }
-            for (Term termListTerm : term.getTermList()) {
-                Term oldTermParentOfTermListTerm = termListTerm.getTermParent();
-                termListTerm.setTermParent(term);
-                termListTerm = em.merge(termListTerm);
-                if (oldTermParentOfTermListTerm != null) {
-                    oldTermParentOfTermListTerm.getTermList().remove(termListTerm);
-                    oldTermParentOfTermListTerm = em.merge(oldTermParentOfTermListTerm);
-                }
-            }
-            for (Post postListPost : term.getPostList()) {
-                postListPost.getTermList().add(term);
-                postListPost = em.merge(postListPost);
-            }
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
+        }
+        for (Post postListPost : term.getPostList()) {
+            postListPost.getTermList().add(term);
+            postListPost = em.merge(postListPost);
+        }
     }
 
     @Override
     @Transactional
     public void edit(Term term) throws NonexistentEntityException, Exception {
-//        EntityManager em = null;
         try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
             Term persistentTerm = em.find(Term.class, term.getId());
             Term termParentOld = persistentTerm.getTermParent();
             Term termParentNew = term.getTermParent();
@@ -167,7 +145,6 @@ public class TermJpaDao implements TermDao {
                     postListNewPost = em.merge(postListNewPost);
                 }
             }
-//            em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -178,49 +155,34 @@ public class TermJpaDao implements TermDao {
             }
             throw ex;
         }
-//        finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
     }
 
     @Override
     @Transactional
     public void destroy(Integer id) throws NonexistentEntityException {
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
-            Term term;
-            try {
-                term = em.getReference(Term.class, id);
-                term.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The term with id " + id + " no longer exists.", enfe);
-            }
-            Term termParent = term.getTermParent();
-            if (termParent != null) {
-                termParent.getTermList().remove(term);
-                termParent = em.merge(termParent);
-            }
-            List<Term> termList = term.getTermList();
-            for (Term termListTerm : termList) {
-                termListTerm.setTermParent(null);
-                termListTerm = em.merge(termListTerm);
-            }
-            List<Post> postList = term.getPostList();
-            for (Post postListPost : postList) {
-                postListPost.getTermList().remove(term);
-                postListPost = em.merge(postListPost);
-            }
-            em.remove(term);
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
+        Term term;
+        try {
+            term = em.getReference(Term.class, id);
+            term.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The term with id " + id + " no longer exists.", enfe);
+        }
+        Term termParent = term.getTermParent();
+        if (termParent != null) {
+            termParent.getTermList().remove(term);
+            termParent = em.merge(termParent);
+        }
+        List<Term> termList = term.getTermList();
+        for (Term termListTerm : termList) {
+            termListTerm.setTermParent(null);
+            termListTerm = em.merge(termListTerm);
+        }
+        List<Post> postList = term.getPostList();
+        for (Post postListPost : postList) {
+            postListPost.getTermList().remove(term);
+            postListPost = em.merge(postListPost);
+        }
+        em.remove(term);
     }
 
     @Override
@@ -234,61 +196,40 @@ public class TermJpaDao implements TermDao {
     }
 
     private List<Term> findEntities(boolean all, int maxResults, int firstResult) {
-//        EntityManager em = getEntityManager();
-//        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Term.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
-//        } finally {
-//            em.close();
-//        }
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Term.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
     }
 
     @Override
     public Term find(Integer id) {
-//        EntityManager em = getEntityManager();
-//        try {
-            return em.find(Term.class, id);
-//        } finally {
-//            em.close();
-//        }
+        return em.find(Term.class, id);
     }
 
     @Override
     public int getCount() {
-//        EntityManager em = getEntityManager();
-//        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Term> rt = cq.from(Term.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
-//        } finally {
-//            em.close();
-//        }
-    }
-
-    @Override
-    public List<Term> findEntitiesByName(String name) {
-        return em.createNamedQuery("Term.findByName", Term.class)
-                .setParameter("name", name).getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Term> rt = cq.from(Term.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
     }
 
     @Override
     public Term findByNameAndType(String name, Term.TermType type) {
         return em.createNamedQuery("Term.findByNameAndType", Term.class)
-                .setParameter("name", name).setParameter("type", type).getSingleResult();
+            .setParameter("name", name).setParameter("type", type).getSingleResult();
     }
 
     @Override
     public Term findBySlug(String slug) {
         return em.createNamedQuery("Term.findBySlug", Term.class)
-                .setParameter("slug", slug).getSingleResult();
+            .setParameter("slug", slug).getSingleResult();
     }
 
     @Override
@@ -298,10 +239,41 @@ public class TermJpaDao implements TermDao {
         } else {
             try {
                 edit(model);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+    }
+
+    @Override
+    public List<Term> findEntitiesByType(TermType type) {
+        return em.createNamedQuery("Term.findEntitiesByType", Term.class)
+            .setParameter("type", type).getResultList();
+    }
+
+    @Override
+    public List<Term> findEntitiesByType(TermType type, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Term.findEntitiesByType", Term.class)
+            .setParameter("type", type);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
+
+    @Override
+    public List<Term> findEntitiesByTypeOrderByCount(TermType type) {
+//        return em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+//            .setParameter("type", type).getResultList();
+        return em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+            .setParameter("type", type).getResultList();
+    }
+
+    @Override
+    public List<Term> findEntitiesByTypeOrderByCount(TermType type, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Term.findEntitiesByTypeOrderByCount", Term.class)
+            .setParameter("type", type);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
     }
 }

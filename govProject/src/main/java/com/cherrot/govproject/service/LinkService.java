@@ -14,6 +14,5 @@ import java.util.List;
  */
 public interface LinkService extends BaseService<Link, Integer> {
 
-    void create(Link link, List<LinkCategory> categories);
     List<LinkCategory> listCategories();
 }

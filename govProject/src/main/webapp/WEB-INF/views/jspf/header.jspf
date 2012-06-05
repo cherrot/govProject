@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
         <div id="headerimage">
-            <p align="middle"> <img src="<c:url value="/resource/images/header.jpg"/>"</p>
+            <p align="middle"> <img src="<c:url value="/resources/images/header.jpg"/>"</p>
         </div>

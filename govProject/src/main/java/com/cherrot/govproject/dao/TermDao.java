@@ -14,23 +14,11 @@ import java.util.List;
  */
 public interface TermDao extends Serializable, BaseDao<Term, Integer> {
 
-    List<Term> findEntitiesByName(String name);
     Term findByNameAndType(String name, Term.TermType type);
     Term findBySlug(String slug);
-//    void create(TermTaxonomy termTaxonomy);
-//
-//    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;
-//
-//    void edit(TermTaxonomy termTaxonomy) throws IllegalOrphanException, NonexistentEntityException, Exception;
-//
-//    TermTaxonomy findTermTaxonomy(Integer id);
-//
-//    List<TermTaxonomy> findTermTaxonomyEntities();
-//
-//    List<TermTaxonomy> findTermTaxonomyEntities(int maxResults, int firstResult);
-//
-//    EntityManager getEntityManager();
-//
-//    int getTermTaxonomyCount();
+    List<Term> findEntitiesByType(Term.TermType type);
+    List<Term> findEntitiesByType(Term.TermType type, int maxResults, int firstResult);
+    List<Term> findEntitiesByTypeOrderByCount(Term.TermType type);
+    List<Term> findEntitiesByTypeOrderByCount(Term.TermType type, int maxResults, int firstResult);
 
 }

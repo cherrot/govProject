@@ -15,6 +15,7 @@ import java.util.List;
  */
 public interface PostService extends BaseService<Post, Integer> {
 
+    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms);
     void create(Post post, List<Term> categories, List<String> tags);
     void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas);
     /**
@@ -28,5 +29,7 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param post 被操作的post对象
      * @param termList 要关联post的文章分类/标签列表
      */
-    void addTermList(Post post, List<Term> termList);
+    void addTermList(Post post, List<Term> terms);
+    void removeTerm(Post post, Term term);
+    void removeTermList(Post post, List<Term> terms);
 }

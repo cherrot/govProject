@@ -49,7 +49,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Term.findByName", query = "SELECT t FROM Term t WHERE t.name = :name"),
     @NamedQuery(name = "Term.findByNameAndType", query = "SELECT t FROM Term t WHERE t.name = :name AND t.type = :type"),
     @NamedQuery(name = "Term.findBySlug", query = "SELECT t FROM Term t WHERE t.slug = :slug"),
-    @NamedQuery(name = "Term.findByDescription", query = "SELECT t FROM Term t WHERE t.description = :description")})
+    @NamedQuery(name = "Term.findByDescription", query = "SELECT t FROM Term t WHERE t.description = :description"),
+    @NamedQuery(name = "Term.findEntitiesByType", query="SELECT t FROM Term t WHERE t.type = :type"),
+    @NamedQuery(name = "Term.findEntitiesByTypeOrderByCount", query="SELECT t FROM Term t WHERE t.type=:type ORDER BY t.count")
+})
 public class Term implements Serializable {
     private static final long serialVersionUID = 1L;
 

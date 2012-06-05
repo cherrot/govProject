@@ -139,38 +139,57 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    public List<Term> listByType(TermType type) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByType(TermType type, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByType(type);
+        getDependency(terms, withPosts, withTerms);
+        return terms;
     }
 
     @Override
-    public List<Term> listByType(TermType type, int pageNum) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
+        return listByType(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
-    public List<Term> listByType(TermType type, int pageNum, int pageSize) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByType(type, pageSize, (pageNum-1)*pageSize);
+        getDependency(terms, withPosts, withTerms);
+        return terms;
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByTypeOrderByCount(TermType type, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type);
+        getDependency(terms, withPosts, withTerms);
+        return terms;
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type, int pageNum) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
+        return listByTypeOrderByCount(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
-    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize) {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
+        List<Term> terms = termDao.findEntitiesByTypeOrderByCount(type, pageSize, (pageNum-1)*pageSize);
+        getDependency(terms, withPosts, withTerms);
+        return terms;
+    }
+
+    private void getDependency(List<Term> terms, boolean withPosts, boolean withTerms) {
+        if (withPosts || withTerms) {
+            for (Term term : terms) {
+                if (withPosts) term.getPostList();
+                if (withTerms) term.getTermList();
+            }
+        }
+    }
+
+    @Override
+    public Term find(Integer id, boolean withPosts, boolean withTerms) {
+        Term term = find(id);
+        if (withPosts) term.getPostList();
+        if (withTerms) term.getTermList();
+        return term;
     }
 }

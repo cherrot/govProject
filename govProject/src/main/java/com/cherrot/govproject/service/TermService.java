@@ -14,6 +14,7 @@ import java.util.List;
  */
 public interface TermService extends BaseService<Term, Integer> {
 
+    Term find(Integer id, boolean withPosts, boolean withTerms);
     /**
      * Create Term and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.
@@ -23,10 +24,10 @@ public interface TermService extends BaseService<Term, Integer> {
     List<Term> createTagsByName(List<String> tags);
     List<Term> createCategoriesByName(List<String> categories);
 
-    List<Term> listByType(TermType type);
-    List<Term> listByType(TermType type, int pageNum);
-    List<Term> listByType(TermType type, int pageNum, int pageSize);
-    List<Term> listByTypeOrderByCount(TermType type);
-    List<Term> listByTypeOrderByCount(TermType type, int pageNum);
-    List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize);
+    List<Term> listByType(TermType type, boolean withPosts, boolean withTerms);
+    List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms);
+    List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderByCount(TermType type, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderByCount(TermType type, int pageNum, boolean withPosts, boolean withTerms);
+    List<Term> listByTypeOrderByCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
 }

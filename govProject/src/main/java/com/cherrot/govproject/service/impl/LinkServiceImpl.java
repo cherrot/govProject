@@ -33,13 +33,6 @@ public class LinkServiceImpl implements LinkService{
 
     @Override
     @Transactional
-    public void create(Link link, List<LinkCategory> categories) {
-        //TODO unfinished
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    @Transactional
     public void create(Link model) {
         linkDao.create(model);
     }
@@ -102,7 +95,6 @@ public class LinkServiceImpl implements LinkService{
 
     @Override
     public List<LinkCategory> listCategories() {
-        //TODO unfinished
-        throw new UnsupportedOperationException("Not supported yet.");
+        return linkCategoryDao.findEntities();
     }
 }
