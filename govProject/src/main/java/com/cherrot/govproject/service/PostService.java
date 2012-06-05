@@ -32,4 +32,6 @@ public interface PostService extends BaseService<Post, Integer> {
     void addTermList(Post post, List<Term> terms);
     void removeTerm(Post post, Term term);
     void removeTermList(Post post, List<Term> terms);
+    List<Post> listNewestPostsByTerm(int postCount, Term term);
+    List<Post> listNewestPostsByCategoryName(int postCount, String categoryName);
 }
