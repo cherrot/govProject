@@ -48,7 +48,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Comment find(Integer id) {
+    public Comment find(Integer id,boolean withCommentmeta,boolean withChildren) {
+        List<Comment> comments = commentDao.findEntities();
+        if(withCommentmeta){
+            for(Comment comment:comments){
+                comment.getCommentmetaList();
+            }
+        }
         return commentDao.find(id);
     }
 
@@ -72,17 +78,27 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> list() {
+    public List<Comment> list(boolean withCommentmeta,boolean withChildren) {
+        List<Comment> comments = commentDao.findEntities();
+        getDependency(comments, withCommentmeta, withChildren);
         return commentDao.findEntities();
     }
 
     @Override
-    public List<Comment> list(int pageNum) {
+    public List<Comment> list(int pageNum,boolean withCommentmeta,boolean withChildren) {
+        List<Comment> comments = commentDao.findEntities();
+        if(withCommentmeta){
+        getDependency(comments, withCommentmeta, withChildren);
+        }
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    public List<Comment> list(int pageNum, int pageSize) {
+    public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta,boolean withChildren) {
+        List<Comment> comments = commentDao.findEntities();
+        if(withCommentmeta){
+        getDependency(comments, withCommentmeta, withChildren);
+        }
         return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
@@ -103,3 +119,12 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 }
+
+    private void getDependency(List<Comment> comments, boolean withCommentmeta, boolean withChildren) {
+        if (withCommentmeta || withChildren) {
+            for (Comment comment:comments) {
+                if (withCommentmeta) comment;
+                if (withChildren) comment;
+            }
+        }
+    }
