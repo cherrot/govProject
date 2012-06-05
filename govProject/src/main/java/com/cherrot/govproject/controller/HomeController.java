@@ -30,14 +30,12 @@ public class HomeController {
     public ModelAndView home() {
         ModelAndView mav = new ModelAndView("home");
         List<Term> categories = termService.listByTypeOrderByCount(Term.TermType.CATEGORY, true, false);
-        for(Term term : categories)
-            term.getPostList();
         mav.addObject("categories", categories);
-//        List<LinkCategory> linkCategories = linkService.listCategories();
-//        for(LinkCategory linkCategory : linkCategories) {
-//            linkCategory.getLinkList();
-//        }
-//        mav.addObject("linkCategories", linkCategories);
+        List<LinkCategory> linkCategories = linkService.listCategories();
+        for(LinkCategory linkCategory : linkCategories) {
+            linkCategory.getLinkList();
+        }
+        mav.addObject("linkCategories", linkCategories);
         return mav;
     }
 }

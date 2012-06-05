@@ -13,11 +13,11 @@ import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.util.Constants;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -48,14 +48,16 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Comment find(Integer id,boolean withCommentmeta,boolean withChildren) {
-        List<Comment> comments = commentDao.findEntities();
-        if(withCommentmeta){
-            for(Comment comment:comments){
-                comment.getCommentmetaList();
-            }
-        }
+    public Comment find(Integer id) {
         return commentDao.find(id);
+    }
+
+    @Override
+    public Comment find(Integer id, boolean withCommentmetas, boolean withChildComments) {
+        Comment comment = find(id);
+        if (withCommentmetas) comment.getCommentmetaList();
+        if (withChildComments) comment.getCommentList();
+        return comment;
     }
 
     @Override
@@ -78,28 +80,22 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> list(boolean withCommentmeta,boolean withChildren) {
+    public List<Comment> list(boolean withCommentmetas, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities();
-        getDependency(comments, withCommentmeta, withChildren);
-        return commentDao.findEntities();
+        getDependency(comments, withCommentmetas, withChildComments);
+        return comments;
     }
 
     @Override
-    public List<Comment> list(int pageNum,boolean withCommentmeta,boolean withChildren) {
-        List<Comment> comments = commentDao.findEntities();
-        if(withCommentmeta){
-        getDependency(comments, withCommentmeta, withChildren);
-        }
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+    public List<Comment> list(int pageNum,boolean withCommentmetas, boolean withChildComments) {
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE, withCommentmetas, withChildComments);
     }
 
     @Override
-    public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta,boolean withChildren) {
-        List<Comment> comments = commentDao.findEntities();
-        if(withCommentmeta){
-        getDependency(comments, withCommentmeta, withChildren);
-        }
-        return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+    public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta, boolean withChildComments) {
+        List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        getDependency(comments, withCommentmeta, withChildComments);
+        return comments;
     }
 
     @Override
@@ -118,13 +114,28 @@ public class CommentServiceImpl implements CommentService{
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-}
 
-    private void getDependency(List<Comment> comments, boolean withCommentmeta, boolean withChildren) {
-        if (withCommentmeta || withChildren) {
-            for (Comment comment:comments) {
-                if (withCommentmeta) comment;
-                if (withChildren) comment;
+    private void getDependency(List<Comment> comments, boolean withCommentmetas, boolean withChildComments) {
+        if (withCommentmetas || withChildComments) {
+            for (Comment comment : comments) {
+                if (withCommentmetas) comment.getCommentmetaList();
+                if (withChildComments) comment.getCommentList();
             }
         }
     }
+
+    @Override
+    public List<Comment> list() {
+        return commentDao.findEntities();
+    }
+
+    @Override
+    public List<Comment> list(int pageNum) {
+        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+    }
+
+    @Override
+    public List<Comment> list(int pageNum, int pageSize) {
+        return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+    }
+}

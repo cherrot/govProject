@@ -14,8 +14,8 @@ import java.util.List;
 public interface CommentService extends BaseService<Comment, Integer> {
 
     void create(Comment comment, List<Commentmeta> commentmetas);
-    public Comment find(Integer id,boolean withCommentmeta);
-    public List<Comment> list(boolean withCommentmeta);
-    public List<Comment> list(int pageNum,boolean withCommentmeta);
-    public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta);
+    public Comment find(Integer id, boolean withCommentmetas, boolean withChildComments);
+    public List<Comment> list(boolean withCommentmetas, boolean withChildComments);
+    public List<Comment> list(int pageNum, boolean withCommentmetas, boolean withChildComments);
+    public List<Comment> list(int pageNum, int pageSize, boolean withCommentmetas, boolean withChildComments);
 }

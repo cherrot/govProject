@@ -18,7 +18,6 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import sun.java2d.loops.Blit;
 
 /**
  *
@@ -95,23 +94,23 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    public LinkCategory find(Integer id,boolean withLinks) {
+    public LinkCategory findLinkCategory(Integer linkCategoryId, boolean withLinks) {
+        LinkCategory linkCategory = linkCategoryDao.find(linkCategoryId);
         if(withLinks){
-            for (LinkCategory linkCategories : listCategories) {
-                linkCategories.getLinkList();
-            }
+            linkCategory.getLinkList();
         }
-        return linkCategoryDao.find(id);
+        return linkCategory;
     }
-    
+
     @Override
-    public List<LinkCategory> listCategories(boolean withLinks) {
+    public List<LinkCategory> listLinkCategories(boolean withLinks) {
+        List<LinkCategory> linkCategories = linkCategoryDao.findEntities();
         if(withLinks){
-            for (LinkCategory linkCategories : listCategories) {
-                linkCategories.getLinkList();
+            for (LinkCategory linkCategory : linkCategories) {
+                linkCategory.getLinkList();
             }
         }
-        return linkCategoryDao.findEntities();
+        return linkCategories;
     }
 
 }
