@@ -25,6 +25,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -35,7 +36,8 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author sai
  */
 @Entity
-@Table(name = "posts")
+@Table(name = "posts", uniqueConstraints = {
+    @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
@@ -50,10 +52,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByTittle", query = "SELECT p FROM Post p WHERE p.tittle = :tittle"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
-    @NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t IN (:term) ORDER BY p.createDate"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate")
-
+    //以下为等价式
+    //@NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.id IN (:termId) ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p, IN(p.termList) terms WHERE terms.id = :termId ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC")
 })
+/**
+ * state_field_path_expression must have a string, numeric, or enum value.
+ * @See http://openjpa.apache.org/builds/1.1.0/docs/jpa_langref.html#jpa_langref_in
+ */
 public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id

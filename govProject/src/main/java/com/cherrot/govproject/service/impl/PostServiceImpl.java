@@ -55,6 +55,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Post find(Integer id) {
         return postDao.find(id);
     }
@@ -79,16 +80,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Post> list() {
         return postDao.findEntities();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Post> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Post> list(int pageNum, int pageSize) {
         return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -111,40 +115,47 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional
     public void addTerm(Post post, Term term) {
         post.getTermList().add(term);
     }
 
     @Override
+    @Transactional
     public void addTermList(Post post, List<Term> terms) {
         post.getTermList().addAll(terms);
     }
 
     @Override
+    @Transactional
     public void removeTerm(Post post, Term term) {
         post.getTermList().remove(term);
     }
 
     @Override
+    @Transactional
     public void removeTermList(Post post, List<Term> terms) {
         post.getTermList().removeAll(terms);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms) {
         Post post = find(id);
-        if (withComments) post.getCommentList();
-        if (withPostmetas) post.getPostmetaList();
-        if (withTerms) post.getTermList();
+        if (withComments) post.getCommentList().isEmpty();
+        if (withPostmetas) post.getPostmetaList().isEmpty();
+        if (withTerms) post.getTermList().isEmpty();
         return post;
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByTerm(Term term, int pageNum, int pageSize) {
         return postDao.findEntitiesByTermOrderbyCreateDate(term, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryNameOrderbyCreateDate(categoryName, pageSize, (pageNum-1)*pageSize);
     }

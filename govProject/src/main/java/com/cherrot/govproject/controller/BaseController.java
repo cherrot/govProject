@@ -16,7 +16,7 @@ public class BaseController {
 	 * @param request
 	 * @return
 	 */
-	protected User getSessionUser(HttpSession session) {
+	protected static User getSessionUser(HttpSession session) {
 		return (User) session.getAttribute(Constants.USER_CONTEXT);
 	}
 
@@ -25,7 +25,7 @@ public class BaseController {
 	 * @param session
 	 * @param user
 	 */
-	protected void setSessionUser(HttpSession session, User user) {
+	protected static void setSessionUser(HttpSession session, User user) {
 		session.setAttribute(Constants.USER_CONTEXT, user);
 	}
 
@@ -38,7 +38,7 @@ public class BaseController {
 	 *            以"/"打头的URL地址
 	 * @return 基于应用程序的url绝对路径
 	 */
-	public final String getAppbaseUrl(HttpServletRequest request, String url) {
+	public static String getAppbaseUrl(HttpServletRequest request, String url) {
 		Assert.hasLength(url, "url不能为空");
 		Assert.isTrue(url.startsWith("/"), "必须以/打头");
 		return request.getContextPath() + url;

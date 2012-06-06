@@ -34,16 +34,6 @@ public class PostJpaDao implements PostDao {
 
     @PersistenceContext
     private EntityManager em;
-//    public PostJpaDao(UserTransaction utx, EntityManagerFactory emf) {
-//        this.utx = utx;
-//        this.emf = emf;
-//    }
-//    private UserTransaction utx = null;
-//    private EntityManagerFactory emf = null;
-//
-//    public EntityManager getEntityManager() {
-//        return emf.createEntityManager();
-//    }
 
     @Override
     @Transactional
@@ -60,10 +50,6 @@ public class PostJpaDao implements PostDao {
         if (post.getCommentList() == null) {
             post.setCommentList(new ArrayList<Comment>());
         }
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
             User user = post.getUser();
             if (user != null) {
                 user = em.getReference(user.getClass(), user.getId());
@@ -138,21 +124,12 @@ public class PostJpaDao implements PostDao {
                     oldPostOfCommentListComment = em.merge(oldPostOfCommentListComment);
                 }
             }
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
     }
 
     @Override
     @Transactional
     public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException, Exception {
-//        EntityManager em = null;
         try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
             Post persistentPost = em.find(Post.class, post.getId());
             User userOld = persistentPost.getUser();
             User userNew = post.getUser();
@@ -290,7 +267,6 @@ public class PostJpaDao implements PostDao {
                     }
                 }
             }
-//            em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
@@ -301,20 +277,11 @@ public class PostJpaDao implements PostDao {
             }
             throw ex;
         }
-//        finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
     }
 
     @Override
     @Transactional
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
-//        EntityManager em = null;
-//        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
             Post post;
             try {
                 post = em.getReference(Post.class, id);
@@ -361,12 +328,6 @@ public class PostJpaDao implements PostDao {
                 termListTerm = em.merge(termListTerm);
             }
             em.remove(post);
-//            em.getTransaction().commit();
-//        } finally {
-//            if (em != null) {
-//                em.close();
-//            }
-//        }
     }
 
     @Override
@@ -380,8 +341,6 @@ public class PostJpaDao implements PostDao {
     }
 
     private List<Post> findEntities(boolean all, int maxResults, int firstResult) {
-//        EntityManager em = getEntityManager();
-//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Post.class));
             Query q = em.createQuery(cq);
@@ -390,9 +349,6 @@ public class PostJpaDao implements PostDao {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-//        } finally {
-//            em.close();
-//        }
     }
 
     @Override
@@ -426,7 +382,7 @@ public class PostJpaDao implements PostDao {
     @Override
     public List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult) {
         Query q = em.createNamedQuery("Post.findEntitiesByTermOrderbyCreateDate", Post.class);
-        q.setParameter("term", term);
+        q.setParameter("termId", term.getId());
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
         return q.getResultList();

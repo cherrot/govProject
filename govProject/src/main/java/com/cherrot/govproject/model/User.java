@@ -41,7 +41,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByUserLevel", query = "SELECT u FROM User u WHERE u.userLevel = :userLevel"),
     @NamedQuery(name = "User.findByRegisterDate", query = "SELECT u FROM User u WHERE u.registerDate = :registerDate"),
     @NamedQuery(name = "User.findByDisplayName", query = "SELECT u FROM User u WHERE u.displayName = :displayName"),
-    @NamedQuery(name = "User.findByEmail", query = "SELECT u FROM User u WHERE u.email = :email"),
     @NamedQuery(name = "User.findByUrl", query = "SELECT u FROM User u WHERE u.url = :url")})
 public class User implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -77,13 +76,13 @@ public class User implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "displayName", nullable = false, length = 45)
     private String displayName;
-    //if the field contains email address consider using this annotation to enforce field validation
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
-    @Basic(optional = false)
-    @NotNull
-    @Size(min = 1, max = 100)
-    @Column(name = "email", nullable = false, length = 100)
-    private String email;
+//    //if the field contains email address consider using this annotation to enforce field validation
+//    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
+//    @Basic(optional = false)
+//    @NotNull
+//    @Size(min = 1, max = 100)
+//    @Column(name = "email", nullable = false, length = 100)
+//    private String email;
     @Size(max = 100)
     @Column(name = "url", length = 100)
     private String url;
@@ -101,14 +100,14 @@ public class User implements Serializable {
 //        this.id = id;
 //    }
 
-    public User(/*Integer id,*/ String login, String pass, int userLevel, Date registerDate, String displayName, String email) {
+    public User(/*Integer id,*/ String login, String pass, int userLevel, Date registerDate, String displayName/*, String email*/) {
 //        this.id = id;
         this.login = login;
         this.pass = pass;
         this.userLevel = userLevel;
         this.registerDate = registerDate;
         this.displayName = displayName;
-        this.email = email;
+//        this.email = email;
     }
 
     public Integer getId() {
@@ -159,13 +158,13 @@ public class User implements Serializable {
         this.displayName = displayName;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
 
     public String getUrl() {
         return url;

@@ -49,11 +49,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public User find(Integer id) {
         return userDao.find(id);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
         User user = find(id);
         processDependency(user, withSiteLogs, withPosts, withUsermetas);
@@ -61,6 +63,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
         User user = userDao.findByLogin(loginName);
         processDependency(user, withSiteLogs, withPosts, withUsermetas);
@@ -87,16 +90,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<User> list() {
         return userDao.findEntities();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<User> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<User> list(int pageNum, int pageSize) {
         return userDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -119,8 +125,8 @@ public class UserServiceImpl implements UserService{
     }
 
     private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
-        if (withSiteLogs) user.getSiteLogList();
-        if (withPosts) user.getPostList();
-        if (withUsermetas) user.getUsermetaList();
+        if (withSiteLogs) user.getSiteLogList().isEmpty();
+        if (withPosts) user.getPostList().isEmpty();
+        if (withUsermetas) user.getUsermetaList().isEmpty();
     }
 }

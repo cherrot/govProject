@@ -12,25 +12,14 @@
     <div id="sidebar" >
       <%@include file="jspf/sidebar.jspf" %>
     </div>
-    <ul>
-      <c:forEach items="${categories}" var="category">
-        <li><a href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
-      </c:forEach>
-    </ul>
-
     <c:forEach items="${categories}" var="category">
+      <h2>${category.name}</h2>
       <ol>
         <c:forEach items="${requestScope[category.name]}" var="post">
-          <li>${post.title}</li>
+          <li>${post.tittle}</li>
         </c:forEach>
       </ol>
     </c:forEach>
-
-    <c:forEach items="${linkCategories}" var="category">
-      <h3>${category.name}</h3>
-      
-    </c:forEach>
-
   </body>
   <div id="footer">
     <%@include file="jspf/footer.jspf" %>

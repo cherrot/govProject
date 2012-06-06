@@ -25,8 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OptionServiceImpl implements OptionService{
 
-
-
     @Inject
     private OptionDao optionDao;
 
@@ -38,6 +36,7 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Option find(Integer id) {
         return optionDao.find(id);
     }
@@ -62,16 +61,19 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Option> list() {
         return optionDao.findEntities();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Option> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Option> list(int pageNum, int pageSize) {
         return optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }

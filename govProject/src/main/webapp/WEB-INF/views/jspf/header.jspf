@@ -1,5 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <div id="headerimage">
-            <p align="middle"> <img src="<c:url value="/resources/images/header.jpg"/>"</p>
-        </div>
+    <div id="headerimage">
+      <img src="<c:url value="/resources/images/header.jpg"/>" />
+    </div>
+    <ul>
+      <c:forEach items="${categories}" var="category">
+        <li><a href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
+      </c:forEach>
+    </ul>

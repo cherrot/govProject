@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
         <% String listName="测试边栏";%>
         <% String listLink1="http://www.w3school.com.cn";%>
@@ -9,7 +10,7 @@
         <% String listLink6sString="链接六";%>
         <!--可以添加方法改变链接名字-->
         <div id="sidebarlist1">
-        <p><%=listName%></p>
+        <h3><%=listName%></h3>
         <ul type="circle">
           <li><a href=""><%=listLink1sString%></a></li>
           <li><a href=""><%=listLink2sString%></a></li>
@@ -19,8 +20,16 @@
           <li><a href=""><%=listLink6sString%></a></li>
         </ul>
         </div>
+          <c:forEach items="${linkCategories}" var="category">
+            <h3>${category.name}</h3>
+            <ul>
+              <c:forEach items="${category.linkList}" var="link" >
+                <li><a href="${link.url}">${link.name}</a></li>
+              </c:forEach>
+            </ul>
+          </c:forEach>
         <div id="sidebarlist2">
-        <p><%=listName%></p>
+        <h3><%=listName%></h3>
         <ul type="circle">
           <li><a href=""><%=listLink1sString%></a></li>
           <li><a href=""><%=listLink2sString%></a></li>

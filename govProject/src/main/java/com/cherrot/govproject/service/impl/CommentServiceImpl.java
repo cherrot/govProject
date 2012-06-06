@@ -48,15 +48,17 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Comment find(Integer id) {
         return commentDao.find(id);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public Comment find(Integer id, boolean withCommentmetas, boolean withChildComments) {
         Comment comment = find(id);
-        if (withCommentmetas) comment.getCommentmetaList();
-        if (withChildComments) comment.getCommentList();
+        if (withCommentmetas) comment.getCommentmetaList().isEmpty();
+        if (withChildComments) comment.getCommentList().isEmpty();
         return comment;
     }
 
@@ -80,9 +82,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Comment> list(boolean withCommentmetas, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities();
-        getDependency(comments, withCommentmetas, withChildComments);
+        processDependency(comments, withCommentmetas, withChildComments);
         return comments;
     }
 
@@ -92,9 +95,10 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
-        getDependency(comments, withCommentmeta, withChildComments);
+        processDependency(comments, withCommentmeta, withChildComments);
         return comments;
     }
 
@@ -115,26 +119,29 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
-    private void getDependency(List<Comment> comments, boolean withCommentmetas, boolean withChildComments) {
+    private void processDependency(List<Comment> comments, boolean withCommentmetas, boolean withChildComments) {
         if (withCommentmetas || withChildComments) {
             for (Comment comment : comments) {
-                if (withCommentmetas) comment.getCommentmetaList();
-                if (withChildComments) comment.getCommentList();
+                if (withCommentmetas) comment.getCommentmetaList().isEmpty();
+                if (withChildComments) comment.getCommentList().isEmpty();
             }
         }
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Comment> list() {
         return commentDao.findEntities();
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
+    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum, int pageSize) {
         return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
