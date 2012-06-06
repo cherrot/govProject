@@ -15,9 +15,16 @@ import java.util.List;
  */
 public interface PostService extends BaseService<Post, Integer> {
 
-    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms);
     void create(Post post, List<Term> categories, List<String> tags);
     void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas);
+    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms);
+//    /**
+//     * 只得到Post的引用，不取回post。主要用于验证该slug是否存在（通过捕获EntityNotFoundException）。
+//     * @param slug post的slug（用户自定义的文章链接）
+//     * @return Post的引用
+//     */
+//    Post getReferenceBySlug(String slug);
+    Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withTerms);
     /**
      * 向指定的文章(post)添加文章分类/文章标签（关键字）。注意，此方法不能覆盖post原有的term关联
      * @param post 被操作的post对象

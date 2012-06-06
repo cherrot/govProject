@@ -34,13 +34,13 @@ public class LoginController {
     private UserService userService;
 
     @ModelAttribute("newUser")
-    public User getUser() {
+    public User getNewUser() {
         return new User(null, null, 0, new Date(), null);
     }
 
     @RequestMapping(value={"/login","/register"}, method= RequestMethod.GET)
     public String login() {
-        return "redirect:/login";
+        return "/login";
     }
 
     /**
@@ -103,6 +103,6 @@ public class LoginController {
         usermetas.add(genderMeta);
         userService.create(user);
         BaseController.setSessionUser(request.getSession(), user);
-        return "redirect:/";
+        return "/";
     }
 }

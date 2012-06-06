@@ -22,6 +22,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -110,9 +111,12 @@ public class Post implements Serializable {
     @Size(max = 20)
     @Column(name = "password", length = 20)
     private String password;
+    /**
+     * By default the MIME would be "text/html"
+     */
     @Size(max = 45)
     @Column(name = "mime", length = 45)
-    private String mime;
+    private String mime = "text/html";
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -134,6 +138,10 @@ public class Post implements Serializable {
     @ManyToOne
     private Post postParent;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
+    /**
+     * Retriving the commentList order by its createDate
+     */
+    @OrderBy("commentDate")
     private List<Comment> commentList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
     @JoinTable(name="term_relationships",
