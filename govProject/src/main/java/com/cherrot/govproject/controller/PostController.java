@@ -32,17 +32,26 @@ public class PostController {
     @Inject
     private PostService postService;
 
+    /**
+     * 返回一个新的Comment对象，默认为等待审核状态
+     * @return
+     */
     @ModelAttribute("newComment")
     public Comment getNewComment(){
         return new Comment(new Date(), false, null, null, null, "0.0.0.0", null);
     }
 
-    @RequestMapping(value="/{postSlug}", method= RequestMethod.GET)
-    //如果@PathVariable不指定参数名，只有在编译时打开debug开关（javac -debug=no）时才可行！！（不建议）
-    public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
+    /**
+     * 捕获URI为 /post?id=xxx的请求
+     * @param postId post的主键
+     * @return
+     */
+    @RequestMapping(params="id")
+    public ModelAndView viewPost(@RequestParam("id")int postId) {
+        //TODO 最好能将用户浏览器URL置换为文章自定义链接的形式。
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.findBySlug(postSlug, true, true, true);
+            Post post = postService.find(postId, true, true, true);
             mav.addObject("post", post);
         } catch (NoResultException ex) {
             mav.setViewName("/errors/404");
@@ -50,11 +59,17 @@ public class PostController {
         return mav;
     }
 
-    @RequestMapping(value="/", params="post")
-    public ModelAndView viewPost(@RequestParam("post")int postId) {
+    /**
+     * 捕获URI类似 /post/my-new-artical 形式的文章。
+     * @param postSlug 文章短链接（slug字段）
+     * @return
+     */
+    @RequestMapping(value="/{postSlug}", method= RequestMethod.GET)
+    //如果@PathVariable不指定参数名，只有在编译时打开debug开关（javac -debug=no）时才可行！（不建议！）
+    public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.find(postId, true, true, true);
+            Post post = postService.findBySlug(postSlug, true, true, true);
             mav.addObject("post", post);
         } catch (NoResultException ex) {
             mav.setViewName("/errors/404");
@@ -68,15 +83,16 @@ public class PostController {
         , @Valid @ModelAttribute("newComment")Comment comment
         , BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            //TODO 如何返回当前页面？
-        }
+//        if (bindingResult.hasErrors()) {
+//            //返回当前页面
+//            return request.getRequestURI();//当前页面URI
+//        }
         try {
             Post post = postService.find(postId);
         } catch (NoResultException ex) {
-            //TODO
+            return "/errors/410";
         }
-        //TODO
-        return "";
+        request.getRemoteAddr();//IP
+        return request.getRequestURI();//当前页面URI;
     }
 }

@@ -50,7 +50,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByStatus", query = "SELECT p FROM Post p WHERE p.status = :status"),
     @NamedQuery(name = "Post.findByType", query = "SELECT p FROM Post p WHERE p.type = :type"),
     @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
-    @NamedQuery(name = "Post.findByTittle", query = "SELECT p FROM Post p WHERE p.tittle = :tittle"),
+    @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
     //以下为等价式
@@ -106,8 +106,8 @@ public class Post implements Serializable {
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 255)
-    @Column(name = "tittle", nullable = false, length = 255)
-    private String tittle;
+    @Column(name = "title", nullable = false, length = 255)
+    private String title;
     @Size(max = 20)
     @Column(name = "password", length = 20)
     private String password;
@@ -164,7 +164,7 @@ public class Post implements Serializable {
         this.status = status;
         this.type = type;
         this.slug = slug;
-        this.tittle = tittle;
+        this.title = tittle;
         this.content = content;
     }
 
@@ -232,12 +232,12 @@ public class Post implements Serializable {
         this.slug = slug;
     }
 
-    public String getTittle() {
-        return tittle;
+    public String getTitle() {
+        return title;
     }
 
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getPassword() {

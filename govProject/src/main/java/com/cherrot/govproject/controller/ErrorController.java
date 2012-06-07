@@ -19,7 +19,13 @@ public class ErrorController {
 
     @RequestMapping("/404")
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handle404(){
-        return "errors/404";
+    public String handle404() {
+        return "/errors/404";
+    }
+
+    @RequestMapping("/410")
+    @ResponseStatus(HttpStatus.GONE)
+    public String handle410() {
+        return "/errors/410";
     }
 }
