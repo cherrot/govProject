@@ -25,7 +25,7 @@ public class PostController {
     //如果@PathVariable不指定参数名，只有在编译时打开debug开关（javac -debug=no）时才可行！！（不建议）
     public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
         ModelAndView mav = new ModelAndView("viewPost");
-        postService
         return mav;
     }
+
 }

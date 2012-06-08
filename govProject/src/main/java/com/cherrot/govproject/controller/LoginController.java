@@ -40,7 +40,7 @@ public class LoginController {
 
     @RequestMapping(value={"/login","/register"}, method= RequestMethod.GET)
     public String login() {
-        return "redirect:/login";
+        return "/login";
     }
 
     /**
