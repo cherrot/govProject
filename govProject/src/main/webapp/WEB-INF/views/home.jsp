@@ -12,6 +12,7 @@
     <div id="sidebar" >
       <%@include file="jspf/sidebar.jspf" %>
     </div>
+    <!--Start MainContent-->
     <c:forEach items="${categories}" var="category">
       <h2>${category.name}</h2>
       <ol>
@@ -20,8 +21,9 @@
         </c:forEach>
       </ol>
     </c:forEach>
+    <!--End MainContent-->
+    <div id="footer">
+      <%@include file="jspf/footer.jspf" %>
+    </div>
   </body>
-  <div id="footer">
-    <%@include file="jspf/footer.jspf" %>
-  </div>
 </html>

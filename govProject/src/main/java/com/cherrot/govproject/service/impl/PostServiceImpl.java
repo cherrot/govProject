@@ -142,9 +142,15 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly=true)
     public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms) {
         Post post = find(id);
-        if (withComments) post.getCommentList().isEmpty();
-        if (withPostmetas) post.getPostmetaList().isEmpty();
-        if (withTerms) post.getTermList().isEmpty();
+        processDependency(post, withComments, withPostmetas, withTerms);
+        return post;
+    }
+
+    @Override
+    @Transactional(readOnly=true)
+    public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withTerms) {
+        Post post = postDao.findBySlug(slug);
+        processDependency(post, withComments, withPostmetas, withTerms);
         return post;
     }
 
@@ -158,6 +164,12 @@ public class PostServiceImpl implements PostService {
     @Transactional(readOnly=true)
     public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryNameOrderbyCreateDate(categoryName, pageSize, (pageNum-1)*pageSize);
+    }
+
+    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withTerms){
+        if (withComments) post.getCommentList().isEmpty();
+        if (withPostmetas) post.getPostmetaList().isEmpty();
+        if (withTerms) post.getTermList().isEmpty();
     }
 
 }

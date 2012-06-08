@@ -397,4 +397,9 @@ public class PostJpaDao implements PostDao {
         return q.getResultList();
     }
 
+    @Override
+    public Post findBySlug(String slug) {
+        return em.createNamedQuery("Post.findBySlug", Post.class)
+            .setParameter("slug", slug).getSingleResult();
+    }
 }

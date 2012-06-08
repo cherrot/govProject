@@ -34,7 +34,7 @@ public class LoginController {
     private UserService userService;
 
     @ModelAttribute("newUser")
-    public User getUser() {
+    public User getNewUser() {
         return new User(null, null, 0, new Date(), null);
     }
 
@@ -95,14 +95,14 @@ public class LoginController {
         List<Usermeta> usermetas = new ArrayList<Usermeta>(2);
         Usermeta birthdayMeta = new Usermeta("birthday");
         birthdayMeta.setMetaValue(birthday.toString());
-        birthdayMeta.setUser(user);
         Usermeta genderMeta = new Usermeta("gender");
         genderMeta.setMetaValue(gender);
+        birthdayMeta.setUser(user);
         genderMeta.setUser(user);
         usermetas.add(birthdayMeta);
         usermetas.add(genderMeta);
         userService.create(user);
         BaseController.setSessionUser(request.getSession(), user);
-        return "redirect:/";
+        return "/";
     }
 }
