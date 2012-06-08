@@ -17,7 +17,7 @@
       <h2>${category.name}</h2>
       <ol>
         <c:forEach items="${requestScope[category.name]}" var="post">
-          <li>${post.tittle}</li>
+          <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a></li>
         </c:forEach>
       </ol>
     </c:forEach>

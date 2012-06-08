@@ -145,4 +145,10 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> list(int pageNum, int pageSize) {
         return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
+
+    //FIXME
+    @Override
+    public List<Comment> listByPostWithHierarchyOrderbyDate() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

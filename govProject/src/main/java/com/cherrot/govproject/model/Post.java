@@ -155,7 +155,7 @@ public class Post implements Serializable {
 //        this.id = id;
 //    }
 
-    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String tittle, String content) {
+    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String title, String content) {
 //        this.id = id;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
@@ -164,7 +164,7 @@ public class Post implements Serializable {
         this.status = status;
         this.type = type;
         this.slug = slug;
-        this.title = tittle;
+        this.title = title;
         this.content = content;
     }
 

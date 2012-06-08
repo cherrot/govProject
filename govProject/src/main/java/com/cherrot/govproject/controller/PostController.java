@@ -6,6 +6,7 @@ package com.cherrot.govproject.controller;
 
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import java.util.Date;
 import javax.inject.Inject;
@@ -23,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Controller to display posts.
+ * TODO: Add http type converters which could convert String values and Integer Values to posts.
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
@@ -31,18 +33,25 @@ public class PostController {
 
     @Inject
     private PostService postService;
+    @Inject
+    private CommentService commentService;
 
     /**
      * 返回一个新的Comment对象，默认为等待审核状态
      * @return
      */
     @ModelAttribute("newComment")
-    public Comment getNewComment(){
-        return new Comment(new Date(), false, null, null, null, "0.0.0.0", null);
+    public Comment getNewComment(HttpServletRequest request
+        , @RequestParam("postId")int postId){
+
+        Post post = postService.find(postId);
+        Comment comment = new Comment(new Date(), false, null, null, null, "0.0.0.0", null);
+        comment.setPost(post);
+        return comment;
     }
 
     /**
-     * 捕获URI为 /post?id=xxx的请求
+     * 捕获URI为 /post?id=xxx的请求，显示文章
      * @param postId post的主键
      * @return
      */
@@ -68,11 +77,6 @@ public class PostController {
     //如果@PathVariable不指定参数名，只有在编译时打开debug开关（javac -debug=no）时才可行！（不建议！）
     public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
         ModelAndView mav = new ModelAndView("viewPost");
-<<<<<<< HEAD
-        return mav;
-    }
-
-=======
         try {
             Post post = postService.findBySlug(postSlug, true, true, true);
             mav.addObject("post", post);
@@ -82,23 +86,36 @@ public class PostController {
         return mav;
     }
 
-    @RequestMapping(value="/", method= RequestMethod.POST)
+    /**
+     * 添加评论
+     * @param request 用于获取请求者IP
+     * @param postId 文章id
+     * @param comment 评论
+     * @param bindingResult 评论字段合法性验证结果
+     * @return
+     */
+//    @RequestMapping(value="/*", method= RequestMethod.POST)
     public String leaveAComment(HttpServletRequest request
         , @RequestParam("postId")int postId
         , @Valid @ModelAttribute("newComment")Comment comment
         , BindingResult bindingResult) {
 
-//        if (bindingResult.hasErrors()) {
-//            //返回当前页面
-//            return request.getRequestURI();//当前页面URI
-//        }
-        try {
-            Post post = postService.find(postId);
-        } catch (NoResultException ex) {
-            return "/errors/410";
+        if (bindingResult.hasErrors()) {
+            //返回当前页面
+            return request.getRequestURI();//当前页面URI
         }
-        request.getRemoteAddr();//IP
+//        Post post = null;
+//        try {
+//            post = postService.find(postId);
+//        } catch (NoResultException ex) {
+//            return "/errors/410";
+//        }
+        comment.setAuthorIp(request.getRemoteAddr());//IP
+//        comment.setPost(post);
+        commentService.create(comment);
         return request.getRequestURI();//当前页面URI;
     }
->>>>>>> 31e93c416eb48c96bf5df6e046f52edef90535e1
+
+//    @RequestMapping(value={"/{postSlug}/edit"})
+//    public ModelAndView editPost
 }
