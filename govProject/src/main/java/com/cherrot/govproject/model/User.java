@@ -92,6 +92,8 @@ public class User implements Serializable {
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Usermeta> usermetaList;
+    @OneToMany(cascade= CascadeType.ALL, mappedBy= "user")
+    private List<Comment> commentList;
 
     public User() {
     }
@@ -199,6 +201,14 @@ public class User implements Serializable {
 
     public void setUsermetaList(List<Usermeta> usermetaList) {
         this.usermetaList = usermetaList;
+    }
+
+    public List<Comment> getCommentList() {
+        return commentList;
+    }
+
+    public void setCommentList(List<Comment> commentList) {
+        this.commentList = commentList;
     }
 
     @Override

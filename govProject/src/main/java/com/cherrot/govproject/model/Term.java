@@ -81,9 +81,13 @@ public class Term implements Serializable {
     @Column(name = "count", nullable = false)
     private int count;
     @Enumerated(EnumType.STRING)
+    @Basic(optional=false)
+    @NotNull
     @Size(max = 8)
     @Column(name = "type", length = 8)
     private TermType type;
+    @Basic(optional=false)
+    @NotNull
     @Size(max = 100)
     @Column(name = "name", length = 100)
     private String name;
@@ -112,15 +116,19 @@ public class Term implements Serializable {
     private List<Post> postList;
 
     public Term() {
+        count = 0;
+        type = TermType.POST_TAG;
     }
 
 //    public Term(Integer id) {
 //        this.id = id;
 //    }
 
-    public Term(/*Integer id,*/ int count, String slug) {
+    public Term(/*Integer id,*/ int count, String name, TermType type, String slug) {
 //        this.id = id;
         this.count = count;
+        this.name = name;
+        this.type = type;
         this.slug = slug;
     }
 

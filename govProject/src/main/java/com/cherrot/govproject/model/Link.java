@@ -65,6 +65,7 @@ public class Link implements Serializable {
     private LinkCategory linkCategory;
 
     public Link() {
+        target = "_blank";
     }
 
 //    public Link(Integer id) {

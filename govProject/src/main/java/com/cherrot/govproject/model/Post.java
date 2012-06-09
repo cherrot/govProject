@@ -159,19 +159,20 @@ public class Post implements Serializable {
             inverseJoinColumns=@JoinColumn(name="term_id"),
             joinColumns=@JoinColumn(name="post_id"))
     private List<Term> termList;
-    //TODO 完成所有JPA类的契约默认构造器
+
     public Post() {
         createDate = modifyDate = new Date();
         commentStatus = true;
         commentCount = 0;
-        status =
+        status = PostStatus.DRAFT;
+        type = PostType.POST;
     }
 
 //    public Post(Integer id) {
 //        this.id = id;
 //    }
 
-    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, String status, String type, String slug, String title, String content) {
+    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, PostStatus status, PostType type, String slug, String title, String content) {
 //        this.id = id;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
@@ -224,19 +225,19 @@ public class Post implements Serializable {
         this.commentCount = commentCount;
     }
 
-    public String getStatus() {
+    public PostStatus getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(PostStatus status) {
         this.status = status;
     }
 
-    public String getType() {
+    public PostType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(PostType type) {
         this.type = type;
     }
 

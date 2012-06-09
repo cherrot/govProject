@@ -41,12 +41,13 @@ public class PostController {
     private CommentService commentService;
 
     /**
-     * 返回一个新的Comment对象，默认为等待审核状态
+     * 返回一个新的Comment对象
+     * 本方法直接使用默认构造器返回一个Comment对象，因此完全可以省略
      * @return
      */
     @ModelAttribute("newComment")
     public Comment getNewComment(){
-        return new Comment(new Date(), false, null, null, null, "0.0.0.0", null);
+        return new Comment();
     }
 
     /**

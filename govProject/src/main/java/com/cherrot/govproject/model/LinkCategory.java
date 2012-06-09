@@ -57,16 +57,12 @@ public class LinkCategory implements Serializable {
     private List<Link> linkList;
 
     public LinkCategory() {
+        count = 0;
     }
 
 //    public LinkCategory(Integer id) {
 //        this.id = id;
 //    }
-
-    public LinkCategory(/*Integer id,*/ int count) {
-//        this.id = id;
-        this.count = count;
-    }
 
     public Integer getId() {
         return id;

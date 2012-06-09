@@ -7,6 +7,7 @@ package com.cherrot.govproject.dao.jpa;
 import com.cherrot.govproject.dao.UserDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
+import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.User;
@@ -57,6 +58,9 @@ public class UserJpaDao implements UserDao {
         if (user.getUsermetaList() == null) {
             user.setUsermetaList(new ArrayList<Usermeta>());
         }
+        if (user.getCommentList() == null) {
+            user.setCommentList(new ArrayList<Comment>());
+        }
 //        EntityManager em = null;
 //        try {
 //            em = getEntityManager();
@@ -79,6 +83,11 @@ public class UserJpaDao implements UserDao {
                 attachedUsermetaList.add(usermetaListUsermetaToAttach);
             }
             user.setUsermetaList(attachedUsermetaList);
+            List<Comment> attachedCommentList = new ArrayList<Comment>();
+            for (Comment commentListCommentToAttach : user.getCommentList()) {
+                commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
+                attachedCommentList.add(commentListCommentToAttach);
+            }
             em.persist(user);
             for (SiteLog siteLogListSiteLog : user.getSiteLogList()) {
                 User oldUserOfSiteLogListSiteLog = siteLogListSiteLog.getUser();
@@ -107,6 +116,15 @@ public class UserJpaDao implements UserDao {
                     oldUserOfUsermetaListUsermeta = em.merge(oldUserOfUsermetaListUsermeta);
                 }
             }
+            for (Comment commentListComment : user.getCommentList()) {
+                User oldUserOfCommentListComment = commentListComment.getUser();
+                commentListComment.setUser(user);
+                commentListComment = em.merge(commentListComment);
+                if (oldUserOfCommentListComment != null) {
+                    oldUserOfCommentListComment.getCommentList().remove(commentListComment);
+                    oldUserOfCommentListComment = em.merge(oldUserOfCommentListComment);
+                }
+            }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -130,6 +148,8 @@ public class UserJpaDao implements UserDao {
             List<Post> postListNew = user.getPostList();
             List<Usermeta> usermetaListOld = persistentUser.getUsermetaList();
             List<Usermeta> usermetaListNew = user.getUsermetaList();
+            List<Comment> commentListOld = persistentUser.getCommentList();
+            List<Comment> commentListNew = user.getCommentList();
             List<String> illegalOrphanMessages = null;
             for (SiteLog siteLogListOldSiteLog : siteLogListOld) {
                 if (!siteLogListNew.contains(siteLogListOldSiteLog)) {
@@ -153,6 +173,14 @@ public class UserJpaDao implements UserDao {
                         illegalOrphanMessages = new ArrayList<String>();
                     }
                     illegalOrphanMessages.add("You must retain Usermeta " + usermetaListOldUsermeta + " since its user field is not nullable.");
+                }
+            }
+            for (Comment commentListOldComment : commentListOld) {
+                if (!commentListNew.contains(commentListOldComment)) {
+                    if (illegalOrphanMessages == null) {
+                        illegalOrphanMessages = new ArrayList<String>();
+                    }
+                    illegalOrphanMessages.add("You must retain Comment " + commentListOldComment + " since its user field is not nullable.");
                 }
             }
             if (illegalOrphanMessages != null) {
@@ -179,6 +207,11 @@ public class UserJpaDao implements UserDao {
             }
             usermetaListNew = attachedUsermetaListNew;
             user.setUsermetaList(usermetaListNew);
+            List<Comment> attachedCommentListNew = new ArrayList<Comment>();
+            for (Comment commentListNewCommentToAttach : commentListNew) {
+                commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
+                attachedCommentListNew.add(commentListNewCommentToAttach);
+            }
             user = em.merge(user);
             for (SiteLog siteLogListNewSiteLog : siteLogListNew) {
                 if (!siteLogListOld.contains(siteLogListNewSiteLog)) {
@@ -213,6 +246,17 @@ public class UserJpaDao implements UserDao {
                     }
                 }
             }
+            for (Comment commentListNewComment : commentListNew) {
+                if (!commentListOld.contains(commentListNewComment)) {
+                    User oldUserOfCommentListNewComment = commentListNewComment.getUser();
+                    commentListNewComment.setUser(user);
+                    commentListNewComment = em.merge(commentListNewComment);
+                    if (oldUserOfCommentListNewComment != null && !oldUserOfCommentListNewComment.equals(user)) {
+                        oldUserOfCommentListNewComment.getCommentList().remove(commentListNewComment);
+                        oldUserOfCommentListNewComment = em.merge(oldUserOfCommentListNewComment);
+                    }
+                }
+            }
 //            em.getTransaction().commit();
         }
         catch (Exception ex) {
@@ -231,7 +275,7 @@ public class UserJpaDao implements UserDao {
 //            }
 //        }
     }
-
+//FIXME 还没写完！！！
     @Override
     @Transactional
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {

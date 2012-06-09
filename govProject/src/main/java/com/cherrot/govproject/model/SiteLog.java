@@ -58,6 +58,7 @@ public class SiteLog implements Serializable {
     private User user;
 
     public SiteLog() {
+        logDate = new Date();
     }
 
 //    public SiteLog(Integer id) {

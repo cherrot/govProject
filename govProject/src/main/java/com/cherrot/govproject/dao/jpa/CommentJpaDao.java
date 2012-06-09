@@ -10,6 +10,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.User;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -57,6 +58,11 @@ public class CommentJpaDao implements CommentDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
+        User user = comment.getUser();
+        if (user != null) {
+            user = em.getReference(user.getClass(), user.getId());
+            comment.setUser(user);
+        }
             Post post = comment.getPost();
             if (post != null) {
                 post = em.getReference(post.getClass(), post.getId());
@@ -80,6 +86,10 @@ public class CommentJpaDao implements CommentDao {
             }
             comment.setCommentList(attachedCommentList);
             em.persist(comment);
+        if (user != null) {
+            user.getCommentList().add(comment);
+            user = em.merge(user);
+        }
             if (post != null) {
                 post.getCommentList().add(comment);
                 post = em.merge(post);
@@ -123,6 +133,8 @@ public class CommentJpaDao implements CommentDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Comment persistentComment = em.find(Comment.class, comment.getId());
+            User userOld = persistentComment.getUser();
+            User userNew = comment.getUser();
             Post postOld = persistentComment.getPost();
             Post postNew = comment.getPost();
             Comment commentParentOld = persistentComment.getCommentParent();
@@ -142,6 +154,10 @@ public class CommentJpaDao implements CommentDao {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            if (userNew != null) {
+                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                comment.setUser(userNew);
             }
             if (postNew != null) {
                 postNew = em.getReference(postNew.getClass(), postNew.getId());
@@ -166,6 +182,14 @@ public class CommentJpaDao implements CommentDao {
             commentListNew = attachedCommentListNew;
             comment.setCommentList(commentListNew);
             comment = em.merge(comment);
+            if (userOld != null && !userOld.equals(userNew)) {
+                userOld.getCommentList().remove(comment);
+                userOld = em.merge(userOld);
+            }
+            if (userNew != null && !userNew.equals(userOld)) {
+                userNew.getCommentList().add(comment);
+                userNew = em.merge(userNew);
+            }
             if (postOld != null && !postOld.equals(postNew)) {
                 postOld.getCommentList().remove(comment);
                 postOld = em.merge(postOld);
@@ -253,6 +277,11 @@ public class CommentJpaDao implements CommentDao {
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
+            }
+            User user = comment.getUser();
+            if (user != null) {
+                user.getCommentList().remove(comment);
+                user = em.merge(user);
             }
             Post post = comment.getPost();
             if (post != null) {

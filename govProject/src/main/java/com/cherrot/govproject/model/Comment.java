@@ -63,8 +63,9 @@ public class Comment implements Serializable {
     @NotNull
     @Column(name = "approved", nullable = false)
     private boolean approved;
-    @Column(name = "user_id")
-    private Integer userId;
+    @ManyToOne(optional=true)
+    @JoinColumn(name = "user_id", referencedColumnName="id", nullable=true)
+    private User user;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -105,6 +106,8 @@ public class Comment implements Serializable {
     private Comment commentParent;
 
     public Comment() {
+        approved = false;
+        commentDate = new Date();
     }
 
 //    public Comment(Integer id) {
@@ -146,12 +149,12 @@ public class Comment implements Serializable {
         this.approved = approved;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getAuthor() {
