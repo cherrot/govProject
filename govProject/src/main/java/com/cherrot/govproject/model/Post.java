@@ -11,6 +11,8 @@ import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -64,6 +66,16 @@ import javax.xml.bind.annotation.XmlTransient;
  */
 public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public enum PostStatus {
+        DRAFT, PUBLISHED, PENDING
+    }
+
+    //TODO 完成所有JPA类的枚举类型
+    public enum PostType {
+        POST, ATTACHMENT
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -88,16 +100,18 @@ public class Post implements Serializable {
     @NotNull
     @Column(name = "commentCount", nullable = false)
     private int commentCount;
+    @Enumerated(EnumType.STRING)
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    private PostStatus status;
+    @Enumerated(EnumType.STRING)
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 20)
     @Column(name = "type", nullable = false, length = 20)
-    private String type;
+    private PostType type;
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 200)
@@ -111,12 +125,9 @@ public class Post implements Serializable {
     @Size(max = 20)
     @Column(name = "password", length = 20)
     private String password;
-    /**
-     * By default the MIME would be "text/html"
-     */
     @Size(max = 45)
     @Column(name = "mime", length = 45)
-    private String mime = "text/html";
+    private String mime;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -148,7 +159,12 @@ public class Post implements Serializable {
             inverseJoinColumns=@JoinColumn(name="term_id"),
             joinColumns=@JoinColumn(name="post_id"))
     private List<Term> termList;
+    //TODO 完成所有JPA类的契约默认构造器
     public Post() {
+        createDate = modifyDate = new Date();
+        commentStatus = true;
+        commentCount = 0;
+        status =
     }
 
 //    public Post(Integer id) {

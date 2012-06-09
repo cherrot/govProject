@@ -90,8 +90,11 @@ public class LoginController {
     public String doRegister(HttpServletRequest request
         , @Valid @ModelAttribute("newUser")User user, BindingResult bindingResult
         , @RequestParam("birthday")Date birthday, @RequestParam("gender")String gender) {
-        if (bindingResult.hasErrors())
+
+        if (bindingResult.hasErrors()) {
             return "/login";
+        }
+
         List<Usermeta> usermetas = new ArrayList<Usermeta>(2);
         Usermeta birthdayMeta = new Usermeta("birthday");
         birthdayMeta.setMetaValue(birthday.toString());
@@ -103,6 +106,6 @@ public class LoginController {
         usermetas.add(genderMeta);
         userService.create(user);
         BaseController.setSessionUser(request.getSession(), user);
-        return "/";
+        return "redirect:/";
     }
 }

@@ -46,5 +46,9 @@ http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.
     <error-code>404</error-code>
     <location>/errors/404</location>
   </error-page>
+  <error-page>
+    <error-code>410</error-code>
+    <location>/errors/410</location>
+  </error-page>
 
 </web-app>

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>${post1.title} | 昆明文化辞典</title>
+    <title>${post.title} | 昆明文化辞典</title>
   </head>
   <body>
     <div id="header">
@@ -39,12 +39,17 @@
             <li>${comment.author}:${comment.content} (${comment.commentDate})</li>
           </c:if>
         </c:forEach>
-          <c:if test="${empty newComment}"></c:if>
       </ol>
+      <ul>
+        <c:if test="${!empty postComment}">
+          <li>NewComment:<a href="${postComment.authorUrl}">${postComment.author}</a>: ${postComment.content}</li>
+        </c:if>
+      </ul>
     </div>
     <div id="newComment">
       <h3>留下评论</h3>
       <form:form modelAttribute="newComment">
+        <form:errors path="*"/>
         <label for="newCommentAuthor">您的姓名</label>
         <form:input id="newCommentAuthor" path="author" placeholder="请输入您的姓名" required="required" />
         <form:errors path="author" /><br/>
@@ -58,7 +63,8 @@
         <form:textarea id="newCommentContent" path="content" placeholder="写点什么吧：" required="required"/>
         <form:errors path="content" /><br/>
         <input type="hidden" name="postId" value="${post.id}"/>
-        <form:hidden path="commentParent" value=""/>
+        <input type="hidden" name="commentParentId" value=""/>
+        <input type="submit" value="提交"/>
       </form:form>
     </div>
     <!--End MainContent-->
