@@ -191,18 +191,4 @@ public class UsermetaJpaDao implements UsermetaDao {
 //        }
     }
 
-    @Override
-    public void save(Usermeta model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
 }

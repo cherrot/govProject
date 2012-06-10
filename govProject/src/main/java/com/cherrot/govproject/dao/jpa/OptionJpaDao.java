@@ -161,18 +161,4 @@ public class OptionJpaDao implements OptionDao {
 //        }
     }
 
-    @Override
-    public void save(Option model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
 }

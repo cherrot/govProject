@@ -119,4 +119,13 @@ public class LinkServiceImpl implements LinkService{
         return linkCategories;
     }
 
+    @Override
+    public void save(Link model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
+
 }

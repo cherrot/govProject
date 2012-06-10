@@ -190,19 +190,4 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //            em.close();
 //        }
     }
-
-    @Override
-    public void save(Commentmeta model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
 }

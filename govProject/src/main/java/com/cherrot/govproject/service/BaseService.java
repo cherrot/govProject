@@ -17,6 +17,7 @@ public interface BaseService<Model extends Serializable, PrimaryKey extends Seri
     void edit(Model model);
     Model find(PrimaryKey id);
     void destroy(PrimaryKey id);
+    void save(Model model);
     int getCount();
     List<Model> list();
     List<Model> list(int pageNum);

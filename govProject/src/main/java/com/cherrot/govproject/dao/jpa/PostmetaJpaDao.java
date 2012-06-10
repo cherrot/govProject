@@ -191,18 +191,4 @@ public class PostmetaJpaDao implements PostmetaDao {
 //        }
     }
 
-    @Override
-    public void save(Postmeta model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
 }

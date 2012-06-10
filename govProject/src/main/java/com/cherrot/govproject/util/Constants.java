@@ -18,7 +18,8 @@ public class Constants {
     /**
      * Session Attributes
      */
-    public static final String USER_CONTEXT = "USER_CONTEXT";
+    public static final String USER_CONTEXT = "loginUser";
     public static final String ERROR_MSG_KEY = "errorMsg";
+    public static final String SUCCESS_MSG_KEY = "successMsg";
     public static final String LOGIN_TO_URL = "toUrl";
 }

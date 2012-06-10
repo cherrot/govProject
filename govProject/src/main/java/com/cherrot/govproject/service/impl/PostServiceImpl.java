@@ -172,4 +172,13 @@ public class PostServiceImpl implements PostService {
         if (withTerms) post.getTermList().isEmpty();
     }
 
+    @Override
+    public void save(Post model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
+
 }

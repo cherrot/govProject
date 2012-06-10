@@ -95,4 +95,13 @@ public class OptionServiceImpl implements OptionService{
         }
     }
 
+    @Override
+    public void save(Option model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
+
 }

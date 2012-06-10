@@ -76,4 +76,13 @@ public class SiteLogServiceImpl implements SiteLogService{
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    @Override
+    public void save(SiteLog model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
+
 }

@@ -131,9 +131,24 @@ public class UserServiceImpl implements UserService{
         if (withComments) user.getCommentList().isEmpty();
     }
 
-    //FIXME 未完成方法
     @Override
     public User validateUser(String loginName, String password) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        User user = null;
+        try {
+            user = findByLoginName(loginName, false, false, false, false);
+        } catch (Exception e) {
+            
+        } finally {
+            return user;
+        }
+    }
+
+    @Override
+    public void save(User model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
     }
 }

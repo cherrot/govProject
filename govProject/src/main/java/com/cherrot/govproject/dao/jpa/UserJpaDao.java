@@ -399,18 +399,4 @@ public class UserJpaDao implements UserDao {
 //        }
     }
 
-    @Override
-    public void save(User model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
 }

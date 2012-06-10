@@ -16,7 +16,6 @@ import java.util.List;
 public interface BaseDao<Model extends Serializable, PrimaryKey extends Serializable> {
 
     void create(Model model);
-    void save(Model model);
     void destroy(PrimaryKey id) throws IllegalOrphanException, NonexistentEntityException;
     void edit(Model model) throws IllegalOrphanException, NonexistentEntityException, Exception;
     Model find(PrimaryKey id);

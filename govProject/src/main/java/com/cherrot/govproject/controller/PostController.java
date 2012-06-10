@@ -8,6 +8,7 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.util.Constants;
 import java.util.Map;
 import java.util.WeakHashMap;
 import javax.inject.Inject;
@@ -181,13 +182,13 @@ public class PostController {
     /**
      * TODO: 通过editPost方法注入的post对象，用户提交文章时表单中未包含的post字段（比如post.id）是否会丢失？ 如果丢失了，那就添加一个隐藏的input传入id
      * TODO: 未完成
-     * @param request 用于返回用户请求前的页面
+     * @param request 用于返回用户请求前的页面(编辑文章页)
      * @param post 提交的post
      * @param bindingResult 数据验证结果
      * @param redirectAttr 用于添加Flash Attributes用于redirect后的控制器/页面使用
      * @return
      */
-    @RequestMapping(value={"/*/edit", "/edit", "/create"})
+    @RequestMapping(value={"/*/edit", "/edit", "/create"}, method= RequestMethod.POST)
     public String doEditPost(HttpServletRequest request
         ,@Valid @ModelAttribute("post")Post post
         ,BindingResult bindingResult
@@ -196,6 +197,9 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
+        } else {
+            postService.save(post);
+            redirectAttr.addFlashAttribute(Constants.SUCCESS_MSG_KEY, "文章保存成功！");
         }
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;

@@ -204,4 +204,13 @@ public class TermServiceImpl implements TermService {
         }
     }
 
+    @Override
+    public void save(Term model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
+
 }

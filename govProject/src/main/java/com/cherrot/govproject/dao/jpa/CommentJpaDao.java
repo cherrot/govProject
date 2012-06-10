@@ -360,18 +360,4 @@ public class CommentJpaDao implements CommentDao {
 //            em.close();
 //        }
     }
-
-    @Override
-    public void save(Comment model) {
-        if (model.getId() == null)
-            create(model);
-        else
-            try {
-            edit(model);
-        }
-        catch (Exception ex) {
-            Logger.getLogger(CommentJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
 }

@@ -180,16 +180,4 @@ public class SiteLogJpaDao implements SiteLogDao {
 //        }
     }
 
-    @Override
-    public void save(SiteLog model) {
-        if (model.getId() == null)
-            create(model);
-        else
-            try {
-            edit(model);
-        }
-        catch (Exception ex) {
-        }
-    }
-
 }

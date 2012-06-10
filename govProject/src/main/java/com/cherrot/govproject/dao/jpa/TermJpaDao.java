@@ -233,19 +233,6 @@ public class TermJpaDao implements TermDao {
     }
 
     @Override
-    public void save(Term model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            } catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @Override
     public List<Term> findEntitiesByType(TermType type) {
         return em.createNamedQuery("Term.findEntitiesByType", Term.class)
             .setParameter("type", type).getResultList();

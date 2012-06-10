@@ -151,4 +151,13 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> listByPostWithHierarchyOrderbyDate() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void save(Comment model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
+    }
 }

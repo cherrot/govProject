@@ -366,20 +366,6 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
-    public void save(Post model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            try {
-                edit(model);
-            }
-            catch (Exception ex) {
-                Logger.getLogger(CommentmetaJpaDao.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
-    @Override
     public List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult) {
         Query q = em.createNamedQuery("Post.findEntitiesByTermOrderbyCreateDate", Post.class);
         q.setParameter("termId", term.getId());
