@@ -212,6 +212,8 @@ public class UserJpaDao implements UserDao {
                 commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
                 attachedCommentListNew.add(commentListNewCommentToAttach);
             }
+            commentListNew = attachedCommentListNew;
+            user.setCommentList(commentListNew);
             user = em.merge(user);
             for (SiteLog siteLogListNewSiteLog : siteLogListNew) {
                 if (!siteLogListOld.contains(siteLogListNewSiteLog)) {
@@ -275,7 +277,7 @@ public class UserJpaDao implements UserDao {
 //            }
 //        }
     }
-//FIXME 还没写完！！！
+
     @Override
     @Transactional
     public void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException {
@@ -311,6 +313,13 @@ public class UserJpaDao implements UserDao {
                     illegalOrphanMessages = new ArrayList<String>();
                 }
                 illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Usermeta " + usermetaListOrphanCheckUsermeta + " in its usermetaList field has a non-nullable user field.");
+            }
+            List<Comment> commentListOrphanCheck = user.getCommentList();
+            for (Comment commentlistOrphanCheckComment : commentListOrphanCheck) {
+                if (illegalOrphanMessages == null) {
+                    illegalOrphanMessages = new ArrayList<String>();
+                }
+                illegalOrphanMessages.add("This User (" + user + ") cannot be destroyed since the Comment " + commentlistOrphanCheckComment + " in its commentList field has a non-nullable user field.");
             }
             if (illegalOrphanMessages != null) {
                 throw new IllegalOrphanException(illegalOrphanMessages);
