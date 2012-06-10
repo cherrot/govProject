@@ -50,17 +50,17 @@
       <h3>留下评论</h3>
       <form:form modelAttribute="newComment">
         <form:errors path="*"/>
-        <label for="newCommentAuthor">您的姓名</label>
-        <form:input id="newCommentAuthor" path="author" placeholder="请输入您的姓名" required="required" />
+        <label for="new_comment_author">您的姓名</label>
+        <form:input id="new_comment_author" path="author" placeholder="请输入您的姓名" required="required" />
         <form:errors path="author" /><br/>
-        <label for="newCommentEmail">您的邮箱</label>
-        <form:input id="newCommentEmail" path="authorEmail" placeholder="请输入您的Email（如QQ邮箱）" required="required"/>
+        <label for="new_comment_email">您的邮箱</label>
+        <form:input id="new_comment_email" path="authorEmail" placeholder="请输入您的Email（如QQ邮箱）" required="required"/>
         <form:errors path="authorEmail" /><br/>
-        <label for="newCommentUrl">您的个人主页</label>
-        <form:input id="newCoomentUrl" path="authorUrl" placeholder="您的人人主页、QQ空间、百度空间等（可不填）"/>
+        <label for="new_comment_url">您的个人主页</label>
+        <form:input id="new_comment_url" path="authorUrl" placeholder="您的人人主页、QQ空间、百度空间等（可不填）"/>
         <form:errors path="authorUrl" /><br/>
-        <label for="newCommentContent">您的评论</label>
-        <form:textarea id="newCommentContent" path="content" placeholder="写点什么吧：" required="required"/>
+        <label for="new_comment_content">您的评论</label>
+        <form:textarea id="new_comment_content" path="content" placeholder="写点什么吧：" required="required"/>
         <form:errors path="content" /><br/>
         <input type="hidden" name="postId" value="${post.id}"/>
         <input type="hidden" name="commentParentId" value=""/>

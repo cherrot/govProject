@@ -8,6 +8,8 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
+import java.util.Map;
+import java.util.WeakHashMap;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
@@ -142,7 +144,8 @@ public class PostController {
      */
     @RequestMapping(value="/{postSlug}/edit", method= RequestMethod.GET)
     public ModelAndView editPost(@PathVariable("postSlug")final String postSlug) {
-        ModelAndView mav = new ModelAndView("editPost");
+
+        ModelAndView mav = processModels4EditPost();
         try {
             Post post = postService.findBySlug(postSlug, false, true, true);
             mav.addObject("post", post);
@@ -161,7 +164,8 @@ public class PostController {
      */
     @RequestMapping(value = {"/edit", "/create"}, method= RequestMethod.GET)
     public ModelAndView editPost(@RequestParam(value="id", required=false)final Integer postId) {
-        ModelAndView mav = new ModelAndView("editPost");
+
+        ModelAndView mav = processModels4EditPost();
         try {
             if (postId != null){
                 Post post = postService.find(postId, false, true, true);
@@ -175,7 +179,8 @@ public class PostController {
     }
 
     /**
-     * TODO: 通过editPost方法注入的post对象，用户提交文章时表单中未包含的post字段（比如post.id）是否会丢失？
+     * TODO: 通过editPost方法注入的post对象，用户提交文章时表单中未包含的post字段（比如post.id）是否会丢失？ 如果丢失了，那就添加一个隐藏的input传入id
+     * TODO: 未完成
      * @param request 用于返回用户请求前的页面
      * @param post 提交的post
      * @param bindingResult 数据验证结果
@@ -194,5 +199,19 @@ public class PostController {
         }
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
+    }
+
+    /**
+     * 注入editPost页面所必需的对象，比如以Map注入枚举类型PostStatus
+     * @return 注入必需Model的ModelAndView
+     */
+    private ModelAndView processModels4EditPost() {
+        ModelAndView mav = new ModelAndView("editPost");
+        Map<String, Post.PostStatus> postStatusMap = new WeakHashMap<String, Post.PostStatus>(3);
+        postStatusMap.put("发布", Post.PostStatus.PUBLISHED);
+        postStatusMap.put("存入草稿", Post.PostStatus.DRAFT);
+        postStatusMap.put("等待审核", Post.PostStatus.PENDING);
+        mav.addObject("postStatus", postStatusMap);
+        return mav;
     }
 }
