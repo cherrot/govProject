@@ -8,7 +8,6 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
-import java.util.Date;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
@@ -24,9 +23,10 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 本类中使用两种方式处理 @ModelAttribute 注解，一种是通过@ModelAttribute
+ * 本类中使用三种方式处理 @ModelAttribute 注解，一种是通过@ModelAttribute
  * 注解的方法得到新的实例用于数据绑定和验证（处理Comment）
  * 第二种是在编辑文章时用到的，在GET请求中注入post完成数据绑定。
+ * 第三中是在新建文章时用到的，如果用户是新建文章，则不注入post对象，此时Spring会使用默认构造器注入。
  * 什么，为什么使用两种方法？ Just for fun ;) !
  * TODO: Add http type converters which could convert String values and Integer Values to posts.
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
@@ -107,6 +107,9 @@ public class PostController {
         , final BindingResult bindingResult
         , RedirectAttributes redirectAttr) {
 
+        /**
+         * 通过FlashAttribute传递临时属性到redirect后的控制器方法中。
+         */
         if (bindingResult.hasErrors()) {
             System.err.println();
             redirectAttr.addFlashAttribute("newComment", comment);
@@ -151,7 +154,8 @@ public class PostController {
     }
 
     /**
-     * 进入编辑文章或新建文章页面
+     * 进入编辑文章或新建文章页面。
+     * 如果是新建文章，Spring会自动使用默认构造器进行数据绑定，因此没有显式实例化post对象到ModelAndView中
      * @param postId
      * @return
      */
@@ -159,14 +163,10 @@ public class PostController {
     public ModelAndView editPost(@RequestParam(value="id", required=false)final Integer postId) {
         ModelAndView mav = new ModelAndView("editPost");
         try {
-            Post post = null;
             if (postId != null){
-                post = postService.find(postId, false, true, true);
-            } else {
-                //TODO 如果未指定id，直接使用默认构造器。 默认构造器需按契约设定字段值。 下面这行可以删除
-                post = new Post();
+                Post post = postService.find(postId, false, true, true);
+                mav.addObject("post", post);
             }
-            mav.addObject("post", post);
         } catch(NoResultException ex) {
             mav.setViewName("redirect:errors/404");
         } finally {

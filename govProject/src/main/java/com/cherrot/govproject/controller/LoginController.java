@@ -65,16 +65,12 @@ public class LoginController {
 	public ModelAndView doLogin(HttpServletRequest request,
         @RequestParam("username")String username, @RequestParam("password")String password) {
 
-		User dbUser = userService.findByLoginName(username, false, false, false);
-		ModelAndView mav = new ModelAndView();
         // see Spring3 doc: 16.5 Resolving views -- The forward: prefix
-		mav.setViewName("/home");
-		if (dbUser == null) {
-			mav.addObject(Constants.ERROR_MSG_KEY, "用户名不存在");
-		} else if ( ! dbUser.getPass().equals(password) ) {
-			mav.addObject(Constants.ERROR_MSG_KEY, "用户密码不正确");
-		} else {
-			BaseController.setSessionUser(request.getSession(),dbUser);
+		ModelAndView mav = new ModelAndView("/login");
+
+        User user = userService.validateUser(username, password);
+		if ( user != null) {
+			BaseController.setSessionUser(request.getSession(),user);
             //toUrl is used to save the previous URL the user is visiting before doLogin.
 			String toUrl = (String)request.getSession().getAttribute(Constants.LOGIN_TO_URL);
 			request.getSession().removeAttribute(Constants.LOGIN_TO_URL);
@@ -82,6 +78,8 @@ public class LoginController {
 				toUrl = "/";
 			}
 			mav.setViewName("redirect:"+toUrl);
+		} else { //用户验证失败
+            mav.addObject(Constants.ERROR_MSG_KEY, "用户名或密码错误");
 		}
 		return mav;
 	}

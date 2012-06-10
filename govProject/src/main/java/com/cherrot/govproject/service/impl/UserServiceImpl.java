@@ -56,17 +56,17 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional(readOnly=true)
-    public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+    public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = find(id);
-        processDependency(user, withSiteLogs, withPosts, withUsermetas);
+        processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
         return user;
     }
 
     @Override
     @Transactional(readOnly=true)
-    public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+    public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = userDao.findByLogin(loginName);
-        processDependency(user, withSiteLogs, withPosts, withUsermetas);
+        processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
         return user;
     }
 
@@ -124,9 +124,16 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas) {
+    private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         if (withSiteLogs) user.getSiteLogList().isEmpty();
         if (withPosts) user.getPostList().isEmpty();
         if (withUsermetas) user.getUsermetaList().isEmpty();
+        if (withComments) user.getCommentList().isEmpty();
+    }
+
+    //FIXME 未完成方法
+    @Override
+    public User validateUser(String loginName, String password) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
