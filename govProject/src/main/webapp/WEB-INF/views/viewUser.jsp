@@ -1,5 +1,6 @@
 <%--
     Document   : viewUser
+    本页面需要注入User对象user，用户角色String描述userRole
     Created on : 2012-6-11, 15:50:35
     Author     : Cherrot Luo<cherrot+dev@cherrot.com>
 --%>
@@ -20,7 +21,18 @@
     <!--Start MainContent-->
     ${user.commentList} ${user.login} ${user.displayName} ${user.postList} ${user.registerDate}
     ${user.siteLogList} ${user.url} ${user.userLevel} ${user.usermetaList}
-    <h1>${user.displayName} </h1>
+    <h1>${user.displayName} 的个人资料</h1>
+    <div>
+      <p><em>昵称：</em>${user.displayName}</p>
+      <p><em>登录邮箱：</em>${user.login}</p>
+      <p><em>注册时间：</em>${user.registerDate}</p>
+      <p><em>个人主页：</em>${user.url}</p>
+      <p><em>角色：</em>${userRole}</p>
+    </div>
+    
+    <div>
+      <!--分页显示用户的评论和文章-->
+    </div>
     <!--End MainContent-->
     <div id="footer">
       <%@include file="jspf/footer.jspf" %>
