@@ -27,6 +27,13 @@
     <title>用户登录</title>
   </head>
   <body>
+    <div id="header">
+      <%@include file="jspf/header.jspf" %>
+    </div>
+    <div id="sidebar" >
+      <%@include file="jspf/sidebar.jspf" %>
+    </div>
+
     <h1>用户登录</h1>
     <div class="loginForm">
       <form action="<c:url value="/login" />" method="POST">
@@ -56,6 +63,10 @@
           <input type="submit" name="registerSubmit" value="注册" />
         </fieldset>
       </form:form>
+    </div>
+
+    <div id="footer">
+      <%@include file="jspf/footer.jspf" %>
     </div>
   </body>
 </html>

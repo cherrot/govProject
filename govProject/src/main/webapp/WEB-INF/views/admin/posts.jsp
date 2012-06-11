@@ -8,10 +8,20 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>JSP Page</title>
+    <title>${user.displayName} | 昆明文化辞典</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <div id="header">
+      <%@include file="jspf/header.jspf" %>
+    </div>
+    <div id="sidebar" >
+      <%@include file="jspf/functionBar.jspf" %>
+    </div>
+    <!--Start MainContent-->
+
+    <!--End MainContent-->
+    <div id="footer">
+      <%@include file="jspf/footer.jspf" %>
+    </div>
   </body>
 </html>
