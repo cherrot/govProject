@@ -101,6 +101,7 @@ public class HomeController {
             optionService.create(option);
             //创建测试链接分类和链接
             LinkCategory linkCategory = new LinkCategory();
+            linkCategory.setName("我是友情链接分类");
             linkService.createLinkCategory(linkCategory);
             Link link = new Link("http://www.cherrot.com", "Cherrot", Link.LinkTarget._blank);
             link.setLinkCategory(linkCategory);

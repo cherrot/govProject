@@ -115,13 +115,14 @@ public class Term implements Serializable {
     @ManyToOne
     private Term termParent;
     /**
+     * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
      * If you choose to map the relationship in both directions, then one
      * direction must be defined as the owner and the other must use
      * the mappedBy attribute to define its mapping.
      * This also avoids having to duplicate the JoinTable information in both places.
      * Post.java为主控端， Term.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
-    @OrderColumn(name="termOrder")
+//    @OrderColumn(name="termOrder")
     @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "termList")
     private List<Post> postList;
 

@@ -1,41 +1,14 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-        <% String listName="测试边栏";%>
-        <% String listLink1="http://www.w3school.com.cn";%>
-        <% String listLink1sString="链接一";%>
-        <% String listLink2sString="链接二";%>
-        <% String listLink3sString="链接三";%>
-        <% String listLink4sString="链接四";%>
-        <% String listLink5sString="链接五";%>
-        <% String listLink6sString="链接六";%>
-        <!--可以添加方法改变链接名字-->
-        <div id="sidebarlist1">
-        <h3><%=listName%></h3>
-        <ul type="circle">
-          <li><a href=""><%=listLink1sString%></a></li>
-          <li><a href=""><%=listLink2sString%></a></li>
-          <li><a href=""><%=listLink3sString%></a></li>
-          <li><a href=""><%=listLink4sString%></a></li>
-          <li><a href=""><%=listLink5sString%></a></li>
-          <li><a href=""><%=listLink6sString%></a></li>
-        </ul>
-        </div>
-          <c:forEach items="${linkCategories}" var="category">
-            <h3>${category.name}</h3>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+      <div id="sidebarlist">
+        <c:forEach items="${linkCategories}" var="linkcategory">
+          <div class="links">
+            <h3>${linkcategory.name}</h3>
             <ul>
-              <c:forEach items="${category.linkList}" var="link" >
+              <c:forEach items="${linkcategory.linkList}" var="link" >
                 <li><a href="${link.url}">${link.name}</a></li>
               </c:forEach>
             </ul>
-          </c:forEach>
-        <div id="sidebarlist2">
-        <h3><%=listName%></h3>
-        <ul type="circle">
-          <li><a href=""><%=listLink1sString%></a></li>
-          <li><a href=""><%=listLink2sString%></a></li>
-          <li><a href=""><%=listLink3sString%></a></li>
-          <li><a href=""><%=listLink4sString%></a></li>
-          <li><a href=""><%=listLink5sString%></a></li>
-          <li><a href=""><%=listLink6sString%></a></li>
-        </ul>
-        </div>
+          </div>
+        </c:forEach>
+      </div>
