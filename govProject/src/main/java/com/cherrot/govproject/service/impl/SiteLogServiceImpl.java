@@ -4,25 +4,25 @@
  */
 package com.cherrot.govproject.service.impl;
 
+import com.cherrot.govproject.dao.SiteLogDao;
 import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.SiteLogService;
 import java.util.List;
+import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * FIXME 此类未完成
  * @author cherrot
  */
 @Service
 public class SiteLogServiceImpl implements SiteLogService{
 
-    /**
-     * FIXME 此类未完成
-     * @param user
-     * @param logOperation
-     */
+    @Inject
+    private SiteLogDao siteLogDao;
+
     @Override
     @Transactional
     public void create(User user, String logOperation) {
@@ -32,7 +32,7 @@ public class SiteLogServiceImpl implements SiteLogService{
     @Override
     @Transactional
     public void create(SiteLog model) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        siteLogDao.create(model);
     }
 
     @Override

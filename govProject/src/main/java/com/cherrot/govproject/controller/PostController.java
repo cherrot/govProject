@@ -8,9 +8,10 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.UserService;
 import com.cherrot.govproject.util.Constants;
+import java.util.EnumMap;
 import java.util.Map;
-import java.util.WeakHashMap;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,8 @@ public class PostController {
     private PostService postService;
     @Inject
     private CommentService commentService;
+    @Inject
+    private UserService userService;
 
     /**
      * 返回一个新的Comment对象
@@ -180,8 +183,7 @@ public class PostController {
     }
 
     /**
-     * TODO: 通过editPost方法注入的post对象，用户提交文章时表单中未包含的post字段（比如post.id）是否会丢失？ 如果丢失了，那就添加一个隐藏的input传入id
-     * TODO: 未完成
+     * 注入的Post对象，用户提交文章时表单中未包含的post字段（比如post.id）会丢失，因此应显式添加
      * @param request 用于返回用户请求前的页面(编辑文章页)
      * @param post 提交的post
      * @param bindingResult 数据验证结果
@@ -198,11 +200,12 @@ public class PostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
+            post.setUser(BaseController.getSessionUser(request.getSession()));
             postService.save(post);
             redirectAttr.addFlashAttribute(Constants.SUCCESS_MSG_KEY, "文章保存成功！");
         }
-        String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+//        String referer = request.getHeader("Referer");
+        return "redirect:/post/" + post.getSlug() + "/edit";
     }
 
     /**
@@ -211,10 +214,10 @@ public class PostController {
      */
     private ModelAndView processModels4EditPost() {
         ModelAndView mav = new ModelAndView("editPost");
-        Map<String, Post.PostStatus> postStatusMap = new WeakHashMap<String, Post.PostStatus>(3);
-        postStatusMap.put("发布", Post.PostStatus.PUBLISHED);
-        postStatusMap.put("存入草稿", Post.PostStatus.DRAFT);
-        postStatusMap.put("等待审核", Post.PostStatus.PENDING);
+        Map<Post.PostStatus, String> postStatusMap = new EnumMap<Post.PostStatus, String>(Post.PostStatus.class);
+        postStatusMap.put(Post.PostStatus.PUBLISHED, Post.PostStatus.PUBLISHED.getDescription());
+        postStatusMap.put(Post.PostStatus.DRAFT, Post.PostStatus.DRAFT.getDescription());
+        postStatusMap.put(Post.PostStatus.PENDING, Post.PostStatus.PENDING.getDescription());
         mav.addObject("postStatus", postStatusMap);
         return mav;
     }

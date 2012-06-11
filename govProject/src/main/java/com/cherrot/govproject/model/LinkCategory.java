@@ -60,9 +60,9 @@ public class LinkCategory implements Serializable {
         count = 0;
     }
 
-//    public LinkCategory(Integer id) {
-//        this.id = id;
-//    }
+    public LinkCategory(int count) {
+        this.count = count;
+    }
 
     public Integer getId() {
         return id;

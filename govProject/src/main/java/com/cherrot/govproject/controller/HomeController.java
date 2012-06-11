@@ -4,13 +4,27 @@
  */
 package com.cherrot.govproject.controller;
 
+import com.cherrot.govproject.model.Comment;
+import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.LinkCategory;
+import com.cherrot.govproject.model.Option;
+import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.User;
+import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
+import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TermService;
+import com.cherrot.govproject.service.UserService;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
+import javax.persistence.NoResultException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -30,7 +44,11 @@ public class HomeController {
     private PostService postService;
 
     @RequestMapping("/")
-    public ModelAndView home() {
+    public ModelAndView home(/*TOTO 仅用于测试*/HttpServletRequest request) {
+        //TODO 仅用于生成测试数据！
+        initData();
+        BaseController.setSessionUser(request.getSession(), userService.find(1));
+
         ModelAndView mav = new ModelAndView("home");
         List<Term> categories = termService.listByTypeOrderbyCount(Term.TermType.CATEGORY, false, false);
         mav.addObject("categories", categories);
@@ -40,5 +58,53 @@ public class HomeController {
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
         mav.addObject("linkCategories", linkCategories);
         return mav;
+    }
+
+    /**
+     * TODO 以下内容仅用于生成测试数据！
+     */
+    @Inject private CommentService commentService;
+    @Inject private UserService userService;
+    @Inject private SiteLogService siteLogService;
+    @Inject private OptionService optionService;
+    private void initData() {
+        try {
+            userService.findByLoginName("cherrot+gov@cherrot.com", false, false, false, false);
+        } catch (NoResultException ex) {
+            //创建测试用户
+            User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
+            userService.create(user);
+            //创建测试分类和标签
+            Term category = new Term(1, "我是文章分类", Term.TermType.CATEGORY, "test");
+            Term tag = new Term(1, "我是标签", Term.TermType.POST_TAG, "testtag");
+            termService.create(category);
+            termService.create(tag);
+            //创建测试文章
+            Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
+            post.setUser(user);
+            List<Term> termList = new ArrayList<Term>(2);
+            termList.add(category);
+            termList.add(tag);
+            post.setTermList(termList);
+            postService.create(post);
+            //创建测试评论
+            Comment comment = new Comment(new Date(), true, "Cherrot", "admin@cherrot.com", "http://www.cherrot.com", "127.0.0.1", "我是文章评论");
+            comment.setPost(post);
+            commentService.create(comment);
+            //创建测试日志
+            SiteLog siteLog = new SiteLog(new Date(), "我是操作日志");
+            siteLog.setUser(user);
+            siteLogService.create(siteLog);
+            //创建测试全局选项
+            Option option = new Option("test");
+            option.setOptionValue("我是全局选项");
+            optionService.create(option);
+            //创建测试链接分类和链接
+            LinkCategory linkCategory = new LinkCategory();
+            linkService.createLinkCategory(linkCategory);
+            Link link = new Link("http://www.cherrot.com", "Cherrot", Link.LinkTarget._blank);
+            link.setLinkCategory(linkCategory);
+            linkService.create(link);
+        }
     }
 }

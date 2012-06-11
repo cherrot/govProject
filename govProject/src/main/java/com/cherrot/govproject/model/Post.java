@@ -68,12 +68,32 @@ public class Post implements Serializable {
     private static final long serialVersionUID = 1L;
 
     public enum PostStatus {
-        DRAFT, PUBLISHED, PENDING
+        DRAFT("草稿"), PUBLISHED("发布"), PENDING("待审核");
+
+        private String description;
+
+        private PostStatus(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
     //TODO 完成所有JPA类的枚举类型
     public enum PostType {
-        POST, ATTACHMENT
+        POST("文章"), ATTACHMENT("附件");
+
+        private String description;
+
+        private PostType(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
     @Id
@@ -103,13 +123,13 @@ public class Post implements Serializable {
     @Enumerated(EnumType.STRING)
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+//    @Size(min = 1, max = 20) Can't use this annotation for enum
     @Column(name = "status", nullable = false, length = 20)
     private PostStatus status;
     @Enumerated(EnumType.STRING)
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+//    @Size(min = 1, max = 20) Can't use this annotation for enum
     @Column(name = "type", nullable = false, length = 20)
     private PostType type;
     @Basic(optional = false)

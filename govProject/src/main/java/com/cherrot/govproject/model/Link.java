@@ -8,6 +8,8 @@ import java.io.Serializable;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,6 +38,21 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Link.findByDescription", query = "SELECT l FROM Link l WHERE l.description = :description")})
 public class Link implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public enum LinkTarget {
+        _blank("新页面打开"), _self("当前框架打开"), _parent("父框架中打开"), _top("当前窗口打开");
+
+        private String description;
+
+        private LinkTarget(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -52,11 +69,12 @@ public class Link implements Serializable {
     @Size(min = 1, max = 45)
     @Column(name = "name", nullable = false, length = 45)
     private String name;
+    @Enumerated(EnumType.STRING)
     @Basic(optional = false)
     @NotNull
-    @Size(min = 1, max = 20)
+//    @Size(min = 1, max = 20)
     @Column(name = "target", nullable = false, length = 20)
-    private String target;
+    private LinkTarget target;
     @Size(max = 255)
     @Column(name = "description", length = 255)
     private String description;
@@ -65,14 +83,14 @@ public class Link implements Serializable {
     private LinkCategory linkCategory;
 
     public Link() {
-        target = "_blank";
+        target = LinkTarget._blank;
     }
 
 //    public Link(Integer id) {
 //        this.id = id;
 //    }
 
-    public Link(/*Integer id,*/ String url, String name, String target) {
+    public Link(/*Integer id,*/ String url, String name, LinkTarget target) {
 //        this.id = id;
         this.url = url;
         this.name = name;
@@ -103,11 +121,11 @@ public class Link implements Serializable {
         this.name = name;
     }
 
-    public String getTarget() {
+    public LinkTarget getTarget() {
         return target;
     }
 
-    public void setTarget(String target) {
+    public void setTarget(LinkTarget target) {
         this.target = target;
     }
 

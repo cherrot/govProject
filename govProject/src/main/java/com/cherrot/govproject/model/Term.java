@@ -67,7 +67,17 @@ public class Term implements Serializable {
     }
 
     public enum TermType {
-        POST_TAG, CATEGORY
+        POST_TAG("文章标签"), CATEGORY("文章分类");
+
+        private String description;
+
+        private TermType(String description) {
+            this.description = description;
+        }
+
+        public String getDescription() {
+            return description;
+        }
     }
 
     @Id
@@ -83,7 +93,7 @@ public class Term implements Serializable {
     @Enumerated(EnumType.STRING)
     @Basic(optional=false)
     @NotNull
-    @Size(max = 8)
+//    @Size(max = 8) Can't use this annotation for TermType
     @Column(name = "type", length = 8)
     private TermType type;
     @Basic(optional=false)

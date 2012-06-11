@@ -128,4 +128,9 @@ public class LinkServiceImpl implements LinkService{
         }
     }
 
+    @Override
+    public void createLinkCategory(LinkCategory linkCategory) {
+        linkCategoryDao.create(linkCategory);
+    }
+
 }
