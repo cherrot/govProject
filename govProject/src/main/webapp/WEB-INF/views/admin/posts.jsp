@@ -1,6 +1,6 @@
 <%--
-    Document   : 410
-    Created on : 2012-6-7, 16:23:20
+    Document   : posts
+    Created on : 2012-6-11, 15:51:46
     Author     : Cherrot Luo<cherrot+dev@cherrot.com>
 --%>
 
@@ -9,9 +9,9 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>410</title>
+    <title>JSP Page</title>
   </head>
   <body>
-    <h1>410</h1>
+    <h1>Hello World!</h1>
   </body>
 </html>
