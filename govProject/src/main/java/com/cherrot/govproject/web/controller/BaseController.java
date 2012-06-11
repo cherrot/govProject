@@ -1,4 +1,4 @@
-package com.cherrot.govproject.controller;
+package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.util.Constants;

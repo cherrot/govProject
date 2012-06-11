@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.cherrot.govproject.controller;
+package com.cherrot.govproject.web.controller;
 
 import java.io.File;
 import java.io.IOException;
