@@ -9,7 +9,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.service.OptionService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -69,7 +69,7 @@ public class OptionServiceImpl implements OptionService{
     @Override
     @Transactional(readOnly=true)
     public List<Option> list(int pageNum) {
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override

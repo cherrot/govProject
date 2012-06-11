@@ -12,7 +12,7 @@ import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -88,7 +88,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional(readOnly=true)
     public List<Post> list(int pageNum) {
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override

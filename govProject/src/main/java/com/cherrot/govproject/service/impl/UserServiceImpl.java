@@ -11,7 +11,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.UserService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional(readOnly=true)
     public List<User> list(int pageNum) {
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class UserServiceImpl implements UserService{
         try {
             user = findByLoginName(loginName, false, false, false, false);
         } catch (Exception e) {
-            
+
         } finally {
             return user;
         }

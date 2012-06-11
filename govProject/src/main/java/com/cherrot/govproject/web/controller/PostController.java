@@ -9,7 +9,7 @@ import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
 import java.util.EnumMap;
 import java.util.Map;
 import javax.inject.Inject;
@@ -202,7 +202,7 @@ public class PostController {
         } else {
             post.setUser(BaseController.getSessionUser(request.getSession()));
             postService.save(post);
-            redirectAttr.addFlashAttribute(Constants.SUCCESS_MSG_KEY, "文章保存成功！");
+            redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }
 //        String referer = request.getHeader("Referer");
         return "redirect:/post/" + post.getSlug() + "/edit";
