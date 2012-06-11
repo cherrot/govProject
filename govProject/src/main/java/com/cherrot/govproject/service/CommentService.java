@@ -18,5 +18,4 @@ public interface CommentService extends BaseService<Comment, Integer> {
     public List<Comment> list(boolean withCommentmetas, boolean withChildComments);
     public List<Comment> list(int pageNum, boolean withCommentmetas, boolean withChildComments);
     public List<Comment> list(int pageNum, int pageSize, boolean withCommentmetas, boolean withChildComments);
-    public List<Comment> listByPostWithHierarchyOrderbyDate();
 }
