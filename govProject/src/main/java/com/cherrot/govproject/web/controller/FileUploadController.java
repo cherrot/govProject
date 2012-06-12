@@ -53,6 +53,12 @@ public class FileUploadController {
                 File newFile = new File(fileSystemResource.getPath() + "/" + file.getOriginalFilename());
                 Logger.getLogger(HomeController.class.getSimpleName()).log(Level.INFO, "{0} is created.", newFile.getAbsolutePath());
                 file.transferTo(newFile);
+                //by lai 2012.6.12
+                videoPostParent =  postService.find(postId);
+                videoPost.setPostParent(videoPostParent);
+                videoPost.setType(Post.PostType.ATTACHMENT);
+                videoPost.setMime(file.getContentType());
+                videoConvertService.videoConvert(fileSystemResource.getPath(),file.getOriginalFilename());
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
                 outputString = "<script>parent.callback('upload file failed')</script>";
