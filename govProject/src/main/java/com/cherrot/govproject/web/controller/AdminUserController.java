@@ -4,7 +4,13 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.User;
+import com.cherrot.govproject.service.CommentService;
+import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
+import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
@@ -22,12 +28,22 @@ public class AdminUserController {
 
     @Inject
     private UserService userService;
-
+    @Inject
+    private CommentService commentService;
+    @Inject
+    private PostService postService;
+    
     @RequestMapping(params="id")
     public ModelAndView viewUser(@RequestParam("id")Integer userId) {
         ModelAndView mav = new ModelAndView("/viewUser");
         //TODO 获取User对象。查看 viewUser.jsp确定需要注入的对象。 可以参考UserController的同名方法。
-        //注意此方法是给管理员用的。
+        //注意此方法是给管理员用的
+        User user = userService.find(userId);
+        mav.addObject("user", user);
+        String userRole = userService.getDescriptionOfUserLevel(user.getUserLevel());
+        mav.addObject("userRole", userRole);
+        List<Post> userPosts = postService.listNewesPostsByUser(userId, 1);
+        //TODO
         return mav;
     }
 
@@ -36,9 +52,17 @@ public class AdminUserController {
      * @return
      */
     @RequestMapping("/list")
-    public ModelAndView viewUserList() {
-        //TODO 未实现
-        return null;
+    public ModelAndView viewUserList(
+            @RequestParam(value="pageNum", required=false)Integer pageNum, 
+            @RequestParam(value="pageSize",required=false)Integer pageSize) {
+        
+        ModelAndView mav = new ModelAndView("/admin/users");
+        if (pageNum == null) pageNum = 1;
+        if (pageSize == null) pageSize = DEFAULT_PAGE_SIZE;
+        List<User> userList = userService.list(pageNum, pageSize);
+        mav.addObject("userList", userList);
+        List<String> userRole
+        return mav;
     }
 
     @RequestMapping(value="/delete", params="id")
