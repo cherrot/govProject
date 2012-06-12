@@ -8,7 +8,6 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
-import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
 import java.util.EnumMap;
 import java.util.Map;
@@ -105,7 +104,7 @@ public class PostController {
      * @return
      */
     @RequestMapping(value={"/{postSlug}","*"}, method= RequestMethod.POST)
-    public String leaveAComment(HttpServletRequest request
+    public String createComment(HttpServletRequest request
         , @RequestParam("postId")final int postId
         , @Valid @ModelAttribute("newComment")final Comment comment
         , final BindingResult bindingResult

@@ -16,7 +16,6 @@ import static com.cherrot.govproject.web.controller.BaseController.getSessionUse
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -63,7 +62,7 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value="edit", method=RequestMethod.GET)
+    @RequestMapping(value="/edit", method=RequestMethod.GET)
     public ModelAndView editUser(HttpServletRequest request) {
         ModelAndView mav = new ModelAndView("editUser");
         User user = BaseController.getSessionUser(request.getSession());
@@ -76,9 +75,14 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value="edit", method= RequestMethod.POST)
+    @RequestMapping(value="/edit", method= RequestMethod.POST)
     public String doEditUser(@Valid @ModelAttribute("user")User user) {
         userService.edit(user);
         return "redirect:/user/";
+    }
+
+    @RequestMapping("/posts", params="userId")
+    public ModelAndView listPostsByUser(@RequestParam("userId")Integer userId) {
+        //根据用户ID分页查询文章列表.
     }
 }

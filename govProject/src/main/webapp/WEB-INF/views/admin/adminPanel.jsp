@@ -1,4 +1,4 @@
-<%-- 
+<%--
     Document   : adminPanel
     Created on : 2012-6-11, 23:34:14
     Author     : cherrot
@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>${user.displayName} | 昆明文化辞典</title>
+    <title>控制面板 | 昆明文化辞典</title>
   </head>
   <body>
     <div id="header">
