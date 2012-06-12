@@ -1,3 +1,12 @@
-<%-- any content can be specified here e.g.: --%>
-<%@ page pageEncoding="UTF-8" %>
-<h2>Hello World!</h2>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+      <div id="functionBar">
+        <ul>
+          <li><a href="<c:url value="/admin/user/list" />">用户管理</a></li>
+          <li><a href="<c:url value="/admin/post/list" />">文章管理</a></li>
+          <li><a href="<c:url value="/admin/comment/list"/>">评论管理</a></li>
+          <li><a href="<c:url value="/admin/media/list"/>">媒体库</a></li>
+          <li><a href="<c:url value="/admin/category/list"/>">文章分类</a></li>
+          <li><a href="<c:url value="/admin/tag/list"/>">文章标签</a></li>
+        </ul>
+      </div>
