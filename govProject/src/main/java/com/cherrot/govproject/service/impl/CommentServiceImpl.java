@@ -154,4 +154,16 @@ public class CommentServiceImpl implements CommentService{
             edit(model);
         }
     }
+
+    //FIXME 未完成
+    @Override
+    public List<Comment> listByUser(Integer userId, int pageNum) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    //FIXME 未完成
+    @Override
+    public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

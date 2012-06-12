@@ -6,6 +6,7 @@ package com.cherrot.govproject.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.core.io.FileSystemResource;
@@ -22,7 +23,8 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadController {
 
     //Defined in servlet-context.xml
-    @Named(value="uploadDirResource")
+    @Inject
+    @Named("uploadDir")
     private FileSystemResource fileSystemResource;
 
     @RequestMapping("/post/upload")
@@ -32,8 +34,11 @@ public class FileUploadController {
         String outputString = "<script>parent.callback('upload file successfully')</script>";
         if (!file.isEmpty()) {
             try {
-                file.transferTo(new File(fileSystemResource.getPath() + file.getOriginalFilename()));
+                File newFile = new File(fileSystemResource.getPath() + "/" + file.getOriginalFilename());
+                System.err.println(newFile.getAbsolutePath());
+                file.transferTo(newFile);
             } catch (Exception ex) {
+                System.err.println(ex.getMessage());
                 outputString = "<script>parent.callback('upload file failed')</script>";
             } finally {
                 response.getWriter().println(outputString);

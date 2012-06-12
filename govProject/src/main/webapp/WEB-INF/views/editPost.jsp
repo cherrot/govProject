@@ -27,12 +27,19 @@
     </div>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
-    <form action="<c:url value="/post/upload"/>" enctype="mutipart/form-data" method="post" target="hidden_frame" >
+    <form action="<c:url value="/post/upload"/>" enctype="mutipart/form-data" method="post" >
       <input type="file" name="file" />
       <input type="hidden" name="postId" value="${post.id}"/>
       <input type="submit" value="上传"/>
-      <iframe id="hidden_frame" style="display:none"></iframe>
+      <iframe id="hidden_frame" ></iframe>
     </form>
+
+      <form method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
+        <input type="file" name="file"/>
+        <input type="hidden" name="postId" value="${post.id}"/>
+        <input type="submit"/>
+      </form>
+
     <form:form modelAttribute="post">
       <form:errors path="*" />
       <form:errors path="title"/><form:input path="title" placeholder="请输入文章标题" /><br/>

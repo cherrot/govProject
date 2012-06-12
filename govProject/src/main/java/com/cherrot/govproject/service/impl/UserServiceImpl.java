@@ -151,4 +151,10 @@ public class UserServiceImpl implements UserService{
             edit(model);
         }
     }
+
+    //FIXME 未完成
+    @Override
+    public String getDescriptionOfUserLevel(int userLevel) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

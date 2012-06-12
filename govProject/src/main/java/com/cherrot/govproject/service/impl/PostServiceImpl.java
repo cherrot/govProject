@@ -181,4 +181,16 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    //FIXME 未完成
+    @Override
+    public List<Post> listByUser(Integer userId, int pageNum) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    //FIXME 未完成
+    @Override
+    public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }
