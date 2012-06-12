@@ -11,6 +11,7 @@ import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TermService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
@@ -31,11 +32,14 @@ public class PostServiceImpl implements PostService {
     private PostDao postDao;
     @Inject
     private TermService termService;
+    @Inject
+    private SiteLogService siteLogService;
 
     @Override
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags) {
         create(post, categories, tags, null);
+        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
@@ -46,12 +50,14 @@ public class PostServiceImpl implements PostService {
         List<Term> tagTerms = termService.createTagsByName(tags);
         addTermList(post, tagTerms);
         postDao.create(post);
+        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
     @Transactional
     public void create(Post post) {
         postDao.create(post);
+        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
@@ -63,6 +69,8 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void destroy(Integer id) {
+        Post post = postDao.find(id);
+        siteLogService.create(post.getUser(), post.getTitle()+"被删除" );
         try {
             postDao.destroy(id);
         }
@@ -100,6 +108,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void edit(Post model) {
+        siteLogService.create(model.getUser(), model.getTitle()+"被修改" );
         try {
             postDao.edit(model);
         }

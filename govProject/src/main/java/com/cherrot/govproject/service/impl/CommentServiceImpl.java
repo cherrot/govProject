@@ -11,6 +11,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.service.CommentService;
+import com.cherrot.govproject.service.SiteLogService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
@@ -30,6 +31,8 @@ public class CommentServiceImpl implements CommentService{
 
     @Inject
     private CommentmetaDao commentmetaDao;
+    @Inject
+    private SiteLogService siteLogService;
 
     @Override
     @Transactional
@@ -39,12 +42,14 @@ public class CommentServiceImpl implements CommentService{
             commentmeta.setComment(comment);
             commentmetaDao.create(commentmeta);
         }
+        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
     }
 
     @Override
     @Transactional
     public void create(Comment comment) {
         commentDao.create(comment);
+        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
     }
 
     @Override
@@ -65,6 +70,8 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void destroy(Integer id) {
+        Comment comment = commentDao.find(id);
+        siteLogService.create(comment.getUser(), comment.getAuthor()+"的评论被删除了");
         try {
             commentDao.destroy(id);
         }
