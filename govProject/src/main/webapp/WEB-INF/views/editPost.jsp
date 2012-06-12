@@ -12,6 +12,27 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${post.title} | 昆明文化辞典</title>
     <script type="text/javascript">
+      function init() {
+        document.getElementById('file_upload_form').onsubmit=function() {
+          document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
+          document.getElementById("upload_target").onload=function() {
+            document.getElementById("upload_result").write("文件上传成功！");
+          }
+        }
+      }
+      window.onload=init;
+    </script>
+    <%--<script type="text/javascript">
+      function init() {
+        $("file_upload_form").onsubmit=function() {
+          $("file_upload_form").target = "upload_target";
+          $("upload_target").onload=function() {
+            alert("Uploaded");
+          }
+        }
+      }
+    </script>--%>
+    <script type="text/javascript">
       function callback(msg) {
         document.getElementById("file").outerHTML = document.getElementById("file").outerHTML;
         document.getElementById("msg").innerHTML = "<em>"+msg+"</em>";
@@ -27,18 +48,13 @@
     </div>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
-    <form action="<c:url value="/post/upload"/>" enctype="mutipart/form-data" method="post" >
+    <p id="upload_result"></p>
+    <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
       <input type="file" name="file" />
       <input type="hidden" name="postId" value="${post.id}"/>
       <input type="submit" value="上传"/>
-      <iframe id="hidden_frame" ></iframe>
+      <iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
     </form>
-
-      <form method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
-        <input type="file" name="file"/>
-        <input type="hidden" name="postId" value="${post.id}"/>
-        <input type="submit"/>
-      </form>
 
     <form:form modelAttribute="post">
       <form:errors path="*" />

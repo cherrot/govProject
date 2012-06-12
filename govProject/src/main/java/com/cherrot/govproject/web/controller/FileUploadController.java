@@ -6,6 +6,8 @@ package com.cherrot.govproject.web.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +37,7 @@ public class FileUploadController {
         if (!file.isEmpty()) {
             try {
                 File newFile = new File(fileSystemResource.getPath() + "/" + file.getOriginalFilename());
-                System.err.println(newFile.getAbsolutePath());
+                Logger.getLogger(HomeController.class.getSimpleName()).log(Level.INFO, "{0} is created.", newFile.getAbsolutePath());
                 file.transferTo(newFile);
             } catch (Exception ex) {
                 System.err.println(ex.getMessage());
