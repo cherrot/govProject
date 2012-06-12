@@ -43,8 +43,6 @@ public class PostController {
     private PostService postService;
     @Inject
     private CommentService commentService;
-    @Inject
-    private UserService userService;
 
     /**
      * 返回一个新的Comment对象

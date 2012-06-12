@@ -1,6 +1,5 @@
 <%--
     Document   : viewUser
-    本页面需要注入User对象user，用户角色String描述userRole，分页查询的用户评论userComments，分页查询的用户文章userPosts
     Created on : 2012-6-11, 15:50:35
     Author     : Cherrot Luo<cherrot+dev@cherrot.com>
 --%>

@@ -9,14 +9,19 @@ import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
 import static com.cherrot.govproject.util.Constants.LOGIN_TO_URL;
 import static com.cherrot.govproject.web.controller.BaseController.getSessionUser;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -32,6 +37,8 @@ public class UserController {
     private CommentService commentService;
     @Inject
     private PostService postService;
+    @Inject
+    private UserService userService;
 
     @RequestMapping("/")
     public ModelAndView viewSessionUser(HttpServletRequest request,
@@ -54,5 +61,24 @@ public class UserController {
             mav.setViewName("redirect:/login");
         }
         return mav;
+    }
+
+    @RequestMapping(value="edit", method=RequestMethod.GET)
+    public ModelAndView editUser(HttpServletRequest request) {
+        ModelAndView mav = new ModelAndView("editUser");
+        User user = BaseController.getSessionUser(request.getSession());
+        if (user != null) {
+            mav.addObject("user", user);
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURI());
+            mav.setViewName("redirect:/login");
+        }
+        return mav;
+    }
+
+    @RequestMapping(value="edit", method= RequestMethod.POST)
+    public String doEditUser(@Valid @ModelAttribute("user")User user) {
+
+        return "redirect:/user/";
     }
 }
