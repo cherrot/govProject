@@ -22,4 +22,5 @@ public class Constants {
     public static final String ERROR_MSG_KEY = "errorMsg";
     public static final String SUCCESS_MSG_KEY = "successMsg";
     public static final String LOGIN_TO_URL = "toUrl";
+    public static final String FILTERED_REQUEST = "@@session_context_filtered_request";
 }

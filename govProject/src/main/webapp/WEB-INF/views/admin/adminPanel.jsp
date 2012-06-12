@@ -1,7 +1,7 @@
-<%--
-    Document   : comments
-    Created on : 2012-6-11, 15:51:59
-    Author     : Cherrot Luo<cherrot+dev@cherrot.com>
+<%-- 
+    Document   : adminPanel
+    Created on : 2012-6-11, 23:34:14
+    Author     : cherrot
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>

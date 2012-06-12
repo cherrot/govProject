@@ -32,12 +32,56 @@ http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-
   <servlet-mapping>
     <servlet-name>dispathcerServlet</servlet-name>
     <!--		<url-pattern>/spring/*</url-pattern>-->
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+  <!--已由Spring处理静态资源映射-->
+<!--  <servlet-mapping>
+		<servlet-name>default</servlet-name>
+		<url-pattern>/resources/*</url-pattern>
+	</servlet-mapping>-->
+
+  <filter>
+		<filter-name>adminFilter</filter-name>
+		<filter-class>com.cherrot.govproject.web.filter.AdminFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>adminFilter</filter-name>
+		<url-pattern>/admin/</url-pattern>
+	</filter-mapping>
+
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+		<init-param>
+			<param-name>forceEncoding</param-name>
+			<param-value>true</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/</url-pattern>
+	</filter-mapping>
+
+  <!--
+		浏览器不支持put,delete等method,由该HiddenHttpMethodFilter将xxx?_method=delete 或 xxx?_method=put 转换为标准的
+		http delete、put 方法
+	-->
+  <filter>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>HiddenHttpMethodFilter</filter-name>
+		<servlet-name>dispathcerServlet</servlet-name>
+	</filter-mapping>
 
   <welcome-file-list>
     <welcome-file></welcome-file>

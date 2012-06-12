@@ -1,7 +1,7 @@
 package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.User;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.USER_CONTEXT;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.springframework.util.Assert;
@@ -16,8 +16,8 @@ public class BaseController {
 	 * @param request
 	 * @return
 	 */
-	protected static User getSessionUser(HttpSession session) {
-		return (User) session.getAttribute(Constants.USER_CONTEXT);
+	public static User getSessionUser(HttpSession session) {
+		return (User) session.getAttribute(USER_CONTEXT);
 	}
 
 	/**
@@ -25,8 +25,8 @@ public class BaseController {
 	 * @param session
 	 * @param user
 	 */
-	protected static void setSessionUser(HttpSession session, User user) {
-		session.setAttribute(Constants.USER_CONTEXT, user);
+	public static void setSessionUser(HttpSession session, User user) {
+		session.setAttribute(USER_CONTEXT, user);
 	}
 
 

@@ -10,7 +10,7 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Term;
 import com.cherrot.govproject.model.Term.TermType;
 import com.cherrot.govproject.service.TermService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -142,7 +142,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly=true)
     public List<Term> list(int pageNum) {
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -162,7 +162,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly=true)
     public List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
-        return listByType(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
+        return listByType(type, pageNum, DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
@@ -184,7 +184,7 @@ public class TermServiceImpl implements TermService {
     @Override
     @Transactional(readOnly=true)
     public List<Term> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
-        return listByTypeOrderbyCount(type, pageNum, Constants.DEFAULT_PAGE_SIZE, withPosts, withTerms);
+        return listByTypeOrderbyCount(type, pageNum, DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override

@@ -7,7 +7,9 @@ package com.cherrot.govproject.web.controller;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.UserService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
+import static com.cherrot.govproject.util.Constants.LOGIN_TO_URL;
+import static com.cherrot.govproject.util.Constants.USER_CONTEXT;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -51,7 +53,7 @@ public class LoginController {
      */
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
-		session.removeAttribute(Constants.USER_CONTEXT);
+		session.removeAttribute(USER_CONTEXT);
 		return "redirect:/";
 	}
 
@@ -72,14 +74,14 @@ public class LoginController {
 		if ( user != null) {
 			BaseController.setSessionUser(request.getSession(),user);
             //toUrl is used to save the previous URL the user is visiting before doLogin.
-			String toUrl = (String)request.getSession().getAttribute(Constants.LOGIN_TO_URL);
-			request.getSession().removeAttribute(Constants.LOGIN_TO_URL);
+			String toUrl = (String)request.getSession().getAttribute(LOGIN_TO_URL);
+			request.getSession().removeAttribute(LOGIN_TO_URL);
 			if(toUrl == null || toUrl.isEmpty()){
 				toUrl = "/";
 			}
 			mav.setViewName("redirect:"+toUrl);
 		} else { //用户验证失败
-            mav.addObject(Constants.ERROR_MSG_KEY, "用户名或密码错误");
+            mav.addObject(ERROR_MSG_KEY, "用户名或密码错误");
 		}
 		return mav;
 	}
