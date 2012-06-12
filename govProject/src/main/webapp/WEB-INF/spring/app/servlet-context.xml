@@ -46,7 +46,7 @@
   <beans:bean id="multipartResolver"
               class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
     <beans:property name="defaultEncoding" value="UTF-8" />
-    <beans:property name="maxUploadSize" value="15728640" /><!--15M-->
+    <beans:property name="maxUploadSize" value="157286400" /><!--150M-->
     <beans:property name="uploadTempDir" ref="uploadDirResource" />
   </beans:bean>
 

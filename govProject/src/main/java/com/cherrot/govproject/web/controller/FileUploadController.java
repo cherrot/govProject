@@ -6,7 +6,7 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.PostService;
-import com.cherrot.govproject.service.VideoConvertService;
+import com.cherrot.govproject.service.impl.VideoConverterService;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -30,7 +30,7 @@ public class FileUploadController {
     @Inject
     private PostService postService;
     @Inject
-    private VideoConvertService videoConvertService;
+    private VideoConverterService videoConvertService;
 
 
     //Defined in servlet-context.xml
@@ -50,13 +50,13 @@ public class FileUploadController {
                 file.transferTo(newFile);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().print("{success: true}");
-                //by lai 2012.6.12
+                //by lai 2012.6.12 视频处理 不起作用！
                 Post videoPostParent =  postService.find(postId);
                 Post videoPost = new Post();
                 videoPost.setPostParent(videoPostParent);
                 videoPost.setType(Post.PostType.ATTACHMENT);
                 videoPost.setMime(file.getContentType());
-                videoConvertService.videoConvert(fileSystemResource.getPath(),file.getOriginalFilename());
+                videoConvertService.videoConvert(newFile.getAbsolutePath());
             } catch (Exception ex) {
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().print("{success: false}");

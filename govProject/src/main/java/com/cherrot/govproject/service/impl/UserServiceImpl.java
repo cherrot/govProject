@@ -158,21 +158,13 @@ public class UserServiceImpl implements UserService{
         }
     }
 
-    //FIXME 未完成
+    //使用二进制位表示用户级别。允许用户有多个级别。
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
-        if((userLevel&224 > 0)&&(userLevel&30 < 0)){
-            return "宣传部工作人员";
-        }
-        else if(userLevel&224 > 0 && userLevel&30 > 0){
-            return "既是宣传部工作人员也是文联工作人员";
-        }
-        else if(userLevel&224 < 0 && userLevel&30 > 0){
-            return "文联工作人员";
-        }
-        else if(userLevel&1 > 0){
-            return "普通用户";
-        }
-        return null;
+        StringBuilder stringBuilder = new StringBuilder();
+        if ( (userLevel & 0xE0) > 0 ) stringBuilder.append("宣传部管理员 ");
+        if ( (userLevel & 0x1E) > 0 ) stringBuilder.append("文联工作人员 ");
+        if ( (userLevel & 0x1) > 0 ) stringBuilder.append("普通用户 ");
+        return stringBuilder.toString();
     }
 }

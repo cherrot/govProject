@@ -64,7 +64,7 @@
     </div>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
-    <--<p id="upload_result"></p>
+    <%--<p id="upload_result"></p>
     <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data" target="upload_target">
       <input type="file" name="qqfile" />
       <input type="hidden" name="postId" value="${post.id}"/>

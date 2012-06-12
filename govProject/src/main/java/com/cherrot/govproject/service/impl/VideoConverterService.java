@@ -4,7 +4,6 @@
  */
 package com.cherrot.govproject.service.impl;
 
-import com.cherrot.govproject.service.VideoConvertService;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,25 +14,25 @@ import org.springframework.stereotype.Service;
  * @author LaiWenGen
  */
 @Service
-public class VideoConvertServiceImpl implements VideoConvertService{
+public class VideoConverterService{
 
-    @Override
-    public int videoConvert(final String filepath,final String filename) {
+    public int videoConvert(final String absoluteFilename) {
         //throw new UnsupportedOperationException("Not supported yet.");
         Thread videoConvertThread = new Thread(){
             @Override
-            public void run(){
+            public void run() {
                 try {
-
-                    String cmd = "ffmpeg.exe -i " +  filepath + filename + " -s 459x370 " + filename + " .flv";
+                    //TODO ffmpeg in linux, ffmpeg.exe in Windows
+                    String cmd = "ffmpeg -i " +  absoluteFilename + " -s 459x370 " + absoluteFilename + " .flv";
                     Process exec = Runtime.getRuntime().exec(cmd);
+                    Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, "{0}.flv 创建成功", absoluteFilename);
                     try {
                         int waitFor = exec.waitFor();
                     } catch (InterruptedException ex) {
-                        Logger.getLogger(VideoConvertServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                        Logger.getLogger(VideoConverterService.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 } catch (IOException ex) {
-                    Logger.getLogger(VideoConvertServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(VideoConverterService.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };
