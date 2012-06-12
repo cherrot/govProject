@@ -37,7 +37,9 @@
               <td>${user.login}</td>
               <td>${user.displayName}</td>
               <td>${user.registerDate}</td>
-              <td><a href="<c:url value=""/>"></a></td>
+              <td><a href="<c:url value="/admin/user?id=${user.id}" />">查看</a></td>
+              <td><a href="<c:url value="/admin/user/edit?id=${user.id}" />">编辑</a></td>
+              <td><a href="<c:url value="/admin/user/delete?id=${user.id}" />">删除</a></td>
             </tr>
           </c:forEach>
         </tbody>

@@ -50,7 +50,8 @@ public class FileUploadController {
                 file.transferTo(newFile);
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().print("{success: true}");
-                //by lai 2012.6.12 视频处理 不起作用！
+                //by lai 2012.6.12 视频处理
+                //FIXME不起作用！
                 Post videoPostParent =  postService.find(postId);
                 Post videoPost = new Post();
                 videoPost.setPostParent(videoPostParent);
