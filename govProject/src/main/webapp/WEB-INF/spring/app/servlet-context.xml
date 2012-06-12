@@ -2,7 +2,6 @@
 <beans:beans xmlns="http://www.springframework.org/schema/mvc"
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
-
 	xsi:schemaLocation="
         http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
@@ -17,11 +16,12 @@
   <!--TODO modify this value befor deploying-->
   <resources mapping="/uploads/**" location="file:/tmp/" cache-period="86400" />
 
-  <beans:bean id="uploadDirResource" class="org.springframework.core.io.FileSystemResource">
+  <beans:bean id="uploadDirResource" name="uploadDir" class="org.springframework.core.io.FileSystemResource">
     <beans:constructor-arg>
       <!--TODO modify this value befor deploying-->
       <beans:value>/tmp</beans:value>
     </beans:constructor-arg>
+    <beans:qualifier value="uploadDir"/>
   </beans:bean>
 
   <!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->

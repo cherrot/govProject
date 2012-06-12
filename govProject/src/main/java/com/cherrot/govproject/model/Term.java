@@ -8,8 +8,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,7 +23,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -62,7 +59,6 @@ public class Term implements Serializable {
             this.slug = URLEncoder.encode(slug, "UTF-8");
         }
         catch (UnsupportedEncodingException ex) {
-            Logger.getLogger(Term.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

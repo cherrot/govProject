@@ -158,6 +158,7 @@ public class UserServiceImpl implements UserService{
         }
     }
 
+    //FIXME 未完成
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
         if((userLevel&224 > 0)&&(userLevel&30 < 0)){
