@@ -30,14 +30,17 @@ public class SiteLogServiceImpl implements SiteLogService{
 
     @Override
     @Transactional
-    public void create(User user, String logOperation) {
-        
-    }
-
-    @Override
-    @Transactional
     public void create(SiteLog model) {
         siteLogDao.create(model);
+    }
+    
+    @Override
+    @Transactional
+    public void create(User user, String logOperation) {
+        SiteLog siteLog = new SiteLog();
+        siteLog.setUser(user);
+        siteLog.setLogOperation(logOperation);
+        siteLogDao.create(siteLog);
     }
 
     @Override

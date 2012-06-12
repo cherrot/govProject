@@ -10,6 +10,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
+import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.UserService;
 import com.cherrot.govproject.util.Constants;
 import java.util.List;
@@ -28,9 +29,10 @@ public class UserServiceImpl implements UserService{
 
     @Inject
     private UserDao userDao;
-
     @Inject
     private UsermetaDao usermetaDao;
+    @Inject
+    private SiteLogService siteLogService;
 
     @Override
 //    @Transactional
@@ -46,6 +48,7 @@ public class UserServiceImpl implements UserService{
             usermeta.setUser(user);
             usermetaDao.create(usermeta);
         }
+        siteLogService.create(user, user.getLogin() + "被创建");
     }
 
     @Override
@@ -73,6 +76,8 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void destroy(Integer id) {
+        User user = userDao.find(id);
+        siteLogService.create(user, user.getLogin()+"被删除");
         try {
             userDao.destroy(id);
         }
@@ -110,6 +115,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
+        siteLogService.create(model, model.getLogin()+"被修改");
         try {
             userDao.edit(model);
         }
