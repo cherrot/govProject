@@ -3,15 +3,16 @@
     Created on : 2012-6-6, 20:24:18
     Author     : sai
 --%>
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link href="<c:url value="/resources/css/fileuploader.css"/>" rel="stylesheet" type="text/css">
     <title>${post.title} | 昆明文化辞典</title>
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
       function init() {
         document.getElementById('file_upload_form').onsubmit=function() {
           document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
@@ -21,7 +22,7 @@
         }
       }
       window.onload=init;
-    </script>
+    </script>--%>
     <%--<script type="text/javascript">
       function init() {
         $("file_upload_form").onsubmit=function() {
@@ -32,11 +33,26 @@
         }
       }
     </script>--%>
-    <script type="text/javascript">
+    <%--<script type="text/javascript">
       function callback(msg) {
         document.getElementById("file").outerHTML = document.getElementById("file").outerHTML;
         document.getElementById("msg").innerHTML = "<em>"+msg+"</em>";
       }
+    </script>--%>
+    <script src="<c:url value="/resources/js/fileuploader.js"/>" type="text/javascript"></script>
+    <script>
+        function createUploader(){
+            var uploader = new qq.FileUploader({
+                element: document.getElementById('file-uploader'),
+                action: '<c:url value="/post/upload"/>',
+                params: {postId:${post.id},f:2},
+                encoding: "multipart",
+                debug: false
+            });
+        }
+        // in your app create uploader as soon as the DOM is ready
+        // don't wait for the window to load
+        window.onload = createUploader;
     </script>
   </head>
   <body>
@@ -48,13 +64,26 @@
     </div>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
-    <p id="upload_result"></p>
-    <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
-      <input type="file" name="file" />
+    <--<p id="upload_result"></p>
+    <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data" target="upload_target">
+      <input type="file" name="qqfile" />
       <input type="hidden" name="postId" value="${post.id}"/>
       <input type="submit" value="上传"/>
       <iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
-    </form>
+    </form>--%>
+
+
+    <div id="file-uploader">
+      <noscript>
+        <p>为了上传更快，请您启用JavaScript。</p>
+        <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
+          <input type="file" name="file" />
+          <input type="hidden" name="postId" value="${post.id}"/>
+          <input type="submit" value="上传"/>
+          <iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
+        </form>
+      </noscript>
+    </div>
 
     <form:form modelAttribute="post">
       <form:errors path="*" />
