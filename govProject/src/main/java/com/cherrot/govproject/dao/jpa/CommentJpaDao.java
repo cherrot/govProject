@@ -360,4 +360,13 @@ public class CommentJpaDao implements CommentDao {
 //            em.close();
 //        }
     }
+
+    @Override
+    public List<Comment> findEntitiesByUserId(Integer userId, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Comment.findEntitiesByUserId", Comment.class);
+        q.setParameter("userId", userId);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
 }

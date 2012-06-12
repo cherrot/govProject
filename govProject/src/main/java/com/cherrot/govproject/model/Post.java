@@ -58,7 +58,8 @@ import javax.xml.bind.annotation.XmlTransient;
     //以下为等价式
     //@NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.id IN (:termId) ORDER BY p.createDate DESC"),
     @NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p, IN(p.termList) terms WHERE terms.id = :termId ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC")
+    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")    
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.

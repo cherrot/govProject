@@ -190,4 +190,14 @@ public class PostServiceImpl implements PostService {
         }
     }
 
+    @Override
+    public List<Post> listByUser(Integer userId, int pageNum) {
+        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
+    }
+
+    @Override
+    public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
+        List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+        return posts;
+    }
 }

@@ -18,6 +18,7 @@ public interface PostDao extends Serializable, BaseDao<Post, Integer> {
     Post findBySlug(String slug);
     List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult);
     List<Post> findEntitiesByCategoryNameOrderbyCreateDate(String categoryName, int maxResults, int firstResult);
+    List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
 //    void create(Post post);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;

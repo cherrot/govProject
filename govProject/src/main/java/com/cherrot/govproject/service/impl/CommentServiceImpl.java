@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService{
     @Inject
     private CommentDao commentDao;
-
     @Inject
     private CommentmetaDao commentmetaDao;
     @Inject
@@ -160,5 +159,16 @@ public class CommentServiceImpl implements CommentService{
         } else {
             edit(model);
         }
+    }
+
+    @Override
+    public List<Comment> listByUser(Integer userId, int pageNum) {
+        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
+    }
+
+    @Override
+    public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
+        List<Comment> comments = commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+        return comments;
     }
 }
