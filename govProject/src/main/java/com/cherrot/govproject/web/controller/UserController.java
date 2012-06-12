@@ -78,7 +78,7 @@ public class UserController {
 
     @RequestMapping(value="edit", method= RequestMethod.POST)
     public String doEditUser(@Valid @ModelAttribute("user")User user) {
-
+        userService.edit(user);    
         return "redirect:/user/";
     }
 }
