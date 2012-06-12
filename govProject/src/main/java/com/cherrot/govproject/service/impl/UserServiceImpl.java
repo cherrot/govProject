@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService{
     private SiteLogService siteLogService;
 
     @Override
-//    @Transactional
+    @Transactional
     public void create(User user) {
         userDao.create(user);
     }
@@ -161,6 +161,18 @@ public class UserServiceImpl implements UserService{
     //FIXME 未完成
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        if((userLevel&224 > 0)&&(userLevel&30 < 0)){
+            return "宣传部工作人员";
+        }
+        else if(userLevel&224 > 0 && userLevel&30 > 0){
+            return "既是宣传部工作人员也是文联工作人员";
+        }
+        else if(userLevel&224 < 0 && userLevel&30 > 0){
+            return "文联工作人员";
+        }
+        else if(userLevel&1 > 0){
+            return "普通用户";
+        }
+        return null;
     }
 }

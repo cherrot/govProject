@@ -28,7 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentServiceImpl implements CommentService{
     @Inject
     private CommentDao commentDao;
-
     @Inject
     private CommentmetaDao commentmetaDao;
     @Inject
@@ -162,15 +161,14 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
-    //FIXME 未完成
     @Override
     public List<Comment> listByUser(Integer userId, int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
     }
 
-    //FIXME 未完成
     @Override
     public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Comment> comments = commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+        return comments;
     }
 }

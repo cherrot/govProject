@@ -190,16 +190,14 @@ public class PostServiceImpl implements PostService {
         }
     }
 
-    //FIXME 未完成
     @Override
     public List<Post> listByUser(Integer userId, int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
     }
 
-    //FIXME 未完成
     @Override
     public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+        return posts;
     }
-
 }

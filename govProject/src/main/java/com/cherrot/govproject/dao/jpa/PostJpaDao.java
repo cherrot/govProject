@@ -386,4 +386,13 @@ public class PostJpaDao implements PostDao {
         return em.createNamedQuery("Post.findBySlug", Post.class)
             .setParameter("slug", slug).getSingleResult();
     }
+
+    @Override
+    public List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findEntitiesByUserId", Post.class);
+        q.setParameter("userId", userId);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
 }
