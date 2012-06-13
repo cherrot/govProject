@@ -4,12 +4,14 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -43,7 +45,9 @@ public class AdminUserController {
         String userRole = userService.getDescriptionOfUserLevel(user.getUserLevel());
         mav.addObject("userRole", userRole);
         List<Post> userPosts = postService.listNewesPostsByUser(userId, 1);
-        //TODO
+        mav.addObject("userPosts",userPosts);
+        List<Comment> userComments = commentService.listNewesCommentsByUser(userId, 1);
+        mav.addObject("userComments", userComments);
         return mav;
     }
 
@@ -61,7 +65,20 @@ public class AdminUserController {
         if (pageSize == null) pageSize = DEFAULT_PAGE_SIZE;
         List<User> userList = userService.list(pageNum, pageSize);
         mav.addObject("userList", userList);
-        List<String> userRole
+        List<String> roleList = new ArrayList<String>();
+        List<Integer> postCountList = new ArrayList<Integer>();
+        List<Integer> commentCountList = new ArrayList<Integer>();
+        
+        for (User user : userList) {
+            roleList.add( userService.getDescriptionOfUserLevel(user.getUserLevel()) );
+            postCountList.add( postService.getCountByUser(user.getId()) );
+            commentCountList.add( commentService.getCountByUser(user.getId()) );
+        }
+        
+        mav.addObject("roleList", roleList);
+        mav.addObject("postCountList", postCountList);
+        mav.addObject("commentCountList", commentCountList);
+        
         return mav;
     }
 

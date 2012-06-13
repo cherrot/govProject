@@ -26,4 +26,7 @@ public interface CommentService extends BaseService<Comment, Integer> {
      */
     List<Comment> listByUser(Integer userId, int pageNum);
     List<Comment> listByUser(Integer userId, int pageNum, int pageSize);
+    List<Comment> listNewesCommentsByUser(Integer userId, int pageNum);
+    List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize);
+    int getCountByUser(Integer userId);
 }
