@@ -39,7 +39,6 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void create(Post post, List<Term> categories, List<String> tags) {
         create(post, categories, tags, null);
-        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
@@ -50,14 +49,14 @@ public class PostServiceImpl implements PostService {
         List<Term> tagTerms = termService.createTagsByName(tags);
         addTermList(post, tagTerms);
         postDao.create(post);
-        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
+//        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
     @Transactional
     public void create(Post post) {
         postDao.create(post);
-        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
+//        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
 
     @Override
@@ -70,7 +69,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void destroy(Integer id) {
         Post post = postDao.find(id);
-        siteLogService.create(post.getUser(), post.getTitle()+"被删除" );
+//        siteLogService.create(post.getUser(), post.getTitle()+"被删除" );
         try {
             postDao.destroy(id);
         }
@@ -108,7 +107,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void edit(Post model) {
-        siteLogService.create(model.getUser(), model.getTitle()+"被修改" );
+//        siteLogService.create(model.getUser(), model.getTitle()+"被修改" );
         try {
             postDao.edit(model);
         }
@@ -165,14 +164,14 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly=true)
-    public List<Post> listNewestPostsByTerm(Term term, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTermOrderbyCreateDate(term, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTermDescOrder(termId, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
     @Transactional(readOnly=true)
     public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategoryNameOrderbyCreateDate(categoryName, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByCategoryNameDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
     }
 
     private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withTerms){
@@ -199,5 +198,46 @@ public class PostServiceImpl implements PostService {
     public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
         List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
         return posts;
+    }
+//FIXME!!!
+    @Override
+    public List<Post> listNewesPostsByUser(Integer userId, int pageNum) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getCountByUser(Integer userId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getCountByTerm(Integer termId) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    @Transactional
+    public void testVideo() {
+        Post videoPostParent = find(1);
+//                Post videoPost = new Post();
+//                Post videoPost = postService.find(2);
+//                videoPost.setUser(videoPostParent.getUser());
+//                videoPost.setPostParent(videoPostParent);
+//                videoPost.setType(Post.PostType.ATTACHMENT);
+//                videoPost.setMime(file.getContentType());
+//                videoPost.setContent("/uploads/"+newFile.getName()+".flv");
+//                videoPost.setSlug("testvideo");
+//                videoPost.setTitle("testvideo");
+//                postService.save(videoPost);
+
+                String content = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\">"
+         + "<embed src=\"/govProject/resources/misc/flvplayer.swf\" allowfullscreen=\"true\" flashvars=\"vcastr_file="+"/govProject/uploads/MVI_0015.AVI.flv"+"&BufferTime=3\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"459\" height=\"370\"></embed>"
+         + "</object>";
+                videoPostParent.setContent(content);
     }
 }

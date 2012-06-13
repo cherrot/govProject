@@ -148,6 +148,13 @@ public class UserJpaDao implements UserDao {
             List<Usermeta> usermetaListNew = user.getUsermetaList();
             List<Comment> commentListOld = persistentUser.getCommentList();
             List<Comment> commentListNew = user.getCommentList();
+
+            //FIXME 临时方案
+            if (siteLogListNew == null) siteLogListNew = siteLogListOld;
+            if (postListNew == null) postListNew = postListOld;
+            if (usermetaListNew == null) usermetaListNew = usermetaListOld;
+            if (commentListNew == null) commentListNew = commentListOld;
+
             List<String> illegalOrphanMessages = null;
             for (SiteLog siteLogListOldSiteLog : siteLogListOld) {
                 if (!siteLogListNew.contains(siteLogListOldSiteLog)) {

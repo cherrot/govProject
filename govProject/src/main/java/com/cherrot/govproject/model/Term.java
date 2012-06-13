@@ -7,6 +7,7 @@ package com.cherrot.govproject.model;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -194,6 +195,7 @@ public class Term implements Serializable {
 
     @XmlTransient
     public List<Term> getTermList() {
+//        if (termList == null) termList = new ArrayList<Term>();
         return termList;
     }
 
@@ -211,6 +213,7 @@ public class Term implements Serializable {
 
     @XmlTransient
     public List<Post> getPostList() {
+//        if (postList == null) postList = new ArrayList<Post>();
         return postList;
     }
 

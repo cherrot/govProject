@@ -24,13 +24,13 @@ public class AdminPostController {
     private PostService postService;
 
     //FIXME 未完成  PostControlle中应当有类似方法
-    @RequestMapping(value="/list", method= RequestMethod.GET)
-    public ModelAndView viewPostList(@RequestParam(value="userId", required=false)Integer userId) {
-        //不指定用户Id，分页取出所有post
-        if (userId == null) {
-            postService.list(userId)
-        } else { //指定了用户Id，分页取出属于该用户的文章。
-            postService.listByUser(userId, userId)
-        }
-    }
+//    @RequestMapping(value="/list", method= RequestMethod.GET)
+//    public ModelAndView viewPostList(@RequestParam(value="userId", required=false)Integer userId) {
+//        //不指定用户Id，分页取出所有post
+//        if (userId == null) {
+//            postService.list(userId)
+//        } else { //指定了用户Id，分页取出属于该用户的文章。
+//            postService.listByUser(userId, userId)
+//        }
+//    }
 }

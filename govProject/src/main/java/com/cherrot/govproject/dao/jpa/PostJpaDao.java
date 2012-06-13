@@ -142,6 +142,13 @@ public class PostJpaDao implements PostDao {
             List<Comment> commentListOld = persistentPost.getCommentList();
             List<Comment> commentListNew = post.getCommentList();
             List<String> illegalOrphanMessages = null;
+
+            //FIXME 临时方案
+            if (postmetaListNew == null) postmetaListNew = postmetaListOld;
+            if (postListNew == null) postListNew = postListOld;
+            if (termListNew == null) termListNew = termListOld;
+            if (commentListNew == null) commentListNew = commentListOld;
+
             for (Postmeta postmetaListOldPostmeta : postmetaListOld) {
                 if (!postmetaListNew.contains(postmetaListOldPostmeta)) {
                     if (illegalOrphanMessages == null) {
@@ -364,17 +371,17 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
-    public List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findEntitiesByTermOrderbyCreateDate", Post.class);
-        q.setParameter("termId", term.getId());
+    public List<Post> findEntitiesByTermDescOrder(Integer termId, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findEntitiesByTermDescOrder", Post.class);
+        q.setParameter("termId", termId);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
         return q.getResultList();
     }
 
     @Override
-    public List<Post> findEntitiesByCategoryNameOrderbyCreateDate(String categoryName, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findEntitiesByCategoryNameOrderbyCreateDate", Post.class);
+    public List<Post> findEntitiesByCategoryNameDescOrder(String categoryName, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findEntitiesByCategoryNameDescOrder", Post.class);
         q.setParameter("category", categoryName);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);

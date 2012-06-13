@@ -5,7 +5,6 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Post;
-import com.cherrot.govproject.model.Term;
 import java.io.Serializable;
 import java.util.List;
 
@@ -16,8 +15,8 @@ import java.util.List;
 public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
     Post findBySlug(String slug);
-    List<Post> findEntitiesByTermOrderbyCreateDate(Term term, int maxResults, int firstResult);
-    List<Post> findEntitiesByCategoryNameOrderbyCreateDate(String categoryName, int maxResults, int firstResult);
+    List<Post> findEntitiesByTermDescOrder(Integer termId, int maxResults, int firstResult);
+    List<Post> findEntitiesByCategoryNameDescOrder(String categoryName, int maxResults, int firstResult);
     List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
 //    void create(Post post);
 //

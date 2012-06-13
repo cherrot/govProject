@@ -87,6 +87,11 @@ public class TermJpaDao implements TermDao {
             List<Term> termListNew = term.getTermList();
             List<Post> postListOld = persistentTerm.getPostList();
             List<Post> postListNew = term.getPostList();
+
+            //FIXME 临时方案
+            if (termListNew == null) termListNew = termListOld;
+            if (postListNew == null) postListNew = postListOld;
+
             if (termParentNew != null) {
                 termParentNew = em.getReference(termParentNew.getClass(), termParentNew.getId());
                 term.setTermParent(termParentNew);

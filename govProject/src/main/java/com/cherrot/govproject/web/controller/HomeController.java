@@ -53,7 +53,7 @@ public class HomeController {
         List<Term> categories = termService.listByTypeOrderbyCount(Term.TermType.CATEGORY, false, false);
         mav.addObject("categories", categories);
         for (Term category : categories) {
-            mav.addObject(category.getName(), postService.listNewestPostsByTerm(category, 1, 5));
+            mav.addObject(category.getName(), postService.listNewestPostsByTerm(category.getId(), 1, 5));
         }
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
         mav.addObject("linkCategories", linkCategories);

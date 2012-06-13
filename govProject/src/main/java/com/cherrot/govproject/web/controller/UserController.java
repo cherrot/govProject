@@ -81,8 +81,8 @@ public class UserController {
         return "redirect:/user/";
     }
 
-    @RequestMapping("/posts", params="userId")
-    public ModelAndView listPostsByUser(@RequestParam("userId")Integer userId) {
-        //根据用户ID分页查询文章列表.
-    }
+//    @RequestMapping("/posts", params="userId")
+//    public ModelAndView listPostsByUser(@RequestParam("userId")Integer userId) {
+//        //根据用户ID分页查询文章列表.
+//    }
 }

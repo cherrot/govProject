@@ -115,9 +115,9 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
-        siteLogService.create(model, model.getLogin()+"被修改");
         try {
             userDao.edit(model);
+            siteLogService.create(model, model.getLogin()+"被修改");
         }
         catch (IllegalOrphanException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);

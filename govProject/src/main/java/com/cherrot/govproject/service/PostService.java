@@ -47,7 +47,7 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param pageSize
      * @return
      */
-    List<Post> listNewestPostsByTerm(Term term, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize);
     List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize);
     /**
      * 根据用户的id取出用户发表的文章。 注意只取回文章，不取回附件（即只取出type为POST的记录）
@@ -61,4 +61,5 @@ public interface PostService extends BaseService<Post, Integer> {
     List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize);
     int getCountByUser(Integer userId);
     int getCountByTerm(Integer termId);
+    void testVideo();
 }

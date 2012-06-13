@@ -141,6 +141,11 @@ public class CommentJpaDao implements CommentDao {
             List<Commentmeta> commentmetaListNew = comment.getCommentmetaList();
             List<Comment> commentListOld = persistentComment.getCommentList();
             List<Comment> commentListNew = comment.getCommentList();
+
+            //FIXME 临时方案
+            if (commentmetaListNew == null) commentmetaListNew = commentmetaListOld;
+            if (commentListNew == null) commentListNew = commentListOld;
+
             List<String> illegalOrphanMessages = null;
             for (Commentmeta commentmetaListOldCommentmeta : commentmetaListOld) {
                 if (!commentmetaListNew.contains(commentmetaListOldCommentmeta)) {

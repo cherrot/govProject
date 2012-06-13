@@ -98,6 +98,7 @@ public class LinkCategory implements Serializable {
 
     @XmlTransient
     public List<Link> getLinkList() {
+//        if (linkList == null) linkList = new ArrayList<Link>();
         return linkList;
     }
 

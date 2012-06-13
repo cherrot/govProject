@@ -42,23 +42,19 @@ public class FileUploadController {
     public void doUpload(@RequestParam("qqfile")MultipartFile file
         , @RequestParam("postId")int postId, HttpServletResponse response) throws IOException {
 
-        String outputString = "<script>parent.callback('upload file successfully')</script>";
         if (!file.isEmpty()) {
             try {
                 File newFile = new File(fileSystemResource.getPath() + "/" + file.getOriginalFilename());
                 Logger.getLogger(HomeController.class.getSimpleName()).log(Level.INFO, "{0} is created for post {1}", new Object[]{newFile.getAbsolutePath(), postId});
                 file.transferTo(newFile);
+                //by lai 2012.6.12 视频处理
+                postService.testVideo();
+                videoConvertService.videoConvert(newFile.getAbsolutePath());
+
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().print("{success: true}");
-                //by lai 2012.6.12 视频处理
-                //FIXME不起作用！
-                Post videoPostParent =  postService.find(postId);
-                Post videoPost = new Post();
-                videoPost.setPostParent(videoPostParent);
-                videoPost.setType(Post.PostType.ATTACHMENT);
-                videoPost.setMime(file.getContentType());
-                videoConvertService.videoConvert(newFile.getAbsolutePath());
             } catch (Exception ex) {
+                Logger.getLogger(FileUploadController.class.getSimpleName()).log(Level.SEVERE, ex.getMessage(), ex);
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().print("{success: false}");
             }

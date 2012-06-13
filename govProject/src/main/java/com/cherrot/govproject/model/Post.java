@@ -5,6 +5,7 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -57,9 +58,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
     //以下为等价式
     //@NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.id IN (:termId) ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p, IN(p.termList) terms WHERE terms.id = :termId ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryNameOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")    
+    @NamedQuery(name = "Post.findEntitiesByTermDescOrder", query="SELECT p FROM Post p, IN(p.termList) terms WHERE terms.id = :termId ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.
@@ -312,6 +313,7 @@ public class Post implements Serializable {
 
     @XmlTransient
     public List<Postmeta> getPostmetaList() {
+//        if (postmetaList == null) postmetaList = new ArrayList<Postmeta>();
         return postmetaList;
     }
 
@@ -329,6 +331,7 @@ public class Post implements Serializable {
 
     @XmlTransient
     public List<Post> getPostList() {
+//        if (postList == null) postList = new ArrayList<Post>();
         return postList;
     }
 
@@ -346,6 +349,7 @@ public class Post implements Serializable {
 
     @XmlTransient
     public List<Term> getTermList() {
+//        if (termList == null) termList = new ArrayList<Term>();
         return termList;
     }
 
@@ -355,6 +359,7 @@ public class Post implements Serializable {
 
     @XmlTransient
     public List<Comment> getCommentList() {
+//        if (commentList == null) commentList = new ArrayList<Comment>();
         return commentList;
     }
 

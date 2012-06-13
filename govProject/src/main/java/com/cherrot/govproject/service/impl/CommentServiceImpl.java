@@ -41,14 +41,14 @@ public class CommentServiceImpl implements CommentService{
             commentmeta.setComment(comment);
             commentmetaDao.create(commentmeta);
         }
-        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
+//        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
     }
 
     @Override
     @Transactional
     public void create(Comment comment) {
         commentDao.create(comment);
-        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
+//        siteLogService.create(comment.getUser(), comment.getAuthor()+"做了评论");
     }
 
     @Override
@@ -170,5 +170,21 @@ public class CommentServiceImpl implements CommentService{
     public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
         List<Comment> comments = commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
         return comments;
+    }
+
+    //FIXME!!!
+    @Override
+    public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public int getCountByUser(Integer userId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }

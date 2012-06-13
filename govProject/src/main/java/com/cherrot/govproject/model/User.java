@@ -5,6 +5,7 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -178,6 +179,7 @@ public class User implements Serializable {
 
     @XmlTransient
     public List<SiteLog> getSiteLogList() {
+//        if (siteLogList == null) siteLogList = new ArrayList<SiteLog>();
         return siteLogList;
     }
 
@@ -187,6 +189,7 @@ public class User implements Serializable {
 
     @XmlTransient
     public List<Post> getPostList() {
+//        if (postList == null) postList = new ArrayList<Post>();
         return postList;
     }
 
@@ -196,6 +199,7 @@ public class User implements Serializable {
 
     @XmlTransient
     public List<Usermeta> getUsermetaList() {
+//        if (usermetaList == null) usermetaList = new ArrayList<Usermeta>();
         return usermetaList;
     }
 
@@ -204,6 +208,7 @@ public class User implements Serializable {
     }
 
     public List<Comment> getCommentList() {
+//        if (commentList == null) commentList = new ArrayList<Comment>();
         return commentList;
     }
 
