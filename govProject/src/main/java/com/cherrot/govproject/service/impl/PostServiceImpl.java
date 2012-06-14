@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -60,7 +61,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public Post find(Integer id) {
         return postDao.find(id);
     }
@@ -87,19 +88,19 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Post> list() {
         return postDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Post> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Post> list(int pageNum, int pageSize) {
         return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -124,6 +125,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
+    //FIXME 应当让此方法处理term和post的关系！ 下同！
     public void addTerm(Post post, Term term) {
         post.getTermList().add(term);
     }
@@ -147,7 +149,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withTerms) {
         Post post = find(id);
         processDependency(post, withComments, withPostmetas, withTerms);
@@ -155,7 +157,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withTerms) {
         Post post = postDao.findBySlug(slug);
         processDependency(post, withComments, withPostmetas, withTerms);
@@ -163,13 +165,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize) {
         return postDao.findEntitiesByTermDescOrder(termId, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryNameDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
     }

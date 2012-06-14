@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -52,13 +53,13 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public User find(Integer id) {
         return userDao.find(id);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = find(id);
         processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
@@ -66,7 +67,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = userDao.findByLogin(loginName);
         processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
@@ -95,19 +96,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<User> list() {
         return userDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<User> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<User> list(int pageNum, int pageSize) {
         return userDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }

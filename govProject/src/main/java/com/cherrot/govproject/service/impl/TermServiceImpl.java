@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -100,13 +101,13 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public Term find(Integer id) {
         return termDao.find(id);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public Term find(Integer id, boolean withPosts, boolean withTerms) {
         Term term = find(id);
         if (withPosts) term.getPostList().isEmpty();
@@ -134,25 +135,25 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> list() {
         return termDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Term> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Term> list(int pageNum, int pageSize) {
         return termDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByType(TermType type, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByType(type);
         processDependency(terms, withPosts, withTerms);
@@ -160,13 +161,13 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
         return listByType(type, pageNum, DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByType(type, pageSize, (pageNum-1)*pageSize);
         processDependency(terms, withPosts, withTerms);
@@ -174,7 +175,7 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByTypeOrderbyCount(TermType type, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByTypeOrderbyCount(type);
         processDependency(terms, withPosts, withTerms);
@@ -182,13 +183,13 @@ public class TermServiceImpl implements TermService {
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms) {
         return listByTypeOrderbyCount(type, pageNum, DEFAULT_PAGE_SIZE, withPosts, withTerms);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Term> listByTypeOrderbyCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms) {
         List<Term> terms = termDao.findEntitiesByTypeOrderbyCount(type, pageSize, (pageNum-1)*pageSize);
         processDependency(terms, withPosts, withTerms);
