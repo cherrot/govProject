@@ -4,42 +4,50 @@
  */
 package com.cherrot.govproject.dao.jpa;
 
-import com.cherrot.govproject.dao.jpa.exceptions.NonexistentEntityException;
+import com.cherrot.govproject.dao.TagDao;
+import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Tag;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
-public class TagJpaDao implements Serializable {
+@Repository
+public class TagJpaDao implements TagDao {
 
-    public TagJpaDao(EntityManagerFactory emf) {
-        this.emf = emf;
-    }
-    private EntityManagerFactory emf = null;
+//    public TagJpaDao(EntityManagerFactory emf) {
+//        this.emf = emf;
+//    }
+//    private EntityManagerFactory emf = null;
+//
+//    public EntityManager getEntityManager() {
+//        return emf.createEntityManager();
+//    }
+    
+    @PersistenceContext
+    private EntityManager em;
 
-    public EntityManager getEntityManager() {
-        return emf.createEntityManager();
-    }
-
+    @Override
+    @Transactional
     public void create(Tag tag) {
         if (tag.getPostList() == null) {
             tag.setPostList(new ArrayList<Post>());
         }
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+//        EntityManager em = null;
+//        try {
+//            em = getEntityManager();
+//            em.getTransaction().begin();
             List<Post> attachedPostList = new ArrayList<Post>();
             for (Post postListPostToAttach : tag.getPostList()) {
                 postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
@@ -51,19 +59,21 @@ public class TagJpaDao implements Serializable {
                 postListPost.getTagList().add(tag);
                 postListPost = em.merge(postListPost);
             }
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+//            em.getTransaction().commit();
+//        } finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
     }
 
+    @Override
+    @Transactional
     public void edit(Tag tag) throws NonexistentEntityException, Exception {
-        EntityManager em = null;
+//        EntityManager em = null;
         try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+//            em = getEntityManager();
+//            em.getTransaction().begin();
             Tag persistentTag = em.find(Tag.class, tag.getId());
             List<Post> postListOld = persistentTag.getPostList();
             List<Post> postListNew = tag.getPostList();
@@ -87,28 +97,30 @@ public class TagJpaDao implements Serializable {
                     postListNewPost = em.merge(postListNewPost);
                 }
             }
-            em.getTransaction().commit();
+//            em.getTransaction().commit();
         } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = tag.getId();
-                if (findTag(id) == null) {
+                if (find(id) == null) {
                     throw new NonexistentEntityException("The tag with id " + id + " no longer exists.");
                 }
             }
             throw ex;
-        } finally {
+        } /*finally {
             if (em != null) {
                 em.close();
             }
-        }
+        }*/
     }
 
+    @Override
+    @Transactional
     public void destroy(Integer id) throws NonexistentEntityException {
-        EntityManager em = null;
-        try {
-            em = getEntityManager();
-            em.getTransaction().begin();
+//        EntityManager em = null;
+//        try {
+//            em = getEntityManager();
+//            em.getTransaction().begin();
             Tag tag;
             try {
                 tag = em.getReference(Tag.class, id);
@@ -122,25 +134,27 @@ public class TagJpaDao implements Serializable {
                 postListPost = em.merge(postListPost);
             }
             em.remove(tag);
-            em.getTransaction().commit();
-        } finally {
-            if (em != null) {
-                em.close();
-            }
-        }
+//            em.getTransaction().commit();
+//        } finally {
+//            if (em != null) {
+//                em.close();
+//            }
+//        }
     }
 
-    public List<Tag> findTagEntities() {
-        return findTagEntities(true, -1, -1);
+    @Override
+    public List<Tag> findEntities() {
+        return findEntities(true, -1, -1);
     }
 
-    public List<Tag> findTagEntities(int maxResults, int firstResult) {
-        return findTagEntities(false, maxResults, firstResult);
+    @Override
+    public List<Tag> findEntities(int maxResults, int firstResult) {
+        return findEntities(false, maxResults, firstResult);
     }
 
-    private List<Tag> findTagEntities(boolean all, int maxResults, int firstResult) {
-        EntityManager em = getEntityManager();
-        try {
+    private List<Tag> findEntities(boolean all, int maxResults, int firstResult) {
+//        EntityManager em = getEntityManager();
+//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             cq.select(cq.from(Tag.class));
             Query q = em.createQuery(cq);
@@ -149,31 +163,43 @@ public class TagJpaDao implements Serializable {
                 q.setFirstResult(firstResult);
             }
             return q.getResultList();
-        } finally {
-            em.close();
-        }
+//        } finally {
+//            em.close();
+//        }
     }
 
-    public Tag findTag(Integer id) {
-        EntityManager em = getEntityManager();
-        try {
+    @Override
+    public Tag find(Integer id) {
+//        EntityManager em = getEntityManager();
+//        try {
             return em.find(Tag.class, id);
-        } finally {
-            em.close();
-        }
+//        } finally {
+//            em.close();
+//        }
     }
 
-    public int getTagCount() {
-        EntityManager em = getEntityManager();
-        try {
+    @Override
+    public int getCount() {
+//        EntityManager em = getEntityManager();
+//        try {
             CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
             Root<Tag> rt = cq.from(Tag.class);
             cq.select(em.getCriteriaBuilder().count(rt));
             Query q = em.createQuery(cq);
             return ((Long) q.getSingleResult()).intValue();
-        } finally {
-            em.close();
-        }
+//        } finally {
+//            em.close();
+//        }
+    }
+
+    @Override
+    public Tag findBySlug(String slug) {
+        return em.createNamedQuery("Tag.findBySlug", Tag.class).setParameter("slug", slug).getSingleResult();
+    }
+
+    @Override
+    public Tag getReference(Integer id) {
+        return em.getReference(Tag.class, id);
     }
 
 }

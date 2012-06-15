@@ -15,7 +15,7 @@ import java.util.List;
 public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
     Post findBySlug(String slug);
-    List<Post> findEntitiesByTermDescOrder(Integer termId, int maxResults, int firstResult);
+    List<Post> findEntitiesByCategoryDescOrder(Integer termId, int maxResults, int firstResult);
     List<Post> findEntitiesByCategoryNameDescOrder(String categoryName, int maxResults, int firstResult);
     List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
 //    void create(Post post);

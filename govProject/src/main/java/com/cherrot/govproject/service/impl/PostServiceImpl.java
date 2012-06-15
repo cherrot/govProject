@@ -7,12 +7,12 @@ package com.cherrot.govproject.service.impl;
 import com.cherrot.govproject.dao.PostDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
-import com.cherrot.govproject.service.TermService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.io.File;
 import java.util.List;
@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
     @Inject
     private PostDao postDao;
     @Inject
-    private TermService termService;
+    private CategoryService categoryService;
     @Inject
     private SiteLogService siteLogService;
 
@@ -46,9 +46,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(Post post, List<Category> categories, List<String> tags, List<Postmeta> postmetas) {
-        post.setTermList(categories);
+        post.setCategoryList(categories);
         post.setPostmetaList(postmetas);
-        List<Category> tagTerms = termService.createTagsByName(tags);
+        List<Category> tagTerms = categoryService.createTagsByName(tags);
         addTermList(post, tagTerms);
         postDao.create(post);
 //        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
@@ -128,25 +128,25 @@ public class PostServiceImpl implements PostService {
     @Transactional
     //FIXME 应当让此方法处理term和post的关系！ 下同！
     public void addTerm(Post post, Category term) {
-        post.getTermList().add(term);
+        post.getCategoryList().add(term);
     }
 
     @Override
     @Transactional
     public void addTermList(Post post, List<Category> terms) {
-        post.getTermList().addAll(terms);
+        post.getCategoryList().addAll(terms);
     }
 
     @Override
     @Transactional
     public void removeTerm(Post post, Category term) {
-        post.getTermList().remove(term);
+        post.getCategoryList().remove(term);
     }
 
     @Override
     @Transactional
     public void removeTermList(Post post, List<Category> terms) {
-        post.getTermList().removeAll(terms);
+        post.getCategoryList().removeAll(terms);
     }
 
     @Override
@@ -168,7 +168,7 @@ public class PostServiceImpl implements PostService {
     @Override
 //    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTermDescOrder(termId, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByCategoryDescOrder(termId, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
@@ -180,7 +180,7 @@ public class PostServiceImpl implements PostService {
     private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withTerms){
         if (withComments) post.getCommentList().isEmpty();
         if (withPostmetas) post.getPostmetaList().isEmpty();
-        if (withTerms) post.getTermList().isEmpty();
+        if (withTerms) post.getCategoryList().isEmpty();
     }
 
     @Override

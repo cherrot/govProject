@@ -17,7 +17,7 @@ import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
-import com.cherrot.govproject.service.TermService;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.UserService;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +37,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     @Inject
-    private TermService termService;
+    private CategoryService termService;
     @Inject
     private LinkService linkService;
     @Inject

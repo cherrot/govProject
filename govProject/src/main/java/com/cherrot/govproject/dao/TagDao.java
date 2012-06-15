@@ -14,4 +14,5 @@ import java.io.Serializable;
 public interface TagDao extends Serializable, BaseDao<Tag, Integer> {
 
     Tag findBySlug(String slug);
+    Tag findByTag(String name);
 }

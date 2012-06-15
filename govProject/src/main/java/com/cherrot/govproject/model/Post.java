@@ -56,8 +56,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
     //以下为等价式
     //@NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.id IN (:termId) ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByTermDescOrder", query="SELECT p FROM Post p, IN(p.termList) terms WHERE terms.id = :termId ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.createDate DESC"),
+    @NamedQuery(name = "Post.findEntitiesByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) category WHERE category.id = :categoryId ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findEntitiesByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.name = :categoryName ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findEntitiesByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
 })
 /**

@@ -14,4 +14,5 @@ import java.io.Serializable;
 public interface CategoryDao extends Serializable, BaseDao<Category, Integer> {
 
     Category findBySlug(String slug);
+    Category findByName(String name);
 }
