@@ -7,7 +7,6 @@ package com.cherrot.govproject.model;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -36,46 +35,28 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author sai
  */
 @Entity
-@Table(name = "terms", uniqueConstraints = {
+@Table(name = "categories", uniqueConstraints = {
     @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Term.findAll", query = "SELECT t FROM Term t"),
-    @NamedQuery(name = "Term.findById", query = "SELECT t FROM Term t WHERE t.id = :id"),
-    @NamedQuery(name = "Term.findByCount", query = "SELECT t FROM Term t WHERE t.count = :count"),
-    @NamedQuery(name = "Term.findByType", query = "SELECT t FROM Term t WHERE t.type = :type"),
-    @NamedQuery(name = "Term.findByName", query = "SELECT t FROM Term t WHERE t.name = :name"),
-    @NamedQuery(name = "Term.findByNameAndType", query = "SELECT t FROM Term t WHERE t.name = :name AND t.type = :type"),
-    @NamedQuery(name = "Term.findBySlug", query = "SELECT t FROM Term t WHERE t.slug = :slug"),
-    @NamedQuery(name = "Term.findByDescription", query = "SELECT t FROM Term t WHERE t.description = :description"),
-    @NamedQuery(name = "Term.findEntitiesByType", query="SELECT t FROM Term t WHERE t.type = :type"),
-    @NamedQuery(name = "Term.findEntitiesByTypeOrderbyCount", query="SELECT t FROM Term t WHERE t.type=:type ORDER BY t.count")
+    @NamedQuery(name = "Category.findAll", query = "SELECT c FROM Category c"),
+    @NamedQuery(name = "Category.findById", query = "SELECT c FROM Category c WHERE c.id = :id"),
+    @NamedQuery(name = "Category.findByCount", query = "SELECT c FROM Category c WHERE c.count = :count"),
+    @NamedQuery(name = "Category.findByName", query = "SELECT c FROM Category c WHERE c.name = :name"),
+    @NamedQuery(name = "Category.findBySlug", query = "SELECT c FROM Category c WHERE c.slug = :slug"),
+    @NamedQuery(name = "Category.findByDescription", query = "SELECT c FROM Category c WHERE c.description = :description"),
 })
-public class Term implements Serializable {
+public class Category implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private void processSlug(String slug) {
-        slug = slug.replaceAll("(\\.|\\s)+", "-");
-        try {
-            this.slug = URLEncoder.encode(slug, "UTF-8");
-        }
-        catch (UnsupportedEncodingException ex) {
-        }
-    }
-
-    public enum TermType {
-        POST_TAG("文章标签"), CATEGORY("文章分类");
-
-        private String description;
-
-        private TermType(String description) {
-            this.description = description;
-        }
-
-        public String getDescription() {
-            return description;
-        }
-    }
+//    private void processSlug(String slug) {
+//        slug = slug.replaceAll("(\\.|\\s)+", "-");
+//        try {
+//            this.slug = URLEncoder.encode(slug, "UTF-8");
+//        }
+//        catch (UnsupportedEncodingException ex) {
+//        }
+//    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -87,12 +68,6 @@ public class Term implements Serializable {
     @NotNull
     @Column(name = "count", nullable = false)
     private int count;
-    @Enumerated(EnumType.STRING)
-    @Basic(optional=false)
-    @NotNull
-//    @Size(max = 8) Can't use this annotation for TermType
-    @Column(name = "type", length = 8)
-    private TermType type;
     @Basic(optional=false)
     @NotNull
     @Size(max = 100)
@@ -106,37 +81,35 @@ public class Term implements Serializable {
     @Size(max = 255)
     @Column(name = "description", length = 255)
     private String description;
-    @OneToMany(mappedBy = "termParent")
-    private List<Term> termList;
-    @JoinColumn(name = "term_parent", referencedColumnName = "id")
+    @OneToMany(mappedBy = "categoryParent")
+    private List<Category> categoryList;
+    @JoinColumn(name = "category_parent", referencedColumnName = "id")
     @ManyToOne
-    private Term termParent;
+    private Category categoryParent;
     /**
      * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
      * If you choose to map the relationship in both directions, then one
      * direction must be defined as the owner and the other must use
      * the mappedBy attribute to define its mapping.
      * This also avoids having to duplicate the JoinTable information in both places.
-     * Post.java为主控端， Term.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
+     * Post.java为主控端， Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
 //    @OrderColumn(name="termOrder")
-    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "termList")
+    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "categoryList")
     private List<Post> postList;
 
-    public Term() {
+    public Category() {
         count = 0;
-        type = TermType.POST_TAG;
     }
 
-//    public Term(Integer id) {
+//    public Category(Integer id) {
 //        this.id = id;
 //    }
 
-    public Term(/*Integer id,*/ int count, String name, TermType type, String slug) {
+    public Category(/*Integer id,*/ int count, String name, String slug) {
 //        this.id = id;
         this.count = count;
         this.name = name;
-        this.type = type;
         this.slug = slug;
     }
 
@@ -156,14 +129,6 @@ public class Term implements Serializable {
         this.count = count;
     }
 
-    public TermType getType() {
-        return type;
-    }
-
-    public void setType(TermType type) {
-        this.type = type;
-    }
-
     public String getName() {
         return name;
     }
@@ -178,11 +143,12 @@ public class Term implements Serializable {
 
     /**
      * Set the "slug" (i.e. the RESTful URL) of this term
-     * FIXME slug may confilics when two terms have the same name.
+     * 该记录的URI短链接。
      * @param slug
      */
     public void setSlug(String slug) {
-        processSlug(slug);
+//        processSlug(slug);
+        this.slug = slug;
     }
 
     public String getDescription() {
@@ -194,21 +160,21 @@ public class Term implements Serializable {
     }
 
     @XmlTransient
-    public List<Term> getTermList() {
+    public List<Category> getCategoryList() {
 //        if (termList == null) termList = new ArrayList<Term>();
-        return termList;
+        return categoryList;
     }
 
-    public void setTermList(List<Term> termList) {
-        this.termList = termList;
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
     }
 
-    public Term getTermParent() {
-        return termParent;
+    public Category getCategoryParent() {
+        return categoryParent;
     }
 
-    public void setTermParent(Term termParent) {
-        this.termParent = termParent;
+    public void setCategoryParent(Category categoryParent) {
+        this.categoryParent = categoryParent;
     }
 
     @XmlTransient
@@ -235,10 +201,10 @@ public class Term implements Serializable {
      */
     @Override
     public boolean equals(Object object) {
-        if (!(object instanceof Term)) {
+        if (!(object instanceof Category)) {
             return false;
         }
-        Term other = (Term) object;
+        Category other = (Category) object;
         if ((this.id == null && other.id != null) || (this.id != null && !this.id.equals(other.id))) {
             return false;
         }

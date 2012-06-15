@@ -175,6 +175,11 @@ public class UsermetaJpaDao implements UsermetaDao {
     }
 
     @Override
+    public  Usermeta getReference(Integer id) {
+        return em.getReference(Usermeta.class, id);
+    }
+
+    @Override
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {

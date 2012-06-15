@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
-@RequestMapping("/post")
+@RequestMapping({"/post","admin/post"})
 public class PostController {
 
     @Inject
@@ -198,6 +198,7 @@ public class PostController {
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
             post.setUser(BaseController.getSessionUser(request.getSession()));
+            System.err.println(post.getTitle());
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }

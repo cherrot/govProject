@@ -9,6 +9,7 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>${post.title} | 昆明文化辞典</title>
   </head>
   <body>

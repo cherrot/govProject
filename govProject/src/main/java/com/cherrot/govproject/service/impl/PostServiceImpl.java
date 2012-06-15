@@ -9,11 +9,12 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TermService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
+import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,16 +39,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void create(Post post, List<Term> categories, List<String> tags) {
+    public void create(Post post, List<Category> categories, List<String> tags) {
         create(post, categories, tags, null);
     }
 
     @Override
     @Transactional
-    public void create(Post post, List<Term> categories, List<String> tags, List<Postmeta> postmetas) {
+    public void create(Post post, List<Category> categories, List<String> tags, List<Postmeta> postmetas) {
         post.setTermList(categories);
         post.setPostmetaList(postmetas);
-        List<Term> tagTerms = termService.createTagsByName(tags);
+        List<Category> tagTerms = termService.createTagsByName(tags);
         addTermList(post, tagTerms);
         postDao.create(post);
 //        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
@@ -126,25 +127,25 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     //FIXME 应当让此方法处理term和post的关系！ 下同！
-    public void addTerm(Post post, Term term) {
+    public void addTerm(Post post, Category term) {
         post.getTermList().add(term);
     }
 
     @Override
     @Transactional
-    public void addTermList(Post post, List<Term> terms) {
+    public void addTermList(Post post, List<Category> terms) {
         post.getTermList().addAll(terms);
     }
 
     @Override
     @Transactional
-    public void removeTerm(Post post, Term term) {
+    public void removeTerm(Post post, Category term) {
         post.getTermList().remove(term);
     }
 
     @Override
     @Transactional
-    public void removeTermList(Post post, List<Term> terms) {
+    public void removeTermList(Post post, List<Category> terms) {
         post.getTermList().removeAll(terms);
     }
 
@@ -224,22 +225,21 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void testVideo() {
-        Post videoPostParent = find(1);
-//                Post videoPost = new Post();
-//                Post videoPost = postService.find(2);
-//                videoPost.setUser(videoPostParent.getUser());
-//                videoPost.setPostParent(videoPostParent);
-//                videoPost.setType(Post.PostType.ATTACHMENT);
-//                videoPost.setMime(file.getContentType());
-//                videoPost.setContent("/uploads/"+newFile.getName()+".flv");
-//                videoPost.setSlug("testvideo");
-//                videoPost.setTitle("testvideo");
-//                postService.save(videoPost);
+    public void addAttachment(Integer postId, File localFile, String mime) {
+        Post videoPost = new Post();
+        Post postParent = find(postId);
+        videoPost.setUser(postParent.getUser());
+        videoPost.setPostParent(postParent);
+        videoPost.setType(Post.PostType.ATTACHMENT);
+        videoPost.setMime(mime);
+        videoPost.setContent("");
+        videoPost.setSlug("testvideo");
+        videoPost.setTitle("testvideo");
+        create(videoPost);
 
-                String content = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\">"
-         + "<embed src=\"/govProject/resources/misc/flvplayer.swf\" allowfullscreen=\"true\" flashvars=\"vcastr_file="+"/govProject/uploads/MVI_0015.AVI.flv"+"&BufferTime=3\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"459\" height=\"370\"></embed>"
-         + "</object>";
-                videoPostParent.setContent(content);
+        String content = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\">"
+            + "<embed src=\"/govProject/resources/misc/flvplayer.swf\" allowfullscreen=\"true\" flashvars=\"vcastr_file=" + "/govProject/uploads/MVI_0015.AVI.flv" + "&BufferTime=3\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"459\" height=\"370\"></embed>"
+            + "</object>";
+        postParent.setContent(content);
     }
 }

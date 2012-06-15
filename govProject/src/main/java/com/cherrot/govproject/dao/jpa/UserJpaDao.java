@@ -404,4 +404,9 @@ public class UserJpaDao implements UserDao {
 //        }
     }
 
+    @Override
+    public User getReference(Integer id) {
+        return em.getReference(User.class, id);
+    }
+
 }

@@ -10,7 +10,7 @@ import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.SiteLog;
-import com.cherrot.govproject.model.Term;
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
@@ -50,9 +50,9 @@ public class HomeController {
         BaseController.setSessionUser(request.getSession(), userService.find(1));
 
         ModelAndView mav = new ModelAndView("home");
-        List<Term> categories = termService.listByTypeOrderbyCount(Term.TermType.CATEGORY, false, false);
+        List<Category> categories = termService.listByTypeOrderbyCount(Category.TermType.CATEGORY, false, false);
         mav.addObject("categories", categories);
-        for (Term category : categories) {
+        for (Category category : categories) {
             mav.addObject(category.getName(), postService.listNewestPostsByTerm(category.getId(), 1, 5));
         }
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
@@ -75,14 +75,14 @@ public class HomeController {
             User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
             userService.create(user);
             //创建测试分类和标签
-            Term category = new Term(1, "我是文章分类", Term.TermType.CATEGORY, "test");
-            Term tag = new Term(1, "我是标签", Term.TermType.POST_TAG, "testtag");
+            Category category = new Category(1, "我是文章分类", Category.TermType.CATEGORY, "test");
+            Category tag = new Category(1, "我是标签", Category.TermType.POST_TAG, "testtag");
             termService.create(category);
             termService.create(tag);
             //创建测试文章
             Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
             post.setUser(user);
-            List<Term> termList = new ArrayList<Term>(2);
+            List<Category> termList = new ArrayList<Category>(2);
             termList.add(category);
             termList.add(tag);
             post.setTermList(termList);

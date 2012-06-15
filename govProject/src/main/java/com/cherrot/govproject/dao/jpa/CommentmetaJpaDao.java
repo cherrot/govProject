@@ -188,4 +188,9 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //            em.close();
 //        }
     }
+
+    @Override
+    public Commentmeta getReference(Integer id) {
+        return em.getReference(Commentmeta.class, id);
+    }
 }

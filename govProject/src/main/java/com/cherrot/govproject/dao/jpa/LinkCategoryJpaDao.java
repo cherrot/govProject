@@ -166,4 +166,9 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
         Query q = em.createQuery(cq);
         return ((Long) q.getSingleResult()).intValue();
     }
+
+    @Override
+    public LinkCategory getReference(Integer id) {
+        return em.getReference(LinkCategory.class, id);
+    }
 }

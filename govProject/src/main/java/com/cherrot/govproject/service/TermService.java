@@ -4,30 +4,30 @@
  */
 package com.cherrot.govproject.service;
 
-import com.cherrot.govproject.model.Term;
-import com.cherrot.govproject.model.Term.TermType;
+import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.Category.TermType;
 import java.util.List;
 
 /**
  *
  * @author cherrot
  */
-public interface TermService extends BaseService<Term, Integer> {
+public interface TermService extends BaseService<Category, Integer> {
 
-    Term find(Integer id, boolean withPosts, boolean withTerms);
+    Category find(Integer id, boolean withPosts, boolean withTerms);
     /**
-     * Create Term and TermTaxonomy objects. Only the "type" property of the
+     * Create Category and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.
-     * @param term Term(tag, category, etc) object which would be created ()
+     * @param term Category(tag, category, etc) object which would be created ()
      * @param type "type" property of the TermTaxonomy object
      */
-    List<Term> createTagsByName(List<String> tags);
-    List<Term> createCategoriesByName(List<String> categories);
+    List<Category> createTagsByName(List<String> tags);
+    List<Category> createCategoriesByName(List<String> categories);
 
-    List<Term> listByType(TermType type, boolean withPosts, boolean withTerms);
-    List<Term> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms);
-    List<Term> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderbyCount(TermType type, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms);
-    List<Term> listByTypeOrderbyCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
+    List<Category> listByType(TermType type, boolean withPosts, boolean withTerms);
+    List<Category> listByType(TermType type, int pageNum, boolean withPosts, boolean withTerms);
+    List<Category> listByType(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
+    List<Category> listByTypeOrderbyCount(TermType type, boolean withPosts, boolean withTerms);
+    List<Category> listByTypeOrderbyCount(TermType type, int pageNum, boolean withPosts, boolean withTerms);
+    List<Category> listByTypeOrderbyCount(TermType type, int pageNum, int pageSize, boolean withPosts, boolean withTerms);
 }

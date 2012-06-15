@@ -159,4 +159,9 @@ public class OptionJpaDao implements OptionDao {
 //        }
     }
 
+    @Override
+    public Option getReference(Integer id) {
+        return em.getReference(Option.class, id);
+    }
+
 }

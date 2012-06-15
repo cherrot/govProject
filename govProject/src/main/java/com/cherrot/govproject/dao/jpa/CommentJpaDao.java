@@ -372,4 +372,9 @@ public class CommentJpaDao implements CommentDao {
         q.setFirstResult(firstResult);
         return q.getResultList();
     }
+
+    @Override
+    public Comment getReference(Integer id) {
+        return em.getReference(Comment.class, id);
+    }
 }

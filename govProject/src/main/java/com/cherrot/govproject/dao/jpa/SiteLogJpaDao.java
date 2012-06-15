@@ -182,4 +182,9 @@ public class SiteLogJpaDao implements SiteLogDao {
 //        }
     }
 
+    @Override
+    public SiteLog getReference(Integer id) {
+        return em.getReference(SiteLog.class, id);
+    }
+
 }

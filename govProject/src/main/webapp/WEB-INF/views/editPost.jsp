@@ -1,5 +1,5 @@
 <%--
-    Document   : editPost
+    Document   : editPost 需要注入 Post对象post、文章关键字String对象tags、文章分类List<Term>对象categories
     Created on : 2012-6-6, 20:24:18
     Author     : sai
 --%>
@@ -22,16 +22,6 @@
         }
       }
       window.onload=init;
-    </script>--%>
-    <%--<script type="text/javascript">
-      function init() {
-        $("file_upload_form").onsubmit=function() {
-          $("file_upload_form").target = "upload_target";
-          $("upload_target").onload=function() {
-            alert("Uploaded");
-          }
-        }
-      }
     </script>--%>
     <%--<script type="text/javascript">
       function callback(msg) {
@@ -95,6 +85,7 @@
       <form:checkbox id="comment_status" path="commentStatus" value="true" selected="selected" /><br/>
       <form:password path="password" placeholder="文章访问密码，不设请留空" /><br/>
       <form:select path="status" items="${postStatus}" /><br/>
+      <input type="text" value="${tags}" placeholder="请输入文章关键字，以英文逗号隔开"/>
       <form:hidden path="id" value="${post.id}"/>
       <input type="submit" value="发布" />
     </form:form>

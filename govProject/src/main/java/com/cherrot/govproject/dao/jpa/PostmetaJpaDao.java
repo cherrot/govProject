@@ -189,4 +189,9 @@ public class PostmetaJpaDao implements PostmetaDao {
 //        }
     }
 
+    @Override
+    public Postmeta getReference(Integer id) {
+        return em.getReference(Postmeta.class, id);
+    }
+
 }

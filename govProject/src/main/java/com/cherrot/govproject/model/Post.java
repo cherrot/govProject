@@ -5,7 +5,6 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -25,7 +24,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -171,16 +169,21 @@ public class Post implements Serializable {
     @ManyToOne
     private Post postParent;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
-    /**
-     * Retriving the commentList order by its createDate
-     */
-    @OrderBy("commentDate")
+//    /**
+//     * Retriving the commentList order by its createDate
+//     */
+//    @OrderBy("commentDate")
     private List<Comment> commentList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
-    @JoinTable(name="term_relationships",
-            inverseJoinColumns=@JoinColumn(name="term_id"),
+    @JoinTable(name="category_relationships",
+            inverseJoinColumns=@JoinColumn(name="category_id"),
             joinColumns=@JoinColumn(name="post_id"))
-    private List<Term> termList;
+    private List<Category> categoryList;
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinTable(name="tag_relationships",
+            inverseJoinColumns=@JoinColumn(name="tag_id"),
+            joinColumns=@JoinColumn(name="post_id"))
+    private List<Tag> tagList;
 
     public Post() {
         createDate = modifyDate = new Date();
@@ -303,10 +306,20 @@ public class Post implements Serializable {
         this.content = content;
     }
 
+    /**
+     * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
+     * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
+     * @return 文章摘要 或 附件文件的下载URI
+     */
     public String getExcerpt() {
         return excerpt;
     }
 
+    /**
+     * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
+     * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
+     * @param excerpt 文章摘要或附件URI
+     */
     public void setExcerpt(String excerpt) {
         this.excerpt = excerpt;
     }
@@ -348,13 +361,21 @@ public class Post implements Serializable {
     }
 
     @XmlTransient
-    public List<Term> getTermList() {
-//        if (termList == null) termList = new ArrayList<Term>();
-        return termList;
+    public List<Category> getCategoryList() {
+        return categoryList;
     }
 
-    public void setTermList(List<Term> termList) {
-        this.termList = termList;
+    public void setCategoryList(List<Category> categoryList) {
+        this.categoryList = categoryList;
+    }
+
+    @XmlTransient
+    public List<Tag> getTagList() {
+        return tagList;
+    }
+
+    public void setTagList(List<Tag> tagList) {
+        this.tagList = tagList;
     }
 
     @XmlTransient

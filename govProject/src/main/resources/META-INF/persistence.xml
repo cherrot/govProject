@@ -9,14 +9,15 @@
     <class>com.cherrot.govproject.model.Option</class>
     <class>com.cherrot.govproject.model.Post</class>
     <class>com.cherrot.govproject.model.Postmeta</class>
-    <class>com.cherrot.govproject.model.Term</class>
     <class>com.cherrot.govproject.model.User</class>
     <class>com.cherrot.govproject.model.Usermeta</class>
     <class>com.cherrot.govproject.model.SiteLog</class>
     <class>com.cherrot.govproject.model.LinkCategory</class>
+    <class>com.cherrot.govproject.model.Category</class>
+    <class>com.cherrot.govproject.model.Tag</class>
     <properties>
       <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
-<!--      <property name="hibernate.hbm2ddl.auto" value="update"/>-->
+      <!--      <property name="hibernate.hbm2ddl.auto" value="update"/>-->
       <property name="hibernate.show_sql" value="true"/>
       <property name="hibernate.transaction.flush_before_completion" value="true"/>
       <property name="hibernate.cache.provider_class" value="org.hibernate.cache.HashtableCacheProvider"/>

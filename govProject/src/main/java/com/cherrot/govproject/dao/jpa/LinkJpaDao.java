@@ -189,4 +189,9 @@ public class LinkJpaDao implements LinkDao {
 //        }
     }
 
+    @Override
+    public Link getReference(Integer id) {
+        return em.getReference(Link.class, id);
+    }
+
 }
