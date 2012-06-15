@@ -57,7 +57,7 @@ public class SiteLogServiceImpl implements SiteLogService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public SiteLog find(Integer id) {
         return siteLogDao.find(id);
     }
@@ -80,19 +80,19 @@ public class SiteLogServiceImpl implements SiteLogService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<SiteLog> list() {
         return siteLogDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<SiteLog> list(int pageNum) {
         return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<SiteLog> list(int pageNum, int pageSize) {
         return siteLogDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }

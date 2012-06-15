@@ -17,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -38,7 +39,7 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public Link find(Integer id) {
         return linkDao.find(id);
     }
@@ -63,19 +64,19 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Link> list() {
         return linkDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Link> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Link> list(int pageNum, int pageSize) {
         return linkDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -98,7 +99,7 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public LinkCategory findLinkCategory(Integer linkCategoryId, boolean withLinks) {
         LinkCategory linkCategory = linkCategoryDao.find(linkCategoryId);
         if(withLinks){
@@ -108,7 +109,7 @@ public class LinkServiceImpl implements LinkService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<LinkCategory> listLinkCategories(boolean withLinks) {
         List<LinkCategory> linkCategories = linkCategoryDao.findEntities();
         if(withLinks){

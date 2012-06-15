@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -52,13 +53,13 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public Comment find(Integer id) {
         return commentDao.find(id);
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public Comment find(Integer id, boolean withCommentmetas, boolean withChildComments) {
         Comment comment = find(id);
         if (withCommentmetas) comment.getCommentmetaList().isEmpty();
@@ -88,7 +89,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Comment> list(boolean withCommentmetas, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities();
         processDependency(comments, withCommentmetas, withChildComments);
@@ -101,7 +102,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
         processDependency(comments, withCommentmeta, withChildComments);
@@ -135,19 +136,19 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Comment> list() {
         return commentDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum, int pageSize) {
         return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }

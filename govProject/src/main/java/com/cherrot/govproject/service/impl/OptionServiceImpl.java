@@ -36,7 +36,7 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public Option find(Integer id) {
         return optionDao.find(id);
     }
@@ -61,19 +61,19 @@ public class OptionServiceImpl implements OptionService{
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Option> list() {
         return optionDao.findEntities();
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Option> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-    @Transactional(readOnly=true)
+//    @Transactional(readOnly=true)
     public List<Option> list(int pageNum, int pageSize) {
         return optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
