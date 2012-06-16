@@ -10,9 +10,10 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
-import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
+import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.io.File;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PostServiceImpl implements PostService {
     @Inject
     private PostDao postDao;
     @Inject
-    private CategoryService categoryService;
+    private TagService tagService;
     @Inject
     private SiteLogService siteLogService;
 
@@ -45,11 +46,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    public void create(Post post, List<Category> categories, List<String> tags, List<Postmeta> postmetas) {
+    public void create(Post post, List<Category> categories, List<String> tagStrings, List<Postmeta> postmetas) {
         post.setCategoryList(categories);
         post.setPostmetaList(postmetas);
-        List<Category> tagTerms = categoryService.createTagsByName(tags);
-        addTermList(post, tagTerms);
+        List<Tag> tags = tagService.createTagsByName(tagStrings);
+        post.setTagList(tags);
         postDao.create(post);
 //        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
     }
@@ -126,27 +127,83 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional
-    //FIXME 应当让此方法处理term和post的关系！ 下同！
-    public void addTerm(Post post, Category term) {
-        post.getCategoryList().add(term);
+    public void addCategory(Post post, Category term) {
+//        term.getPostList().add(post);
+        if ( !post.getCategoryList().contains(term)) {
+            post.getCategoryList().add(term);
+            term.setCount(term.getCount()+1);
+        }
     }
 
     @Override
     @Transactional
-    public void addTermList(Post post, List<Category> terms) {
+    public void addCategoryList(Post post, List<Category> terms) {
+        for (Category category : terms) {
+            if ( !post.getCategoryList().contains(category)) {
+                category.setCount(category.getCount()+1);
+            }
+        }
         post.getCategoryList().addAll(terms);
     }
 
     @Override
     @Transactional
-    public void removeTerm(Post post, Category term) {
-        post.getCategoryList().remove(term);
+    public void removeCategory(Post post, Category term) {
+        if ( post.getCategoryList().contains(term)) {
+            term.setCount(term.getCount()-1);
+            post.getCategoryList().remove(term);
+        }
     }
 
     @Override
     @Transactional
-    public void removeTermList(Post post, List<Category> terms) {
+    public void removeCategoryList(Post post, List<Category> terms) {
+        for (Category category : terms) {
+            if ( post.getCategoryList().contains(category)) {
+                category.setCount(category.getCount()-1);
+            }
+        }
         post.getCategoryList().removeAll(terms);
+    }
+
+    @Override
+    @Transactional
+    public void addTag(Post post, Tag tag) {
+        if (!post.getTagList().contains(tag)) {
+            post.getTagList().add(tag);
+            tag.setCount(tag.getCount()+1);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void addTagList(Post post, List<Tag> tags) {
+        for (Tag tag : tags) {
+            if ( !post.getTagList().contains(tag) ) {
+                tag.setCount(tag.getCount()+1);
+            }
+        }
+        post.getTagList().addAll(tags);
+    }
+
+    @Override
+    @Transactional
+    public void removeTag(Post post, Tag tag) {
+        if ( post.getTagList().contains(tag)) {
+            tag.setCount(tag.getCount()-1);
+            post.getTagList().remove(tag);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void removeTagList(Post post, List<Tag> tags) {
+        for (Tag tag : tags) {
+            if ( post.getTagList().contains(tag)) {
+                tag.setCount(tag.getCount()-1);
+            }
+        }
+        post.getTagList().removeAll(tags);
     }
 
     @Override

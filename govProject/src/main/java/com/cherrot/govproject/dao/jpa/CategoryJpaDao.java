@@ -272,4 +272,9 @@ public class CategoryJpaDao implements CategoryDao {
     public Category getReference(Integer id) {
         return em.getReference(Category.class, id);
     }
+
+    @Override
+    public Category findByName(String name) {
+        return em.createNamedQuery("Category.findByName", Category.class).setParameter("name", name).getSingleResult();
+    }
 }

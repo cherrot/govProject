@@ -4,11 +4,12 @@
  */
 package com.cherrot.govproject.service.impl;
 
-import com.cherrot.govproject.dao.CategoryDao;
+import com.cherrot.govproject.dao.TagDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Category;
-import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,104 +26,103 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class CategoryServiceImpl implements CategoryService {
+public class TagServiceImpl implements TagService {
 
     @Inject
-    private CategoryDao categoryDao;
+    private TagDao tagDao;
 
     @Override
     @Transactional
-    public void create(Category category) {
-        categoryDao.create(category);
+    public void create(Tag tag) {
+        tagDao.create(tag);
     }
 
     @Override
     @Transactional
-    public List<Category> createCategoriesByName(List<String> categoryStrings) {
-        Category category = null;
-        List<Category> categories = new ArrayList<Category>();
-        for (String categoryString : categoryStrings) {
+    public List<Tag> createTagsByName(List<String> tagStrings) {
+        Tag tag = null;
+        List<Tag> tags = new ArrayList<Tag>();
+        for (String tagString : tagStrings) {
             try {
-               category = categoryDao.findByName(categoryString);
+               tag = tagDao.findByName(tagString);
             }
             catch (NoResultException  e) {
-                category = new Category();
-                category.setName(categoryString);
-                category.setSlug(categoryString);
-                create(category);
+                tag = new Tag();
+                tag.setName(tagString);
+                tag.setSlug(tagString);
+                create(tag);
             }
-            categories.add(category);
+            tags.add(tag);
         }
-        return categories;
+        return tags;
     }
 
     @Override
     @Transactional
-    public void edit(Category model) {
+    public void edit(Tag model) {
         try {
-            categoryDao.edit(model);
+            tagDao.edit(model);
         }
         catch (IllegalOrphanException ex) {
-            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (NonexistentEntityException ex) {
-            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (Exception ex) {
-            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
 //    @Transactional(readOnly=true)
-    public Category find(Integer id) {
-        return categoryDao.find(id);
+    public Tag find(Integer id) {
+        return tagDao.find(id);
     }
 
     @Override
     @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
-    public Category find(Integer id, boolean withPosts, boolean withTerms) {
-        Category term = find(id);
-        if (withPosts) term.getPostList().isEmpty();
-        if (withTerms) term.getCategoryList().isEmpty();
-        return term;
+    public Tag find(Integer id, boolean withPosts) {
+        Tag tag = find(id);
+        if (withPosts) tag.getPostList().isEmpty();
+        return tag;
     }
 
     @Override
     @Transactional
     public void destroy(Integer id) {
         try {
-            categoryDao.destroy(id);
+            tagDao.destroy(id);
         }
         catch (IllegalOrphanException ex) {
-            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
         catch (NonexistentEntityException ex) {
-            Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     public int getCount() {
-        return categoryDao.getCount();
+        return tagDao.getCount();
     }
 
     @Override
 //    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
-    public List<Category> list() {
-        return categoryDao.findEntities();
+    public List<Tag> list() {
+        return tagDao.findEntities();
     }
 
     @Override
 //    @Transactional(readOnly=true)
-    public List<Category> list(int pageNum) {
+    public List<Tag> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
 //    @Transactional(readOnly=true)
-    public List<Category> list(int pageNum, int pageSize) {
-        return categoryDao.findEntities(pageSize, (pageNum-1)*pageSize);
+    public List<Tag> list(int pageNum, int pageSize) {
+        return tagDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     private void processDependency(List<Category> terms, boolean withPosts, boolean withTerms) {
@@ -135,7 +135,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void save(Category model) {
+    public void save(Tag model) {
         if (model.getId() == null) {
             create(model);
         } else {

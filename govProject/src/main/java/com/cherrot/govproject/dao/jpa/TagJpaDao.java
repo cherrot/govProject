@@ -34,7 +34,7 @@ public class TagJpaDao implements TagDao {
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
-    
+
     @PersistenceContext
     private EntityManager em;
 
@@ -200,6 +200,11 @@ public class TagJpaDao implements TagDao {
     @Override
     public Tag getReference(Integer id) {
         return em.getReference(Tag.class, id);
+    }
+
+    @Override
+    public Tag findByName(String name) {
+        return em.createNamedQuery("Tag.findByName", Tag.class).setParameter("name", name).getSingleResult();
     }
 
 }

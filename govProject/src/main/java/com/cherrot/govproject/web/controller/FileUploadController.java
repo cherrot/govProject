@@ -50,7 +50,7 @@ public class FileUploadController {
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().print("{success: true}");
 
-                processAttachment(localFile);
+                processAttachment(postId, localFile, file.getContentType());
             } catch (Exception ex) {
                 Logger.getLogger(FileUploadController.class.getSimpleName()).log(Level.SEVERE, ex.getMessage(), ex);
                 response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
@@ -62,8 +62,10 @@ public class FileUploadController {
         }
     }
 
-    private void processAttachment(File localFile) {
-        postService.addAttachment();
-        videoConvertService.videoConvert(localFile.getAbsolutePath());
+    private void processAttachment(Integer postId, File localFile, String mime) {
+        postService.addAttachment(postId, localFile, mime);
+        if (mime.toLowerCase().startsWith("video")) {
+            videoConvertService.videoConvert(localFile.getAbsolutePath());
+        }
     }
 }

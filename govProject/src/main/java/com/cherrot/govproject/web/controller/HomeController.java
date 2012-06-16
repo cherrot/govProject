@@ -11,6 +11,7 @@ import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
@@ -18,6 +19,7 @@ import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class HomeController {
 
     @Inject
-    private CategoryService termService;
+    private CategoryService categoryService;
     @Inject
     private LinkService linkService;
     @Inject
@@ -50,7 +52,7 @@ public class HomeController {
         BaseController.setSessionUser(request.getSession(), userService.find(1));
 
         ModelAndView mav = new ModelAndView("home");
-        List<Category> categories = termService.listByTypeOrderbyCount(Category.TermType.CATEGORY, false, false);
+        List<Category> categories = categoryService.list();
         mav.addObject("categories", categories);
         for (Category category : categories) {
             mav.addObject(category.getName(), postService.listNewestPostsByTerm(category.getId(), 1, 5));
@@ -67,6 +69,7 @@ public class HomeController {
     @Inject private UserService userService;
     @Inject private SiteLogService siteLogService;
     @Inject private OptionService optionService;
+    @Inject private TagService tagService;
     private void initData() {
         try {
             userService.findByLoginName("cherrot+gov@cherrot.com", false, false, false, false);
@@ -75,17 +78,19 @@ public class HomeController {
             User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
             userService.create(user);
             //创建测试分类和标签
-            Category category = new Category(1, "我是文章分类", Category.TermType.CATEGORY, "test");
-            Category tag = new Category(1, "我是标签", Category.TermType.POST_TAG, "testtag");
-            termService.create(category);
-            termService.create(tag);
+            Category category = new Category(1, "我是文章分类", "test");
+            Tag tag = new Tag(1, "我是标签", "testtag");
+            categoryService.create(category);
+            tagService.create(tag);
             //创建测试文章
             Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
             post.setUser(user);
-            List<Category> termList = new ArrayList<Category>(2);
-            termList.add(category);
-            termList.add(tag);
-            post.setTermList(termList);
+            List<Category> categoryList = new ArrayList<Category>();
+            categoryList.add(category);
+            post.setCategoryList(categoryList);
+            List<Tag> tagList = new ArrayList<Tag>();
+            tagList.add(tag);
+            post.setTagList(tagList);
             postService.create(post);
             //创建测试评论
             Comment comment = new Comment(new Date(), true, "Cherrot", "admin@cherrot.com", "http://www.cherrot.com", "127.0.0.1", "我是文章评论");

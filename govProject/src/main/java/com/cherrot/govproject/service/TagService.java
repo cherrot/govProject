@@ -4,21 +4,21 @@
  */
 package com.cherrot.govproject.service;
 
-import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.Tag;
 import java.util.List;
 
 /**
  *
  * @author cherrot
  */
-public interface TagService extends BaseService<Category, Integer> {
+public interface TagService extends BaseService<Tag, Integer> {
 
-    Category find(Integer id, boolean withPosts);
+    Tag find(Integer id, boolean withPosts);
     /**
      * Create Category and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.
      * @param term Category(tag, category, etc) object which would be created ()
      * @param type "type" property of the TermTaxonomy object
      */
-    List<Category> createTagsByName(List<String> tags);
+    List<Tag> createTagsByName(List<String> tags);
 }

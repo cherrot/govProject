@@ -198,7 +198,7 @@ public class PostController {
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
             post.setUser(BaseController.getSessionUser(request.getSession()));
-            System.err.println(post.getTitle());
+//            System.err.println(post.getTitle());
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }
