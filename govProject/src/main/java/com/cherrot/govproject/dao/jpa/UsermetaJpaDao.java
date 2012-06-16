@@ -48,7 +48,7 @@ public class UsermetaJpaDao implements UsermetaDao {
 //            em.getTransaction().begin();
             User user = usermeta.getUser();
             if (user != null) {
-                user = em.getReference(user.getClass(), user.getId());
+                user = em.getReference(User.class, user.getId());
                 usermeta.setUser(user);
             }
             em.persist(usermeta);
@@ -76,7 +76,7 @@ public class UsermetaJpaDao implements UsermetaDao {
             User userOld = persistentUsermeta.getUser();
             User userNew = usermeta.getUser();
             if (userNew != null) {
-                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                userNew = em.getReference(User.class, userNew.getId());
                 usermeta.setUser(userNew);
             }
             usermeta = em.merge(usermeta);

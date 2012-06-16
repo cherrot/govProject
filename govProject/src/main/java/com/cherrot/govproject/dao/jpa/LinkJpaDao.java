@@ -48,7 +48,7 @@ public class LinkJpaDao implements LinkDao {
 //            em.getTransaction().begin();
             LinkCategory linkCategory = link.getLinkCategory();
             if (linkCategory != null) {
-                linkCategory = em.getReference(linkCategory.getClass(), linkCategory.getId());
+                linkCategory = em.getReference(LinkCategory.class, linkCategory.getId());
                 link.setLinkCategory(linkCategory);
             }
             em.persist(link);
@@ -76,7 +76,7 @@ public class LinkJpaDao implements LinkDao {
             LinkCategory linkCategoryOld = persistentLink.getLinkCategory();
             LinkCategory linkCategoryNew = link.getLinkCategory();
             if (linkCategoryNew != null) {
-                linkCategoryNew = em.getReference(linkCategoryNew.getClass(), linkCategoryNew.getId());
+                linkCategoryNew = em.getReference(LinkCategory.class, linkCategoryNew.getId());
                 link.setLinkCategory(linkCategoryNew);
             }
             link = em.merge(link);

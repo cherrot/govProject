@@ -58,28 +58,28 @@ public class CommentJpaDao implements CommentDao {
 //            em.getTransaction().begin();
         User user = comment.getUser();
         if (user != null) {
-            user = em.getReference(user.getClass(), user.getId());
+            user = em.getReference(User.class, user.getId());
             comment.setUser(user);
         }
             Post post = comment.getPost();
             if (post != null) {
-                post = em.getReference(post.getClass(), post.getId());
+                post = em.getReference(Post.class, post.getId());
                 comment.setPost(post);
             }
             Comment commentParent = comment.getCommentParent();
             if (commentParent != null) {
-                commentParent = em.getReference(commentParent.getClass(), commentParent.getId());
+                commentParent = em.getReference(Comment.class, commentParent.getId());
                 comment.setCommentParent(commentParent);
             }
             List<Commentmeta> attachedCommentmetaList = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListCommentmetaToAttach : comment.getCommentmetaList()) {
-                commentmetaListCommentmetaToAttach = em.getReference(commentmetaListCommentmetaToAttach.getClass(), commentmetaListCommentmetaToAttach.getId());
+                commentmetaListCommentmetaToAttach = em.getReference(Commentmeta.class, commentmetaListCommentmetaToAttach.getId());
                 attachedCommentmetaList.add(commentmetaListCommentmetaToAttach);
             }
             comment.setCommentmetaList(attachedCommentmetaList);
             List<Comment> attachedCommentList = new ArrayList<Comment>();
             for (Comment commentListCommentToAttach : comment.getCommentList()) {
-                commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
+                commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
                 attachedCommentList.add(commentListCommentToAttach);
             }
             comment.setCommentList(attachedCommentList);
@@ -142,9 +142,9 @@ public class CommentJpaDao implements CommentDao {
             List<Comment> commentListOld = persistentComment.getCommentList();
             List<Comment> commentListNew = comment.getCommentList();
 
-            //FIXME 临时方案
-            if (commentmetaListNew == null) commentmetaListNew = commentmetaListOld;
-            if (commentListNew == null) commentListNew = commentListOld;
+            //FIX 临时方案
+//            if (commentmetaListNew == null) commentmetaListNew = commentmetaListOld;
+//            if (commentListNew == null) commentListNew = commentListOld;
 
             List<String> illegalOrphanMessages = null;
             for (Commentmeta commentmetaListOldCommentmeta : commentmetaListOld) {
@@ -159,27 +159,27 @@ public class CommentJpaDao implements CommentDao {
                 throw new IllegalOrphanException(illegalOrphanMessages);
             }
             if (userNew != null) {
-                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                userNew = em.getReference(User.class, userNew.getId());
                 comment.setUser(userNew);
             }
             if (postNew != null) {
-                postNew = em.getReference(postNew.getClass(), postNew.getId());
+                postNew = em.getReference(Post.class, postNew.getId());
                 comment.setPost(postNew);
             }
             if (commentParentNew != null) {
-                commentParentNew = em.getReference(commentParentNew.getClass(), commentParentNew.getId());
+                commentParentNew = em.getReference(Comment.class, commentParentNew.getId());
                 comment.setCommentParent(commentParentNew);
             }
             List<Commentmeta> attachedCommentmetaListNew = new ArrayList<Commentmeta>();
             for (Commentmeta commentmetaListNewCommentmetaToAttach : commentmetaListNew) {
-                commentmetaListNewCommentmetaToAttach = em.getReference(commentmetaListNewCommentmetaToAttach.getClass(), commentmetaListNewCommentmetaToAttach.getId());
+                commentmetaListNewCommentmetaToAttach = em.getReference(Commentmeta.class, commentmetaListNewCommentmetaToAttach.getId());
                 attachedCommentmetaListNew.add(commentmetaListNewCommentmetaToAttach);
             }
             commentmetaListNew = attachedCommentmetaListNew;
             comment.setCommentmetaList(commentmetaListNew);
             List<Comment> attachedCommentListNew = new ArrayList<Comment>();
             for (Comment commentListNewCommentToAttach : commentListNew) {
-                commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
+                commentListNewCommentToAttach = em.getReference(Comment.class, commentListNewCommentToAttach.getId());
                 attachedCommentListNew.add(commentListNewCommentToAttach);
             }
             commentListNew = attachedCommentListNew;

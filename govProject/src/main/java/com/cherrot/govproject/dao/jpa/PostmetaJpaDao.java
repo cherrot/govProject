@@ -48,7 +48,7 @@ public class PostmetaJpaDao implements PostmetaDao {
 //            em.getTransaction().begin();
             Post post = postmeta.getPost();
             if (post != null) {
-                post = em.getReference(post.getClass(), post.getId());
+                post = em.getReference(Post.class, post.getId());
                 postmeta.setPost(post);
             }
             em.persist(postmeta);
@@ -76,7 +76,7 @@ public class PostmetaJpaDao implements PostmetaDao {
             Post postOld = persistentPostmeta.getPost();
             Post postNew = postmeta.getPost();
             if (postNew != null) {
-                postNew = em.getReference(postNew.getClass(), postNew.getId());
+                postNew = em.getReference(Post.class, postNew.getId());
                 postmeta.setPost(postNew);
             }
             postmeta = em.merge(postmeta);

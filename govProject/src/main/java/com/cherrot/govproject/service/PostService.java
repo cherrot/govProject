@@ -41,16 +41,16 @@ public interface PostService extends BaseService<Post, Integer> {
     void removeTagList(Post post, List<Tag> tags);
     /**
      * 根据文章分类取出对应文章。
-     * TODO： 注意只取回文章，不取回附件（即只取出type为POST的记录），目前的实现忘记筛选类型了。
      * @param term
      * @param pageNum
      * @param pageSize
      * @return
      */
-    List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize);
+    List<Post> listNewestPostsByCategory(Integer termId, int pageNum, int pageSize);
     List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTag(Integer tagId, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTagName(String tagName, int pageNum, int pageSize);
     /**
-     * 根据用户的id取出用户发表的文章。 注意只取回文章，不取回附件（即只取出type为POST的记录）
      * @param userId 文章所属用户的id
      * @param pageNum
      * @return

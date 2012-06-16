@@ -67,18 +67,18 @@ public class PostJpaDao implements PostDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-        
+
         /**
          * 设置多对一关系映射，确保引用在数据库中存在
          */
             User user = post.getUser();
             if (user != null) {
-                user = em.getReference(user.getClass(), user.getId());
+                user = em.getReference(User.class, user.getId());
                 post.setUser(user);
             }
             Post postParent = post.getPostParent();
             if (postParent != null) {
-                postParent = em.getReference(postParent.getClass(), postParent.getId());
+                postParent = em.getReference(Post.class, postParent.getId());
                 post.setPostParent(postParent);
             }
         /**
@@ -86,31 +86,31 @@ public class PostJpaDao implements PostDao {
          */
             List<Postmeta> attachedPostmetaList = new ArrayList<Postmeta>();
             for (Postmeta postmetaListPostmetaToAttach : post.getPostmetaList()) {
-                postmetaListPostmetaToAttach = em.getReference(postmetaListPostmetaToAttach.getClass(), postmetaListPostmetaToAttach.getId());
+                postmetaListPostmetaToAttach = em.getReference(Postmeta.class, postmetaListPostmetaToAttach.getId());
                 attachedPostmetaList.add(postmetaListPostmetaToAttach);
             }
             post.setPostmetaList(attachedPostmetaList);
             List<Post> attachedPostList = new ArrayList<Post>();
             for (Post postListPostToAttach : post.getPostList()) {
-                postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+                postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
                 attachedPostList.add(postListPostToAttach);
             }
             post.setPostList(attachedPostList);
             List<Category> attachedCategoryList = new ArrayList<Category>();
             for (Category categoryListCategoryToAttach : post.getCategoryList()) {
-                categoryListCategoryToAttach = em.getReference(categoryListCategoryToAttach.getClass(), categoryListCategoryToAttach.getId());
+                categoryListCategoryToAttach = em.getReference(Category.class, categoryListCategoryToAttach.getId());
                 attachedCategoryList.add(categoryListCategoryToAttach);
             }
             post.setCategoryList(attachedCategoryList);
             List<Tag> attachedTagList = new ArrayList<Tag>();
             for (Tag tagListTagToAttach : post.getTagList()) {
-                tagListTagToAttach = em.getReference(tagListTagToAttach.getClass(), tagListTagToAttach.getId());
+                tagListTagToAttach = em.getReference(Tag.class, tagListTagToAttach.getId());
                 attachedTagList.add(tagListTagToAttach);
             }
             post.setTagList(attachedTagList);
             List<Comment> attachedCommentList = new ArrayList<Comment>();
             for (Comment commentListCommentToAttach : post.getCommentList()) {
-                commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
+                commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
                 attachedCommentList.add(commentListCommentToAttach);
             }
             post.setCommentList(attachedCommentList);
@@ -118,7 +118,7 @@ public class PostJpaDao implements PostDao {
          * 关系确保无误后，持久化该实体
          */
             em.persist(post);
-            
+
         /**
          * 设置多对一关系映射的被维护端（一方）
          */
@@ -183,7 +183,7 @@ public class PostJpaDao implements PostDao {
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            
+
             /**
              * 取出新旧实体的 一对多关系 和 多对一关系所关联的实体
              */
@@ -229,11 +229,11 @@ public class PostJpaDao implements PostDao {
              * 设置多对一关系映射，确保映射实体类存在
              */
             if (userNew != null) {
-                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                userNew = em.getReference(User.class, userNew.getId());
                 post.setUser(userNew);
             }
             if (postParentNew != null) {
-                postParentNew = em.getReference(postParentNew.getClass(), postParentNew.getId());
+                postParentNew = em.getReference(Post.class, postParentNew.getId());
                 post.setPostParent(postParentNew);
             }
             /**
@@ -241,35 +241,35 @@ public class PostJpaDao implements PostDao {
              */
             List<Postmeta> attachedPostmetaListNew = new ArrayList<Postmeta>();
             for (Postmeta postmetaListNewPostmetaToAttach : postmetaListNew) {
-                postmetaListNewPostmetaToAttach = em.getReference(postmetaListNewPostmetaToAttach.getClass(), postmetaListNewPostmetaToAttach.getId());
+                postmetaListNewPostmetaToAttach = em.getReference(Postmeta.class, postmetaListNewPostmetaToAttach.getId());
                 attachedPostmetaListNew.add(postmetaListNewPostmetaToAttach);
             }
             postmetaListNew = attachedPostmetaListNew;
             post.setPostmetaList(postmetaListNew);
             List<Post> attachedPostListNew = new ArrayList<Post>();
             for (Post postListNewPostToAttach : postListNew) {
-                postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
+                postListNewPostToAttach = em.getReference(Post.class, postListNewPostToAttach.getId());
                 attachedPostListNew.add(postListNewPostToAttach);
             }
             postListNew = attachedPostListNew;
             post.setPostList(postListNew);
             List<Category> attachedCategoryListNew = new ArrayList<Category>();
             for (Category categoryListNewCategoryToAttach : categoryListNew) {
-                categoryListNewCategoryToAttach = em.getReference(categoryListNewCategoryToAttach.getClass(), categoryListNewCategoryToAttach.getId());
+                categoryListNewCategoryToAttach = em.getReference(Category.class, categoryListNewCategoryToAttach.getId());
                 attachedCategoryListNew.add(categoryListNewCategoryToAttach);
             }
             categoryListNew = attachedCategoryListNew;
             post.setCategoryList(categoryListNew);
             List<Tag> attachedTagListNew = new ArrayList<Tag>();
             for (Tag tagListNewTagToAttach : tagListNew) {
-                tagListNewTagToAttach = em.getReference(tagListNewTagToAttach.getClass(), tagListNewTagToAttach.getId());
+                tagListNewTagToAttach = em.getReference(Tag.class, tagListNewTagToAttach.getId());
                 attachedTagListNew.add(tagListNewTagToAttach);
             }
             tagListNew = attachedTagListNew;
             post.setTagList(tagListNew);
             List<Comment> attachedCommentListNew = new ArrayList<Comment>();
             for (Comment commentListNewCommentToAttach : commentListNew) {
-                commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
+                commentListNewCommentToAttach = em.getReference(Comment.class, commentListNewCommentToAttach.getId());
                 attachedCommentListNew.add(commentListNewCommentToAttach);
             }
             commentListNew = attachedCommentListNew;
@@ -278,7 +278,7 @@ public class PostJpaDao implements PostDao {
              * 检查无误，持久化实体
              */
             post = em.merge(post);
-            
+
             /**
              * 设置多对一关系映射的被维护端（一方）
              */
@@ -534,5 +534,5 @@ public class PostJpaDao implements PostDao {
     public Post getReference(Integer id) {
         return em.getReference(Post.class, id);
     }
-    
+
 }

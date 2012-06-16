@@ -38,7 +38,7 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
         }
         List<Link> attachedLinkList = new ArrayList<Link>();
         for (Link linkListLinkToAttach : linkCategory.getLinkList()) {
-            linkListLinkToAttach = em.getReference(linkListLinkToAttach.getClass(), linkListLinkToAttach.getId());
+            linkListLinkToAttach = em.getReference(Link.class, linkListLinkToAttach.getId());
             attachedLinkList.add(linkListLinkToAttach);
         }
         linkCategory.setLinkList(attachedLinkList);
@@ -79,7 +79,7 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
             }
             List<Link> attachedLinkListNew = new ArrayList<Link>();
             for (Link linkListNewLinkToAttach : linkListNew) {
-                linkListNewLinkToAttach = em.getReference(linkListNewLinkToAttach.getClass(), linkListNewLinkToAttach.getId());
+                linkListNewLinkToAttach = em.getReference(Link.class, linkListNewLinkToAttach.getId());
                 attachedLinkListNew.add(linkListNewLinkToAttach);
             }
             linkListNew = attachedLinkListNew;

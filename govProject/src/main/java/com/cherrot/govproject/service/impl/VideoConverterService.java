@@ -22,10 +22,9 @@ public class VideoConverterService{
             @Override
             public void run() {
                 try {
-                    //TODO ffmpeg in linux, ffmpeg.exe in Windows
                     String cmd = "ffmpeg -i " +  absoluteFilename + " -s 459x370 " + absoluteFilename + ".flv";
                     Process exec = Runtime.getRuntime().exec(cmd);
-                    Logger.getLogger(getClass().getSimpleName()).log(Level.INFO, "{0}.flv 创建成功", absoluteFilename);
+                    Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "{0}.flv 创建成功", absoluteFilename);
                     try {
                         int waitFor = exec.waitFor();
                     } catch (InterruptedException ex) {

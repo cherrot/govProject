@@ -47,7 +47,16 @@ public class SiteLogJpaDao implements SiteLogDao {
 //            em.getTransaction().begin();
             User user = siteLog.getUser();
             if (user != null) {
-                user = em.getReference(user.getClass(), user.getId());
+//                user = em.getReference(user.getClass(), user.getId());
+                //TODO 怀疑是延时加载导致user.getClass() 不等于 User.class。
+                //显示结果：
+                //getClass:::class com.cherrot.govproject.model.User_$$_javassist_4
+                //getClass:::class com.cherrot.govproject.model.User
+//                if (!user.getClass().equals(User.class)){
+//                    System.err.println("getClass:::"+user.getClass());
+//                    System.err.println("getClass:::"+User.class);
+//                }
+                user = em.getReference(User.class, user.getId());
                 siteLog.setUser(user);
             }
             em.persist(siteLog);
@@ -74,7 +83,7 @@ public class SiteLogJpaDao implements SiteLogDao {
             User userOld = persistentSiteLog.getUser();
             User userNew = siteLog.getUser();
             if (userNew != null) {
-                userNew = em.getReference(userNew.getClass(), userNew.getId());
+                userNew = em.getReference(User.class, userNew.getId());
                 siteLog.setUser(userNew);
             }
             siteLog = em.merge(siteLog);

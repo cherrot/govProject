@@ -48,7 +48,7 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //            em.getTransaction().begin();
             Comment comment = commentmeta.getComment();
             if (comment != null) {
-                comment = em.getReference(comment.getClass(), comment.getId());
+                comment = em.getReference(Comment.class, comment.getId());
                 commentmeta.setComment(comment);
             }
             em.persist(commentmeta);
@@ -76,7 +76,7 @@ public class CommentmetaJpaDao implements CommentmetaDao {
             Comment commentOld = persistentCommentmeta.getComment();
             Comment commentNew = commentmeta.getComment();
             if (commentNew != null) {
-                commentNew = em.getReference(commentNew.getClass(), commentNew.getId());
+                commentNew = em.getReference(Comment.class, commentNew.getId());
                 commentmeta.setComment(commentNew);
             }
             commentmeta = em.merge(commentmeta);

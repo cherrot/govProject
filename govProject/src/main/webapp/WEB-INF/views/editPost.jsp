@@ -31,6 +31,7 @@
     </script>--%>
     <script src="<c:url value="/resources/js/fileuploader.js"/>" type="text/javascript"></script>
     <script>
+      <%--TODO: 修改回调函数，上传成功后不光返回上传状态，还要在文章中嵌入代码--%>
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById('file-uploader'),
@@ -40,8 +41,6 @@
                 debug: false
             });
         }
-        // in your app create uploader as soon as the DOM is ready
-        // don't wait for the window to load
         window.onload = createUploader;
     </script>
   </head>
@@ -54,14 +53,6 @@
     </div>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
-    <%--<p id="upload_result"></p>
-    <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data" target="upload_target">
-      <input type="file" name="qqfile" />
-      <input type="hidden" name="postId" value="${post.id}"/>
-      <input type="submit" value="上传"/>
-      <iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>
-    </form>--%>
-
 
     <div id="file-uploader">
       <noscript>

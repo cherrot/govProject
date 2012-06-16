@@ -25,7 +25,7 @@
       由&nbsp;<a href="<c:url value="/user/${post.user.id}" />">${post.user.displayName}</a>&nbsp;发表&nbsp;
       ${post.createDate}&nbsp;
       所属类别：
-      <c:forEach items="${post.termList}" var="category">
+      <c:forEach items="${post.categoryList}" var="category">
         <a href="<c:url value="/term/${category.slug}"/>" title="点击察看 ${category.name} 分类的所有文章">${category.name}</a>&nbsp;
       </c:forEach>
         <a href="#comments">${post.commentCount} 条评论</a>

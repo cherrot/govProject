@@ -65,25 +65,25 @@ public class UserJpaDao implements UserDao {
 //            em.getTransaction().begin();
             List<SiteLog> attachedSiteLogList = new ArrayList<SiteLog>();
             for (SiteLog siteLogListSiteLogToAttach : user.getSiteLogList()) {
-                siteLogListSiteLogToAttach = em.getReference(siteLogListSiteLogToAttach.getClass(), siteLogListSiteLogToAttach.getId());
+                siteLogListSiteLogToAttach = em.getReference(SiteLog.class, siteLogListSiteLogToAttach.getId());
                 attachedSiteLogList.add(siteLogListSiteLogToAttach);
             }
             user.setSiteLogList(attachedSiteLogList);
             List<Post> attachedPostList = new ArrayList<Post>();
             for (Post postListPostToAttach : user.getPostList()) {
-                postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+                postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
                 attachedPostList.add(postListPostToAttach);
             }
             user.setPostList(attachedPostList);
             List<Usermeta> attachedUsermetaList = new ArrayList<Usermeta>();
             for (Usermeta usermetaListUsermetaToAttach : user.getUsermetaList()) {
-                usermetaListUsermetaToAttach = em.getReference(usermetaListUsermetaToAttach.getClass(), usermetaListUsermetaToAttach.getId());
+                usermetaListUsermetaToAttach = em.getReference(Usermeta.class, usermetaListUsermetaToAttach.getId());
                 attachedUsermetaList.add(usermetaListUsermetaToAttach);
             }
             user.setUsermetaList(attachedUsermetaList);
             List<Comment> attachedCommentList = new ArrayList<Comment>();
             for (Comment commentListCommentToAttach : user.getCommentList()) {
-                commentListCommentToAttach = em.getReference(commentListCommentToAttach.getClass(), commentListCommentToAttach.getId());
+                commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
                 attachedCommentList.add(commentListCommentToAttach);
             }
             em.persist(user);
@@ -149,11 +149,11 @@ public class UserJpaDao implements UserDao {
             List<Comment> commentListOld = persistentUser.getCommentList();
             List<Comment> commentListNew = user.getCommentList();
 
-            //FIXME 临时方案
-            if (siteLogListNew == null) siteLogListNew = siteLogListOld;
-            if (postListNew == null) postListNew = postListOld;
-            if (usermetaListNew == null) usermetaListNew = usermetaListOld;
-            if (commentListNew == null) commentListNew = commentListOld;
+            //FIX 临时方案
+//            if (siteLogListNew == null) siteLogListNew = siteLogListOld;
+//            if (postListNew == null) postListNew = postListOld;
+//            if (usermetaListNew == null) usermetaListNew = usermetaListOld;
+//            if (commentListNew == null) commentListNew = commentListOld;
 
             List<String> illegalOrphanMessages = null;
             for (SiteLog siteLogListOldSiteLog : siteLogListOld) {
@@ -193,28 +193,28 @@ public class UserJpaDao implements UserDao {
             }
             List<SiteLog> attachedSiteLogListNew = new ArrayList<SiteLog>();
             for (SiteLog siteLogListNewSiteLogToAttach : siteLogListNew) {
-                siteLogListNewSiteLogToAttach = em.getReference(siteLogListNewSiteLogToAttach.getClass(), siteLogListNewSiteLogToAttach.getId());
+                siteLogListNewSiteLogToAttach = em.getReference(SiteLog.class, siteLogListNewSiteLogToAttach.getId());
                 attachedSiteLogListNew.add(siteLogListNewSiteLogToAttach);
             }
             siteLogListNew = attachedSiteLogListNew;
             user.setSiteLogList(siteLogListNew);
             List<Post> attachedPostListNew = new ArrayList<Post>();
             for (Post postListNewPostToAttach : postListNew) {
-                postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
+                postListNewPostToAttach = em.getReference(Post.class, postListNewPostToAttach.getId());
                 attachedPostListNew.add(postListNewPostToAttach);
             }
             postListNew = attachedPostListNew;
             user.setPostList(postListNew);
             List<Usermeta> attachedUsermetaListNew = new ArrayList<Usermeta>();
             for (Usermeta usermetaListNewUsermetaToAttach : usermetaListNew) {
-                usermetaListNewUsermetaToAttach = em.getReference(usermetaListNewUsermetaToAttach.getClass(), usermetaListNewUsermetaToAttach.getId());
+                usermetaListNewUsermetaToAttach = em.getReference(Usermeta.class, usermetaListNewUsermetaToAttach.getId());
                 attachedUsermetaListNew.add(usermetaListNewUsermetaToAttach);
             }
             usermetaListNew = attachedUsermetaListNew;
             user.setUsermetaList(usermetaListNew);
             List<Comment> attachedCommentListNew = new ArrayList<Comment>();
             for (Comment commentListNewCommentToAttach : commentListNew) {
-                commentListNewCommentToAttach = em.getReference(commentListNewCommentToAttach.getClass(), commentListNewCommentToAttach.getId());
+                commentListNewCommentToAttach = em.getReference(Comment.class, commentListNewCommentToAttach.getId());
                 attachedCommentListNew.add(commentListNewCommentToAttach);
             }
             commentListNew = attachedCommentListNew;

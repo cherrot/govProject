@@ -4,21 +4,21 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.SiteLog;
-import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.model.User;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
-import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ public class HomeController {
         List<Category> categories = categoryService.list();
         mav.addObject("categories", categories);
         for (Category category : categories) {
-            mav.addObject(category.getName(), postService.listNewestPostsByTerm(category.getId(), 1, 5));
+            mav.addObject(category.getName(), postService.listNewestPostsByCategory(category.getId(), 1, 5));
         }
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
         mav.addObject("linkCategories", linkCategories);
@@ -96,10 +96,10 @@ public class HomeController {
             Comment comment = new Comment(new Date(), true, "Cherrot", "admin@cherrot.com", "http://www.cherrot.com", "127.0.0.1", "我是文章评论");
             comment.setPost(post);
             commentService.create(comment);
-            //创建测试日志
-            SiteLog siteLog = new SiteLog(new Date(), "我是操作日志");
-            siteLog.setUser(user);
-            siteLogService.create(siteLog);
+//            //创建测试日志
+//            SiteLog siteLog = new SiteLog(new Date(), "我是操作日志");
+//            siteLog.setUser(user);
+//            siteLogService.create(siteLog);
             //创建测试全局选项
             Option option = new Option("test");
             option.setOptionValue("我是全局选项");

@@ -46,7 +46,7 @@ public class CategoryJpaDao implements CategoryDao {
          */
         Category categoryParent = category.getCategoryParent();
         if (categoryParent != null) {
-            categoryParent = em.getReference(categoryParent.getClass(), categoryParent.getId());
+            categoryParent = em.getReference(Category.class, categoryParent.getId());
             category.setCategoryParent(categoryParent);
         }
         /**
@@ -54,13 +54,13 @@ public class CategoryJpaDao implements CategoryDao {
          */
         List<Category> attachedCategoryList = new ArrayList<Category>();
         for (Category categoryListCategoryToAttach : category.getCategoryList()) {
-            categoryListCategoryToAttach = em.getReference(categoryListCategoryToAttach.getClass(), categoryListCategoryToAttach.getId());
+            categoryListCategoryToAttach = em.getReference(Category.class, categoryListCategoryToAttach.getId());
             attachedCategoryList.add(categoryListCategoryToAttach);
         }
         category.setCategoryList(attachedCategoryList);
         List<Post> attachedPostList = new ArrayList<Post>();
         for (Post postListPostToAttach : category.getPostList()) {
-            postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+            postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
             attachedPostList.add(postListPostToAttach);
         }
         category.setPostList(attachedPostList);
@@ -111,7 +111,7 @@ public class CategoryJpaDao implements CategoryDao {
             List<Post> postListOld = persistentCategory.getPostList();
             List<Post> postListNew = category.getPostList();
 
-            //FIXME 临时方案 应该在业务逻辑层解决！
+            //FIX 临时方案 应该在业务逻辑层解决！
 //            if (categoryListNew == null) categoryListNew = categoryListOld;
 //            if (postListNew == null) postListNew = postListOld;
 
@@ -119,7 +119,7 @@ public class CategoryJpaDao implements CategoryDao {
              * 设置多对一关系映射，确保映射实体类存在
              */
             if (categoryParentNew != null) {
-                categoryParentNew = em.getReference(categoryParentNew.getClass(), categoryParentNew.getId());
+                categoryParentNew = em.getReference(Category.class, categoryParentNew.getId());
                 category.setCategoryParent(categoryParentNew);
             }
             /**
@@ -127,14 +127,14 @@ public class CategoryJpaDao implements CategoryDao {
              */
             List<Category> attachedCategoryListNew = new ArrayList<Category>();
             for (Category categoryListNewCategoryToAttach : categoryListNew) {
-                categoryListNewCategoryToAttach = em.getReference(categoryListNewCategoryToAttach.getClass(), categoryListNewCategoryToAttach.getId());
+                categoryListNewCategoryToAttach = em.getReference(Category.class, categoryListNewCategoryToAttach.getId());
                 attachedCategoryListNew.add(categoryListNewCategoryToAttach);
             }
             categoryListNew = attachedCategoryListNew;
             category.setCategoryList(categoryListNew);
             List<Post> attachedPostListNew = new ArrayList<Post>();
             for (Post postListNewPostToAttach : postListNew) {
-                postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
+                postListNewPostToAttach = em.getReference(Post.class, postListNewPostToAttach.getId());
                 attachedPostListNew.add(postListNewPostToAttach);
             }
             postListNew = attachedPostListNew;

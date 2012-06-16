@@ -50,7 +50,7 @@ public class TagJpaDao implements TagDao {
 //            em.getTransaction().begin();
             List<Post> attachedPostList = new ArrayList<Post>();
             for (Post postListPostToAttach : tag.getPostList()) {
-                postListPostToAttach = em.getReference(postListPostToAttach.getClass(), postListPostToAttach.getId());
+                postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
                 attachedPostList.add(postListPostToAttach);
             }
             tag.setPostList(attachedPostList);
@@ -79,7 +79,7 @@ public class TagJpaDao implements TagDao {
             List<Post> postListNew = tag.getPostList();
             List<Post> attachedPostListNew = new ArrayList<Post>();
             for (Post postListNewPostToAttach : postListNew) {
-                postListNewPostToAttach = em.getReference(postListNewPostToAttach.getClass(), postListNewPostToAttach.getId());
+                postListNewPostToAttach = em.getReference(Post.class, postListNewPostToAttach.getId());
                 attachedPostListNew.add(postListNewPostToAttach);
             }
             postListNew = attachedPostListNew;

@@ -4,8 +4,8 @@
  */
 package com.cherrot.govproject.model;
 
+import com.cherrot.govproject.util.Constants;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -97,6 +97,7 @@ public class User implements Serializable {
     private List<Comment> commentList;
 
     public User() {
+        userLevel = Constants.USER_PENDING;
     }
 
 //    public User(Integer id) {
@@ -161,14 +162,6 @@ public class User implements Serializable {
         this.displayName = displayName;
     }
 
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-
     public String getUrl() {
         return url;
     }
@@ -207,6 +200,7 @@ public class User implements Serializable {
         this.usermetaList = usermetaList;
     }
 
+    @XmlTransient
     public List<Comment> getCommentList() {
 //        if (commentList == null) commentList = new ArrayList<Comment>();
         return commentList;

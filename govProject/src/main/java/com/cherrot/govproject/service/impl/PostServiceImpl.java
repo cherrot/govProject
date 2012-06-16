@@ -52,18 +52,17 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagService.createTagsByName(tagStrings);
         post.setTagList(tags);
         postDao.create(post);
-//        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
+        siteLogService.create(post.getUser(), "创建了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
 
     @Override
     @Transactional
     public void create(Post post) {
         postDao.create(post);
-//        siteLogService.create(post.getUser(),post.getTitle()+"被创建" );
+        siteLogService.create(post.getUser(), "创建了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public Post find(Integer id) {
         return postDao.find(id);
     }
@@ -72,7 +71,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void destroy(Integer id) {
         Post post = postDao.find(id);
-//        siteLogService.create(post.getUser(), post.getTitle()+"被删除" );
+        siteLogService.create(post.getUser(), "删除了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
         try {
             postDao.destroy(id);
         }
@@ -90,29 +89,25 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public List<Post> list() {
         return postDao.findEntities();
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public List<Post> list(int pageNum) {
         return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public List<Post> list(int pageNum, int pageSize) {
         return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
     @Transactional
-    public void edit(Post model) {
-//        siteLogService.create(model.getUser(), model.getTitle()+"被修改" );
+    public void edit(Post post) {
         try {
-            postDao.edit(model);
+            postDao.edit(post);
         }
         catch (IllegalOrphanException ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,6 +118,7 @@ public class PostServiceImpl implements PostService {
         catch (Exception ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
+        siteLogService.create(post.getUser(), "编辑了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
 
     @Override
@@ -223,21 +219,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-//    @Transactional(readOnly=true)
-    public List<Post> listNewestPostsByTerm(Integer termId, int pageNum, int pageSize) {
+    public List<Post> listNewestPostsByCategory(Integer termId, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryDescOrder(termId, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryNameDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
-    }
-
-    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withTerms){
-        if (withComments) post.getCommentList().isEmpty();
-        if (withPostmetas) post.getPostmetaList().isEmpty();
-        if (withTerms) post.getCategoryList().isEmpty();
     }
 
     @Override
@@ -259,7 +247,8 @@ public class PostServiceImpl implements PostService {
         List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
         return posts;
     }
-//FIXME!!!
+
+//FIXME 尚未实现
     @Override
     public List<Post> listNewesPostsByUser(Integer userId, int pageNum) {
         throw new UnsupportedOperationException("Not supported yet.");
@@ -281,6 +270,16 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> listNewestPostsByTag(Integer tagId, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public List<Post> listNewestPostsByTagName(String tagName, int pageNum, int pageSize) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     @Transactional
     public void addAttachment(Integer postId, File localFile, String mime) {
         Post videoPost = new Post();
@@ -298,5 +297,11 @@ public class PostServiceImpl implements PostService {
             + "<embed src=\"/govProject/resources/misc/flvplayer.swf\" allowfullscreen=\"true\" flashvars=\"vcastr_file=" + "/govProject/uploads/MVI_0015.AVI.flv" + "&BufferTime=3\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"459\" height=\"370\"></embed>"
             + "</object>";
         postParent.setContent(content);
+    }
+
+    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withTerms){
+        if (withComments) post.getCommentList().isEmpty();
+        if (withPostmetas) post.getPostmetaList().isEmpty();
+        if (withTerms) post.getCategoryList().isEmpty();
     }
 }
