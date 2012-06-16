@@ -54,11 +54,12 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
-    //以下为等价式
-    //@NamedQuery(name = "Post.findEntitiesByTermOrderbyCreateDate", query="SELECT p FROM Post p INNER JOIN p.termList t WHERE t.id IN (:termId) ORDER BY p.createDate DESC"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) category WHERE category.id = :categoryId ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findEntitiesByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList t WHERE t.name = :categoryName ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findEntitiesByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
+    //下面两式  IN 和 JOIN 的作用等价
+    @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c.id = :categoryId ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.name = :categoryName ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.id = :tagId ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.name = :tagName ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.

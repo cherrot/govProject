@@ -499,7 +499,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByCategoryDescOrder(Integer termId, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findEntitiesByCategoryDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByCategoryDescOrder", Post.class);
         q.setParameter("categoryId", termId);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -508,7 +508,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByCategoryNameDescOrder(String categoryName, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findEntitiesByCategoryNameDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByCategoryNameDescOrder", Post.class);
         q.setParameter("category", categoryName);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -523,7 +523,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findEntitiesByUserId", Post.class);
+        Query q = em.createNamedQuery("Post.findByUserId", Post.class);
         q.setParameter("userId", userId);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);

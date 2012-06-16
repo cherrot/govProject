@@ -63,7 +63,7 @@ public class PostController {
         //TODO 最好能将用户浏览器URL置换为文章自定义链接的形式。
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.find(postId, true, true, true);
+            Post post = postService.find(postId, true, true, true, true);
             mav.addObject("post", post);
         } catch (NoResultException ex) {
             mav.setViewName("redirect:/errors/404");
@@ -81,7 +81,7 @@ public class PostController {
     public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.findBySlug(postSlug, true, true, true);
+            Post post = postService.findBySlug(postSlug, true, true, true, true);
             mav.addObject("post", post);
         } catch (NoResultException ex) {
             mav.setViewName("redirect:/errors/404");
@@ -148,7 +148,7 @@ public class PostController {
 
         ModelAndView mav = processModels4EditPost();
         try {
-            Post post = postService.findBySlug(postSlug, false, true, true);
+            Post post = postService.findBySlug(postSlug, false, true, true, true);
             mav.addObject("post", post);
         } catch(NoResultException ex) {
             mav.setViewName("redirect:errors/404");
@@ -169,7 +169,7 @@ public class PostController {
         ModelAndView mav = processModels4EditPost();
         try {
             if (postId != null){
-                Post post = postService.find(postId, false, true, true);
+                Post post = postService.find(postId, false, true, true, true);
                 mav.addObject("post", post);
             }
         } catch(NoResultException ex) {
@@ -212,11 +212,14 @@ public class PostController {
      */
     private ModelAndView processModels4EditPost() {
         ModelAndView mav = new ModelAndView("editPost");
+        //设置文章发布状态的Map，用于<form:select>
         Map<Post.PostStatus, String> postStatusMap = new EnumMap<Post.PostStatus, String>(Post.PostStatus.class);
         postStatusMap.put(Post.PostStatus.PUBLISHED, Post.PostStatus.PUBLISHED.getDescription());
         postStatusMap.put(Post.PostStatus.DRAFT, Post.PostStatus.DRAFT.getDescription());
         postStatusMap.put(Post.PostStatus.PENDING, Post.PostStatus.PENDING.getDescription());
         mav.addObject("postStatus", postStatusMap);
+        //设置文章分类
+
         return mav;
     }
 }
