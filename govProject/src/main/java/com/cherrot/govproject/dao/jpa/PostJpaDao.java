@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
+ * FIXME 添加 修改 删除文章时记得处理 目录或标签的setCount()设置正确的文章数目. 还有LinkJpaDao
  * @author cherrot
  */
 @Repository
@@ -507,9 +507,9 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
-    public List<Post> findEntitiesByCategoryNameDescOrder(String categoryName, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByCategoryNameDescOrder", Post.class);
-        q.setParameter("category", categoryName);
+    public List<Post> findEntitiesByCategorySlugDescOrder(String categoryName, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findByCategorySlugDescOrder", Post.class);
+        q.setParameter("categorySlug", categoryName);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
         return q.getResultList();

@@ -56,9 +56,9 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
     //下面两式  IN 和 JOIN 的作用等价
     @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c.id = :categoryId ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByCategoryNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.name = :categoryName ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByCategorySlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.id = :tagId ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByTagNameDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.name = :tagName ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagSlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
 })
 /**

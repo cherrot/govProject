@@ -13,7 +13,8 @@ import java.util.List;
  */
 public interface CategoryService extends BaseService<Category, Integer> {
 
-    Category find(Integer id, boolean withPosts, boolean withTerms);
+    Category find(Integer id, boolean withPosts, boolean withChildCategories);
+    Category findBySlug(String slug, boolean withPosts, boolean withChildCategories);
     /**
      * Create Category and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.

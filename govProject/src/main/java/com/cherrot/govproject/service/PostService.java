@@ -46,10 +46,10 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param pageSize
      * @return
      */
-    List<Post> listNewestPostsByCategory(Integer termId, int pageNum, int pageSize);
-    List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize);
+    List<Post> listNewestPostsByCategory(Integer categoryId, int pageNum, int pageSize);
+    List<Post> listNewestPostsByCategorySlug(String categoryName, int pageNum, int pageSize);
     List<Post> listNewestPostsByTag(Integer tagId, int pageNum, int pageSize);
-    List<Post> listNewestPostsByTagName(String tagName, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTagSlug(String tagName, int pageNum, int pageSize);
     /**
      * @param userId 文章所属用户的id
      * @param pageNum
@@ -60,7 +60,8 @@ public interface PostService extends BaseService<Post, Integer> {
     List<Post> listNewesPostsByUser(Integer userId, int pageNum);
     List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize);
     int getCountByUser(Integer userId);
-    int getCountByTerm(Integer termId);
+    int getCountByCategory(Integer categoryId);
+    int getCountByTag(Integer tagId);
     void addAttachment(Integer postId, File localFile, String mime);
 
     //    /**

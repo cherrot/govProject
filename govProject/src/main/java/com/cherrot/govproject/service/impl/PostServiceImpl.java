@@ -11,6 +11,7 @@ import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
@@ -25,7 +26,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author cherrot
  */
 @Service
@@ -33,6 +33,8 @@ public class PostServiceImpl implements PostService {
 
     @Inject
     private PostDao postDao;
+    @Inject
+    private CategoryService categoryService;
     @Inject
     private TagService tagService;
     @Inject
@@ -70,9 +72,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void destroy(Integer id) {
-        Post post = postDao.find(id);
-        siteLogService.create(post.getUser(), "删除了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
         try {
+            Post post = postDao.find(id);
+            siteLogService.create(post.getUser(), "删除了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
             postDao.destroy(id);
         }
         catch (IllegalOrphanException ex) {
@@ -125,81 +127,121 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void addCategory(Post post, Category term) {
 //        term.getPostList().add(post);
-        if ( !post.getCategoryList().contains(term)) {
             post.getCategoryList().add(term);
-            term.setCount(term.getCount()+1);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     @Transactional
     public void addCategoryList(Post post, List<Category> terms) {
-        for (Category category : terms) {
-            if ( !post.getCategoryList().contains(category)) {
-                category.setCount(category.getCount()+1);
-            }
-        }
         post.getCategoryList().addAll(terms);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     @Transactional
     public void removeCategory(Post post, Category term) {
-        if ( post.getCategoryList().contains(term)) {
-            term.setCount(term.getCount()-1);
             post.getCategoryList().remove(term);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     @Transactional
     public void removeCategoryList(Post post, List<Category> terms) {
-        for (Category category : terms) {
-            if ( post.getCategoryList().contains(category)) {
-                category.setCount(category.getCount()-1);
-            }
-        }
         post.getCategoryList().removeAll(terms);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     @Transactional
     public void addTag(Post post, Tag tag) {
-        if (!post.getTagList().contains(tag)) {
             post.getTagList().add(tag);
-            tag.setCount(tag.getCount()+1);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     @Transactional
     public void addTagList(Post post, List<Tag> tags) {
-        for (Tag tag : tags) {
-            if ( !post.getTagList().contains(tag) ) {
-                tag.setCount(tag.getCount()+1);
-            }
-        }
         post.getTagList().addAll(tags);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
     @Transactional
     public void removeTag(Post post, Tag tag) {
-        if ( post.getTagList().contains(tag)) {
-            tag.setCount(tag.getCount()-1);
             post.getTagList().remove(tag);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
     @Transactional
     public void removeTagList(Post post, List<Tag> tags) {
-        for (Tag tag : tags) {
-            if ( post.getTagList().contains(tag)) {
-                tag.setCount(tag.getCount()-1);
-            }
-        }
         post.getTagList().removeAll(tags);
+        try {
+            postDao.edit(post);
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
@@ -224,8 +266,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> listNewestPostsByCategoryName(String categoryName, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategoryNameDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listNewestPostsByCategorySlug(String categoryName, int pageNum, int pageSize) {
+        return postDao.findEntitiesByCategorySlugDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
@@ -265,7 +307,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public int getCountByTerm(Integer termId) {
+    public int getCountByCategory(Integer termId) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -275,7 +317,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> listNewestPostsByTagName(String tagName, int pageNum, int pageSize) {
+    public List<Post> listNewestPostsByTagSlug(String tagName, int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

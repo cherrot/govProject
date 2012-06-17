@@ -4,6 +4,15 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.TagService;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
+import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
+import java.util.List;
+import javax.inject.Inject;
 import javax.persistence.NoResultException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,14 +26,27 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class TermController {
 
+    @Inject
+    private CategoryService categoryService;
+    @Inject
+    private TagService tagService;
+    @Inject
+    private PostService postService;
+    
     @RequestMapping("/category/{categorySlug}")
     public ModelAndView listPostsByCategoryPage1(@PathVariable("categorySlug")String slug) {
         ModelAndView mav = new ModelAndView("/listPosts");
         //TODO 根据分类的slug取出分类，然后根据该分类分页查询文章列表
         try {
-
+            Category category = categoryService.findBySlug(slug, false, false);
+            mav.addObject("term", category);
+            List<Post> postList = postService.listNewestPostsByCategory(category.getId(), 1, DEFAULT_PAGE_SIZE);
+            mav.addObject("postList", postList);
+            mav.addObject("pageNum", 1);
+            int pageCount = category.getCount();
+            mav.addObject(categoryService);
         } catch (NoResultException e) {
-            mav.setViewName("redirect:/errors/404");
+            throw new ResourceNotFoundException();
         }
         return mav;
     }

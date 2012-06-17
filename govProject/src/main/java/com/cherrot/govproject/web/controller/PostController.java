@@ -12,6 +12,7 @@ import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
+import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -74,7 +75,7 @@ public class PostController {
             Post post = postService.find(postId, false, false, false, false);
             return "redirect:/post/"+post.getSlug();
         } catch (NoResultException ex) {
-            return "redirect:/errors/404";
+            throw new ResourceNotFoundException();
         }
     }
 
@@ -98,7 +99,7 @@ public class PostController {
                 mav.addObject("pendingComments", pendingComments);
             }
         } catch (NoResultException ex) {
-            mav.setViewName("redirect:/errors/404");
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
@@ -143,7 +144,7 @@ public class PostController {
         try {
             post = postService.find(postId);
         } catch (NoResultException ex) {
-            return "redirect:/errors/404";
+            throw new ResourceNotFoundException();
         }
         comment.setPost(post);
         commentService.create(comment);
@@ -182,7 +183,7 @@ public class PostController {
             Post post = postService.findBySlug(postSlug, false, true, true, true);
             mav = processModels4EditPost(post);
         } catch(NoResultException ex) {
-            mav.setViewName("redirect:errors/404");
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
