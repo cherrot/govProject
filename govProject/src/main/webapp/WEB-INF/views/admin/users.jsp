@@ -12,12 +12,8 @@
     <title>用户管理 | 昆明文化辞典</title>
   </head>
   <body>
-    <div id="header">
       <%@include file="jspf/header.jspf" %>
-    </div>
-    <div id="sidebar" >
       <%@include file="jspf/functionBar.jspf" %>
-    </div>
     <!--Start MainContent-->
     <div>
       <table>
@@ -53,8 +49,6 @@
       <!--分页-->
     </div>
     <!--End MainContent-->
-    <div id="footer">
       <%@include file="jspf/footer.jspf" %>
-    </div>
   </body>
 </html>

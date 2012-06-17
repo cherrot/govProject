@@ -4,19 +4,27 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
 import javax.persistence.NoResultException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +50,8 @@ public class PostController {
     private PostService postService;
     @Inject
     private CommentService commentService;
+    @Inject
+    private CategoryService categoryService;
 
     /**
      * 返回一个新的Comment对象
@@ -59,16 +69,13 @@ public class PostController {
      * @return
      */
     @RequestMapping(params="id")
-    public ModelAndView viewPost(@RequestParam("id")int postId) {
-        //TODO 最好能将用户浏览器URL置换为文章自定义链接的形式。
-        ModelAndView mav = new ModelAndView("viewPost");
+    public String viewPost(@RequestParam("id")int postId) {
         try {
-            Post post = postService.find(postId, true, true, true, true);
-            mav.addObject("post", post);
+            Post post = postService.find(postId, false, false, false, false);
+            return "redirect:/post/"+post.getSlug();
         } catch (NoResultException ex) {
-            mav.setViewName("redirect:/errors/404");
+            return "redirect:/errors/404";
         }
-        return mav;
     }
 
     /**
@@ -77,12 +84,19 @@ public class PostController {
      * @return
      */
     @RequestMapping(value="/{postSlug}", method= RequestMethod.GET)
-    //如果@PathVariable不指定参数名，只有在编译时打开debug开关（javac -debug=no）时才可行！（不建议！）
-    public ModelAndView viewPost(@PathVariable("postSlug")String postSlug) {
+    public ModelAndView viewPost(@PathVariable("postSlug")String postSlug
+        ,@CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId) {
+
         ModelAndView mav = new ModelAndView("viewPost");
         try {
             Post post = postService.findBySlug(postSlug, true, true, true, true);
             mav.addObject("post", post);
+            mav.addObject("tagListString", tagList2String(post.getTagList()));
+            //读取Cookie将访问者所有未审核评论显示在页面上
+            if (pendingCommentsId != null) {
+                List<Comment> pendingComments = cookieString2CommentList(pendingCommentsId);
+                mav.addObject("pendingComments", pendingComments);
+            }
         } catch (NoResultException ex) {
             mav.setViewName("redirect:/errors/404");
         }
@@ -103,12 +117,14 @@ public class PostController {
      * @param bindingResult 评论字段合法性验证结果
      * @return
      */
-    @RequestMapping(value={"/{postSlug}","*"}, method= RequestMethod.POST)
-    public String createComment(HttpServletRequest request
+    @RequestMapping(value={"/{postSlug}"}, method= RequestMethod.POST)
+    public String doCreateComment(HttpServletRequest request
         , @RequestParam("postId")final int postId
         , @Valid @ModelAttribute("newComment")final Comment comment
         , final BindingResult bindingResult
-        , RedirectAttributes redirectAttr) {
+        , RedirectAttributes redirectAttr
+        , @CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId
+        , HttpServletResponse response) {
 
         /**
          * 通过FlashAttribute传递临时属性到redirect后的控制器方法中。
@@ -127,13 +143,28 @@ public class PostController {
         try {
             post = postService.find(postId);
         } catch (NoResultException ex) {
-            return "redirect:/errors/410";
+            return "redirect:/errors/404";
         }
-
-        comment.setAuthorIp(request.getRemoteAddr());//IP
         comment.setPost(post);
         commentService.create(comment);
-        redirectAttr.addFlashAttribute("postComment", comment);
+
+        /**
+         * 将该访问者的所有未审核评论写入Cookie
+         */
+        StringBuilder strBuilder = new StringBuilder();
+        //检验原cookie中的评论是否已通过审核，只有未通过审核的才放入cookie
+        if (pendingCommentsId != null) {
+            List<Comment> pendingComments = cookieString2CommentList(pendingCommentsId);
+            for (Comment pendingComment : pendingComments) {
+                if ( ! pendingComment.getApproved() ) {
+                    strBuilder.append(pendingComment.getId()).append(",");
+                }
+            }
+        }
+        //将新增评论加入cookie
+        strBuilder.append(comment.getId());
+        Cookie pendingCommentsCookie = new Cookie("pendingCommentsId", strBuilder.toString());
+        response.addCookie(pendingCommentsCookie);
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
     }
@@ -146,37 +177,28 @@ public class PostController {
     @RequestMapping(value="/{postSlug}/edit", method= RequestMethod.GET)
     public ModelAndView editPost(@PathVariable("postSlug")final String postSlug) {
 
-        ModelAndView mav = processModels4EditPost();
+        ModelAndView mav = null;
         try {
             Post post = postService.findBySlug(postSlug, false, true, true, true);
-            mav.addObject("post", post);
+            mav = processModels4EditPost(post);
         } catch(NoResultException ex) {
             mav.setViewName("redirect:errors/404");
-        } finally {
-            return mav;
         }
+        return mav;
     }
 
     /**
-     * 进入编辑文章或新建文章页面。
+     * 新建文章。
      * 如果是新建文章，Spring会自动使用默认构造器进行数据绑定，因此没有显式实例化post对象到ModelAndView中
      * @param postId
      * @return
      */
-    @RequestMapping(value = {"/edit", "/create"}, method= RequestMethod.GET)
-    public ModelAndView editPost(@RequestParam(value="id", required=false)final Integer postId) {
-
-        ModelAndView mav = processModels4EditPost();
-        try {
-            if (postId != null){
-                Post post = postService.find(postId, false, true, true, true);
-                mav.addObject("post", post);
-            }
-        } catch(NoResultException ex) {
-            mav.setViewName("redirect:errors/404");
-        } finally {
-            return mav;
-        }
+    @RequestMapping(value = "/create", method= RequestMethod.GET)
+    public ModelAndView createPost() {
+        Post post = new Post();
+        post.setTitle("新建文章");
+        ModelAndView mav = processModels4EditPost(post);
+        return mav;
     }
 
     /**
@@ -187,7 +209,7 @@ public class PostController {
      * @param redirectAttr 用于添加Flash Attributes用于redirect后的控制器/页面使用
      * @return
      */
-    @RequestMapping(value={"/*/edit", "/edit", "/create"}, method= RequestMethod.POST)
+    @RequestMapping(value={"/*/edit", "/create"}, method= RequestMethod.POST)
     public String doEditPost(HttpServletRequest request
         ,@Valid @ModelAttribute("post")Post post
         ,BindingResult bindingResult
@@ -198,7 +220,6 @@ public class PostController {
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
             post.setUser(BaseController.getSessionUser(request.getSession()));
-//            System.err.println(post.getTitle());
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }
@@ -206,11 +227,14 @@ public class PostController {
         return "redirect:/post/" + post.getSlug() + "/edit";
     }
 
+
     /**
      * 注入editPost页面所必需的对象，比如以Map注入枚举类型PostStatus
+     * @param post 可以是持久化Post对象或新建Post对象，不能为null。
      * @return 注入必需Model的ModelAndView
      */
-    private ModelAndView processModels4EditPost() {
+    private ModelAndView processModels4EditPost(Post post) {
+        //使用editPost.jsp
         ModelAndView mav = new ModelAndView("editPost");
         //设置文章发布状态的Map，用于<form:select>
         Map<Post.PostStatus, String> postStatusMap = new EnumMap<Post.PostStatus, String>(Post.PostStatus.class);
@@ -218,8 +242,38 @@ public class PostController {
         postStatusMap.put(Post.PostStatus.DRAFT, Post.PostStatus.DRAFT.getDescription());
         postStatusMap.put(Post.PostStatus.PENDING, Post.PostStatus.PENDING.getDescription());
         mav.addObject("postStatus", postStatusMap);
-        //设置文章分类
+        //添加全部文章分类
+        List<Category> categories = categoryService.list();
+        mav.addObject("categories", categories);
 
+        mav.addObject("post", post);
+        if (post.getId() != null) {
+            //设置已选文章分类
+            List<Category> postCategories = post.getCategoryList();
+            for (Category category : postCategories) {
+                mav.addObject(category.getName(), Boolean.TRUE);
+            }
+            //设置文章标签
+            mav.addObject("tagListString", post.getTagList());
+        }
         return mav;
+    }
+
+    private String tagList2String(List<Tag> tagList) {
+        StringBuilder strBuilder = new StringBuilder();
+        for (Tag tag : tagList) {
+            strBuilder.append(tag.getName()).append(", ");
+        }
+        return strBuilder.substring(0, strBuilder.length()-2);
+    }
+
+    private List<Comment> cookieString2CommentList(String pendingCommentsId) {
+        List<Comment> comments = new ArrayList<Comment>();
+        String[] commentIdStrings = pendingCommentsId.split(",");
+        for (int i=0; i<commentIdStrings.length; i++) {
+            Comment comment = commentService.find(Integer.parseInt(commentIdStrings[i]));
+            comments.add(comment);
+        }
+        return comments;
     }
 }

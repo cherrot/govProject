@@ -10,7 +10,6 @@ import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Option;
 import com.cherrot.govproject.model.Post;
-import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CategoryService;

@@ -1,6 +1,6 @@
 <%--
-    Document   : postList 根据分类或标签筛选的文章列表
-    Created on : 2012-6-13, 6:06:27
+    Document   : categories
+    Created on : 2012-6-17, 17:14:04
     Author     : Cherrot Luo<cherrot+dev@cherrot.com>
 --%>
 

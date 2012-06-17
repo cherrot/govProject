@@ -17,7 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
-public class AdminPanelController {
+public class AdminHomeController {
 
     @Inject
     private UserService userService;

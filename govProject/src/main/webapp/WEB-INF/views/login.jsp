@@ -24,15 +24,11 @@
       //-->
     </script>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>用户登录</title>
+    <title>用户登录 | 昆明文化辞典</title>
   </head>
   <body>
-    <div id="header">
       <%@include file="jspf/header.jspf" %>
-    </div>
-    <div id="sidebar" >
       <%@include file="jspf/sidebar.jspf" %>
-    </div>
 
     <h1>用户登录</h1>
     <div class="loginForm">
@@ -65,8 +61,6 @@
       </form:form>
     </div>
 
-    <div id="footer">
       <%@include file="jspf/footer.jspf" %>
-    </div>
   </body>
 </html>

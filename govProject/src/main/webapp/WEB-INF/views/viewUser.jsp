@@ -11,12 +11,8 @@
     <title>${user.displayName} | 昆明文化辞典</title>
   </head>
   <body>
-    <div id="header">
       <%@include file="jspf/header.jspf" %>
-    </div>
-    <div id="sidebar" >
       <%@include file="jspf/sidebar.jspf" %>
-    </div>
     <!--Start MainContent-->
     <h1>${user.displayName} 的个人资料</h1>
     <div>
@@ -44,8 +40,6 @@
       </ul>
     </div>
     <!--End MainContent-->
-    <div id="footer">
       <%@include file="jspf/footer.jspf" %>
-    </div>
   </body>
 </html>
