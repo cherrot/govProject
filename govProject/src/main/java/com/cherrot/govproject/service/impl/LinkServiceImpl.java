@@ -77,7 +77,7 @@ public class LinkServiceImpl implements LinkService{
     @Override
     @Transactional
     public void edit(Link model) {
-                try {
+        try {
             linkDao.edit(model);
         }
         catch (IllegalOrphanException ex) {

@@ -103,24 +103,19 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void edit(Post post) {
-//        try {
-//            postDao.edit(post);
-//        }
-//        catch (IllegalOrphanException ex) {
-//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        catch (NonexistentEntityException ex) {
-//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        catch (Exception ex) {
-//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-        Post dbPost = postDao.find(post.getId());
-        dbPost.setModifyDate(new Date());
-        dbPost.setCommentStatus(post.getCommentStatus());
-        dbPost.setContent(post.getContent());
-        dbPost.setExcerpt(post.getExcerpt());
-        siteLogService.create(dbPost.getUser(), "文章已更新（ID:" + dbPost.getId() + "）。标题：" + dbPost.getTitle() );
+        try {
+            postDao.edit(post);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        siteLogService.create(post.getUser(), "文章已更新（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
 
     @Override

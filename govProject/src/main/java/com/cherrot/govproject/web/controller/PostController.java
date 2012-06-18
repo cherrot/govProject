@@ -59,8 +59,14 @@ public class PostController {
      * @return
      */
     @ModelAttribute("newComment")
-    public Comment getNewComment(){
+    public Comment getNewComment() {
         return new Comment();
+    }
+    
+    //TODO 要在Web控制器解决模型的不完整问题！
+    @ModelAttribute("post")
+    public Post getPost() {
+        return null;
     }
 
     /**

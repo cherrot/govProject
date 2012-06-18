@@ -107,27 +107,25 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
-//        try {
-//            userDao.edit(model);
-//            siteLogService.create(model, model.getLogin()+"被修改");
-//        }
-//        catch (IllegalOrphanException ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-//        }
-//        catch (NonexistentEntityException ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-//        }
-//        catch (Exception ex) {
-//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-//        }
-        User dbUser = userDao.find(model.getId());
-        dbUser.setDisplayName(model.getDisplayName());
-        dbUser.setLogin(model.getLogin());
-        dbUser.setPass(model.getPass());
-        dbUser.setRegisterDate(model.getRegisterDate());
-        dbUser.setUrl(model.getUrl());
-        dbUser.setUserLevel(model.getUserLevel());
-        siteLogService.create(dbUser, "用户 " + dbUser.getLogin() +" (ID:" + dbUser.getId() + ") 更新了个人资料");
+        //TODO: 最好在web层解决掉这些问题。
+//        User dbUser = userDao.find(model.getId());
+//        if (model.getCommentList() == null) model.setCommentList(dbUser.getCommentList());
+//        if (model.getPostList() == null) model.setPostList(dbUser.getPostList());
+//        if (model.getSiteLogList() == null) model.setSiteLogList(dbUser.getSiteLogList());
+//        if (model.getUsermetaList() == null) model.setUsermetaList(dbUser.getUsermetaList());
+        try {
+            userDao.edit(model);
+        }
+        catch (IllegalOrphanException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        catch (NonexistentEntityException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        catch (Exception ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        }
+        siteLogService.create(model, "用户 " + model.getLogin() +" (ID:" + model.getId() + ") 更新了个人资料");
     }
 
     private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
