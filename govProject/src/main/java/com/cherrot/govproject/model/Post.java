@@ -5,6 +5,7 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -192,6 +193,7 @@ public class Post implements Serializable {
         commentCount = 0;
         status = PostStatus.DRAFT;
         type = PostType.POST;
+//        processLists();
     }
 
 //    public Post(Integer id) {
@@ -209,7 +211,19 @@ public class Post implements Serializable {
         this.slug = slug;
         this.title = title;
         this.content = content;
+//        processLists();
     }
+
+    /**
+     * 在创建实体时实例化实体中的所有集合对象。否则会在DAO层出现空指针异常（Netbeans自动生成JPA控制器的BUG）
+     */
+//    private void processLists() {
+//        postmetaList = new ArrayList<Postmeta>();
+//        postList = new ArrayList<Post>();
+//        commentList = new ArrayList<Comment>();
+//        categoryList = new ArrayList<Category>();
+//        tagList = new ArrayList<Tag>();
+//    }
 
     public Integer getId() {
         return id;

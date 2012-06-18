@@ -5,6 +5,7 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -80,13 +81,22 @@ public class Tag implements Serializable {
 
     public Tag() {
         count = 0;
+//        processLists();
     }
 
     public Tag(int count, String name, String slug) {
         this.count = count;
         this.name = name;
         this.slug = slug;
+//        processLists();
     }
+
+    /**
+     * 在创建实体时实例化实体中的所有集合对象。否则会在DAO层出现空指针异常（Netbeans自动生成JPA控制器的BUG）
+     */
+//    private void processLists() {
+//        postList = new ArrayList<Post>();
+//    }
 
     public Integer getId() {
         return id;

@@ -136,4 +136,10 @@ public class CategoryServiceImpl implements CategoryService {
         }
     }
 
+    //TODO 待实现
+    @Override
+    public Category findBySlug(String slug, boolean withPosts, boolean withChildCategories) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
 }

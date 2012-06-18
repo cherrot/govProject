@@ -6,6 +6,7 @@ package com.cherrot.govproject.model;
 
 import com.cherrot.govproject.util.Constants;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -98,6 +99,7 @@ public class User implements Serializable {
 
     public User() {
         userLevel = Constants.USER_PENDING;
+//        processLists();
     }
 
 //    public User(Integer id) {
@@ -111,8 +113,18 @@ public class User implements Serializable {
         this.userLevel = userLevel;
         this.registerDate = registerDate;
         this.displayName = displayName;
-//        this.email = email;
+//        processLists();
     }
+
+    /**
+     * 在创建实体时实例化实体中的所有集合对象。否则会在DAO层出现空指针异常（Netbeans自动生成JPA控制器的BUG）
+     */
+//    private void processLists() {
+//        siteLogList = new ArrayList<SiteLog>();
+//        postList = new ArrayList<Post>();
+//        commentList = new ArrayList<Comment>();
+//        usermetaList = new ArrayList<Usermeta>();
+//    }
 
     public Integer getId() {
         return id;

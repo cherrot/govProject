@@ -5,15 +5,12 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -100,6 +97,7 @@ public class Category implements Serializable {
 
     public Category() {
         count = 0;
+//        processLists();
     }
 
 //    public Category(Integer id) {
@@ -111,7 +109,16 @@ public class Category implements Serializable {
         this.count = count;
         this.name = name;
         this.slug = slug;
+//        processLists();
     }
+
+    /**
+     * 在创建实体时实例化实体中的所有集合对象。否则会在DAO层出现空指针异常（Netbeans自动生成JPA控制器的BUG）
+     */
+//    private void processLists() {
+//        categoryList = new ArrayList<Category>();
+//        postList = new ArrayList<Post>();
+//    }
 
     public Integer getId() {
         return id;

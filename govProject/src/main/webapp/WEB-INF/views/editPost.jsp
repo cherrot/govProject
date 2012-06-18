@@ -10,10 +10,10 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link href="<c:url value="/resources/css/fileuploader.css"/>" rel="stylesheet" type="text/css">
+    <link href="<c:url value="/resources/js/fileuploader/fileuploader.css"/>" rel="stylesheet" type="text/css">
     <title>${post.title} | 昆明文化辞典</title>
 
-<!--    <script type="text/javascript">
+<%--    <script type="text/javascript">
       function init() {
         document.getElementById('file_upload_form').onsubmit=function() {
           document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
@@ -23,17 +23,24 @@
         }
       }
       window.onload=init;
-    </script>-->
-<!--    <script type="text/javascript">
+    </script>--%>
+<%--    <script type="text/javascript">
       function callback(msg) {
         document.getElementById("file").outerHTML = document.getElementById("file").outerHTML;
         document.getElementById("msg").innerHTML = "<em>"+msg+"</em>";
       }
-    </script>-->
+    </script>--%>
 
-    <script src="<c:url value="/resources/js/fileuploader.js"/>" type="text/javascript"></script>
+    <%--https://github.com/valums/file-uploader--%>
+    <script src="<c:url value="/resources/js/fileuploader/fileuploader.js"/>" type="text/javascript"></script>
+
+    <%--http://ueditor.baidu.com/--%>
+    <script type="text/javascript" src="<c:url value="/resources/js/ueditor/editor_config.js"/>"></script>
+    <script type="text/javascript" src="<c:url value="/resources/js/ueditor/editor_all.js"/>"></script>
+    <link rel="stylesheet" href="<c:url value="/resources/js/ueditor/themes/default/ueditor.css"/>">
+
     <script>
-      <%--TODO: 修改回调函数，上传成功后不光返回上传状态，还要在文章中嵌入代码--%>
+        <%--TODO: 修改回调函数，上传成功后不光返回上传状态，还要在文章中嵌入代码--%>
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById('file-uploader'),
@@ -42,10 +49,12 @@
                 encoding: "multipart",
                 debug: false
             });
+            <%--Ueditor初始化--%>
+            var editor = new baidu.editor.ui.Editor();
+            editor.render("content");
         }
         window.onload = createUploader;
     </script>
-
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
@@ -74,15 +83,21 @@
       <form:errors path="slug"/>
       <form:input path="slug" placeholder="请输入文章短链接（可选）" /><br/>
       <%--不能直接用tagList，必须转成String--%>
-      <label for="postTags">文章标签</label><input id="postTags" type="text" value="${tagListString}" placeholder="请输入文章关键字，以英文逗号隔开"/>
+      <label for="postTags">文章标签</label><input id="postTags" name="postTags" type="text" value="${tagListString}" placeholder="请输入文章关键字，以英文逗号隔开"/>
       <label>文章分类</label>
       <ul>
         <c:forEach items="${categories}" var="category">
-          <li><input type="checkbox" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>
+          <li><input id="postCategories" name="postCategories" type="checkbox" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>
         </c:forEach>
       </ul>
+
       <form:errors path="content"/>
       <form:textarea path="content"/><br/>
+      <%--<div id="content">正文：</div>--%>
+      <script type="text/plain" id="content" name="content">
+        ${post.content}
+      </script>
+
       <label for="comment_status">允许评论</label><form:checkbox id="comment_status" path="commentStatus" value="true" selected="selected" /><br/>
       <form:password path="password" placeholder="文章访问密码，不设请留空" /><br/>
       <label>发布状态</label><form:select path="status" items="${postStatus}"/><br/>

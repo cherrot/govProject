@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService{
             usermeta.setUser(user);
             usermetaDao.create(usermeta);
         }
-        siteLogService.create(user, user.getLogin() + "被创建");
+        siteLogService.create(user, "创建用户" + user.getLogin() + " 。ID: "+user.getId());
     }
 
     @Override
@@ -77,15 +77,15 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void destroy(Integer id) {
         User user = userDao.find(id);
-        siteLogService.create(user, user.getLogin()+"被删除");
+        siteLogService.create(user, "用户 " + user.getLogin()+" 被删除。ID: "+user.getId());
         try {
             userDao.destroy(id);
         }
         catch (IllegalOrphanException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
         catch (NonexistentEntityException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
 
@@ -95,13 +95,11 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<User> list() {
         return userDao.findEntities();
     }
 
     @Override
-//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<User> list(int pageNum, int pageSize) {
         return userDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -109,19 +107,27 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
-        try {
-            userDao.edit(model);
-            siteLogService.create(model, model.getLogin()+"被修改");
-        }
-        catch (IllegalOrphanException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            userDao.edit(model);
+//            siteLogService.create(model, model.getLogin()+"被修改");
+//        }
+//        catch (IllegalOrphanException ex) {
+//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+//        }
+//        catch (NonexistentEntityException ex) {
+//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+//        }
+//        catch (Exception ex) {
+//            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+//        }
+        User dbUser = userDao.find(model.getId());
+        dbUser.setDisplayName(model.getDisplayName());
+        dbUser.setLogin(model.getLogin());
+        dbUser.setPass(model.getPass());
+        dbUser.setRegisterDate(model.getRegisterDate());
+        dbUser.setUrl(model.getUrl());
+        dbUser.setUserLevel(model.getUserLevel());
+        siteLogService.create(dbUser, "用户 " + dbUser.getLogin() +" (ID:" + dbUser.getId() + ") 更新了个人资料");
     }
 
     private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
@@ -138,9 +144,8 @@ public class UserServiceImpl implements UserService{
             user = findByLoginName(loginName, false, false, false, false);
         } catch (Exception e) {
 
-        } finally {
-            return user;
         }
+        return user;
     }
 
     @Override

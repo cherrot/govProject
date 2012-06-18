@@ -213,7 +213,9 @@ public class PostController {
     public String doEditPost(HttpServletRequest request
         ,@Valid @ModelAttribute("post")Post post
         ,BindingResult bindingResult
-        ,RedirectAttributes redirectAttr) {
+        ,RedirectAttributes redirectAttr
+        ,@RequestParam("postTags")String postTags
+        ,@RequestParam("postCategories")int[] postCategories) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
@@ -254,7 +256,7 @@ public class PostController {
                 mav.addObject(category.getName(), Boolean.TRUE);
             }
             //设置文章标签
-            mav.addObject("tagListString", post.getTagList());
+            mav.addObject("tagListString", tagList2String(post.getTagList()));
         }
         return mav;
     }

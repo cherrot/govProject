@@ -16,6 +16,7 @@ import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -60,7 +61,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void create(Post post) {
         postDao.create(post);
-        siteLogService.create(post.getUser(), "创建了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+        siteLogService.create(post.getUser(), "文章已创建（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
 
     @Override
@@ -73,7 +74,7 @@ public class PostServiceImpl implements PostService {
     public void destroy(Integer id) {
         try {
             Post post = postDao.find(id);
-            siteLogService.create(post.getUser(), "删除了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+            siteLogService.create(post.getUser(), "文章已删除（ID:" + post.getId() + "）。标题：" + post.getTitle() );
             postDao.destroy(id);
         }
         catch (IllegalOrphanException ex) {
@@ -102,19 +103,24 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void edit(Post post) {
-        try {
-            postDao.edit(post);
-        }
-        catch (IllegalOrphanException ex) {
-            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
-            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
-            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        siteLogService.create(post.getUser(), "编辑了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+//        try {
+//            postDao.edit(post);
+//        }
+//        catch (IllegalOrphanException ex) {
+//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        catch (NonexistentEntityException ex) {
+//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        catch (Exception ex) {
+//            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+        Post dbPost = postDao.find(post.getId());
+        dbPost.setModifyDate(new Date());
+        dbPost.setCommentStatus(post.getCommentStatus());
+        dbPost.setContent(post.getContent());
+        dbPost.setExcerpt(post.getExcerpt());
+        siteLogService.create(dbPost.getUser(), "文章已更新（ID:" + dbPost.getId() + "）。标题：" + dbPost.getTitle() );
     }
 
     @Override
@@ -330,5 +336,11 @@ public class PostServiceImpl implements PostService {
         if (withPostmetas) post.getPostmetaList().isEmpty();
         if (withCategories) post.getCategoryList().isEmpty();
         if (withTags) post.getTagList().isEmpty();
+    }
+
+    //TODO 待实现
+    @Override
+    public int getCountByTag(Integer tagId) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
