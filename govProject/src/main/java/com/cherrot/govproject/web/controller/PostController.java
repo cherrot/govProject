@@ -18,7 +18,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -74,7 +73,7 @@ public class PostController {
         try {
             Post post = postService.find(postId, false, false, false, false);
             return "redirect:/post/"+post.getSlug();
-        } catch (NoResultException ex) {
+        } catch (Exception ex) {
             throw new ResourceNotFoundException();
         }
     }
@@ -98,7 +97,7 @@ public class PostController {
                 List<Comment> pendingComments = cookieString2CommentList(pendingCommentsId);
                 mav.addObject("pendingComments", pendingComments);
             }
-        } catch (NoResultException ex) {
+        } catch (Exception ex) {
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -143,7 +142,7 @@ public class PostController {
         Post post = null;
         try {
             post = postService.find(postId);
-        } catch (NoResultException ex) {
+        } catch (Exception ex) {
             throw new ResourceNotFoundException();
         }
         comment.setPost(post);
@@ -182,7 +181,7 @@ public class PostController {
         try {
             Post post = postService.findBySlug(postSlug, false, true, true, true);
             mav = processModels4EditPost(post);
-        } catch(NoResultException ex) {
+        } catch(Exception ex) {
             throw new ResourceNotFoundException();
         }
         return mav;

@@ -15,7 +15,6 @@ import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
-import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
@@ -93,11 +92,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<Post> list() {
         return postDao.findEntities();
-    }
-
-    @Override
-    public List<Post> list(int pageNum) {
-        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override
@@ -280,22 +274,12 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> listByUser(Integer userId, int pageNum) {
-        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
-    }
-
-    @Override
     public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
         List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
         return posts;
     }
 
 //FIXME 尚未实现
-    @Override
-    public List<Post> listNewesPostsByUser(Integer userId, int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");

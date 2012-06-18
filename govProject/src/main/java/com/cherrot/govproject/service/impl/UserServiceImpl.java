@@ -12,7 +12,6 @@ import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.UserService;
-import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,12 +98,6 @@ public class UserServiceImpl implements UserService{
 //    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<User> list() {
         return userDao.findEntities();
-    }
-
-    @Override
-//    @Transactional(readOnly=true)
-    public List<User> list(int pageNum) {
-        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override

@@ -6,6 +6,7 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
@@ -13,7 +14,6 @@ import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,43 +32,78 @@ public class TermController {
     private TagService tagService;
     @Inject
     private PostService postService;
-    
+
     @RequestMapping("/category/{categorySlug}")
     public ModelAndView listPostsByCategoryPage1(@PathVariable("categorySlug")String slug) {
+
         ModelAndView mav = new ModelAndView("/listPosts");
-        //TODO 根据分类的slug取出分类，然后根据该分类分页查询文章列表
         try {
             Category category = categoryService.findBySlug(slug, false, false);
             mav.addObject("term", category);
             List<Post> postList = postService.listNewestPostsByCategory(category.getId(), 1, DEFAULT_PAGE_SIZE);
             mav.addObject("postList", postList);
             mav.addObject("pageNum", 1);
-            int pageCount = category.getCount();
-            mav.addObject(categoryService);
-        } catch (NoResultException e) {
+            int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
+            mav.addObject("pageCount", pageCount);
+        } catch (Exception e) {
             throw new ResourceNotFoundException();
         }
         return mav;
     }
 
     @RequestMapping("/category/{categorySlug}/{pageNum}")
-    public ModelAndView listPostsByCategory(@PathVariable("categorySlug")String slug) {
+    public ModelAndView listPostsByCategory(@PathVariable("categorySlug")String slug
+        , @PathVariable("pageNum")int pageNum) {
+
         ModelAndView mav = new ModelAndView("/listPosts");
-        //TODO 根据分类的slug取出分类，然后根据该分类分页查询文章列表
+        try {
+            Category category = categoryService.findBySlug(slug, false, false);
+            mav.addObject("term", category);
+            List<Post> postList = postService.listNewestPostsByCategory(category.getId(), pageNum, DEFAULT_PAGE_SIZE);
+            mav.addObject("postList", postList);
+            mav.addObject("pageNum", pageNum);
+            int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
+            mav.addObject("pageCount", pageCount);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return mav;
     }
 
     @RequestMapping("/tag/{tagSlug}")
     public ModelAndView listPostsByTagPage1(@PathVariable("tagSlug")String slug) {
+
         ModelAndView mav = new ModelAndView("/listPosts");
-        //与上面类同
+        try {
+            Tag tag = tagService.findBySlug(slug, false);
+            mav.addObject("term", tag);
+            List<Post> postList = postService.listNewestPostsByTag(tag.getId(), 1, DEFAULT_PAGE_SIZE);
+            mav.addObject("postList", postList);
+            mav.addObject("pageNum", 1);
+            int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;
+            mav.addObject("pageCount", pageCount);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return mav;
     }
 
     @RequestMapping("/tag/{tagSlug}/{pageNum}")
-    public ModelAndView listPostsByTag(@PathVariable("tagSlug")String slug) {
+    public ModelAndView listPostsByTag(@PathVariable("tagSlug")String slug
+        , @PathVariable("pageNum")int pageNum) {
+
         ModelAndView mav = new ModelAndView("/listPosts");
-        //与上面类同
+        try {
+            Tag tag = tagService.findBySlug(slug, false);
+            mav.addObject("term", tag);
+            List<Post> postList = postService.listNewestPostsByCategory(tag.getId(), pageNum, DEFAULT_PAGE_SIZE);
+            mav.addObject("postList", postList);
+            mav.addObject("pageNum", pageNum);
+            int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;
+            mav.addObject("pageCount", pageCount);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException();
+        }
         return mav;
     }
 }

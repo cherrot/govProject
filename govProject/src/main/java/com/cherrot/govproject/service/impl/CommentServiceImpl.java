@@ -12,7 +12,6 @@ import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.SiteLogService;
-import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -97,11 +96,6 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> list(int pageNum,boolean withCommentmetas, boolean withChildComments) {
-        return list(pageNum, DEFAULT_PAGE_SIZE, withCommentmetas, withChildComments);
-    }
-
-    @Override
     @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
@@ -143,12 +137,6 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
 //    @Transactional(readOnly=true)
-    public List<Comment> list(int pageNum) {
-        return list(pageNum, DEFAULT_PAGE_SIZE);
-    }
-
-    @Override
-//    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum, int pageSize) {
         return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
@@ -163,22 +151,12 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> listByUser(Integer userId, int pageNum) {
-        return listByUser(userId, pageNum, DEFAULT_PAGE_SIZE);
-    }
-
-    @Override
     public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
         List<Comment> comments = commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
         return comments;
     }
 
     //FIXME!!!
-    @Override
-    public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     @Override
     public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize) {
         throw new UnsupportedOperationException("Not supported yet.");

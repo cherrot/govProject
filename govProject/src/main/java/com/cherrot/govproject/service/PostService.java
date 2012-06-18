@@ -55,9 +55,7 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param pageNum
      * @return
      */
-    List<Post> listByUser(Integer userId, int pageNum);
     List<Post> listByUser(Integer userId, int pageNum, int pageSize);
-    List<Post> listNewesPostsByUser(Integer userId, int pageNum);
     List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize);
     int getCountByUser(Integer userId);
     int getCountByCategory(Integer categoryId);

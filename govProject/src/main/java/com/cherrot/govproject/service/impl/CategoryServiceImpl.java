@@ -9,7 +9,6 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.service.CategoryService;
-import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -111,12 +110,6 @@ public class CategoryServiceImpl implements CategoryService {
 //    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Category> list() {
         return categoryDao.findEntities();
-    }
-
-    @Override
-//    @Transactional(readOnly=true)
-    public List<Category> list(int pageNum) {
-        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override

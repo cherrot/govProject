@@ -11,7 +11,6 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Link;
 import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.service.LinkService;
-import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -67,12 +66,6 @@ public class LinkServiceImpl implements LinkService{
 //    @Transactional(readOnly=true)
     public List<Link> list() {
         return linkDao.findEntities();
-    }
-
-    @Override
-//    @Transactional(readOnly=true)
-    public List<Link> list(int pageNum) {
-        return list(pageNum, DEFAULT_PAGE_SIZE);
     }
 
     @Override

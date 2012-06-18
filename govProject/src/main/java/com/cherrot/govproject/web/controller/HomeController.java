@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
-import javax.persistence.NoResultException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -72,7 +71,7 @@ public class HomeController {
     private void initData() {
         try {
             userService.findByLoginName("cherrot+gov@cherrot.com", false, false, false, false);
-        } catch (NoResultException ex) {
+        } catch (Exception ex) {
             //创建测试用户
             User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
             userService.create(user);

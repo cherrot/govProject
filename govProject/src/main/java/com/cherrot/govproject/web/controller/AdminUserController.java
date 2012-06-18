@@ -34,7 +34,7 @@ public class AdminUserController {
     private CommentService commentService;
     @Inject
     private PostService postService;
-    
+
     @RequestMapping(params="id")
     public ModelAndView viewUser(@RequestParam("id")Integer userId) {
         ModelAndView mav = new ModelAndView("/viewUser");
@@ -44,9 +44,9 @@ public class AdminUserController {
         mav.addObject("user", user);
         String userRole = userService.getDescriptionOfUserLevel(user.getUserLevel());
         mav.addObject("userRole", userRole);
-        List<Post> userPosts = postService.listNewesPostsByUser(userId, 1);
+        List<Post> userPosts = postService.listNewesPostsByUser(userId, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userPosts",userPosts);
-        List<Comment> userComments = commentService.listNewesCommentsByUser(userId, 1);
+        List<Comment> userComments = commentService.listNewesCommentsByUser(userId, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userComments", userComments);
         return mav;
     }
@@ -57,9 +57,9 @@ public class AdminUserController {
      */
     @RequestMapping("/list")
     public ModelAndView viewUserList(
-            @RequestParam(value="pageNum", required=false)Integer pageNum, 
+            @RequestParam(value="pageNum", required=false)Integer pageNum,
             @RequestParam(value="pageSize",required=false)Integer pageSize) {
-        
+
         ModelAndView mav = new ModelAndView("/admin/users");
         if (pageNum == null) pageNum = 1;
         if (pageSize == null) pageSize = DEFAULT_PAGE_SIZE;
@@ -68,17 +68,17 @@ public class AdminUserController {
         List<String> roleList = new ArrayList<String>();
         List<Integer> postCountList = new ArrayList<Integer>();
         List<Integer> commentCountList = new ArrayList<Integer>();
-        
+
         for (User user : userList) {
             roleList.add( userService.getDescriptionOfUserLevel(user.getUserLevel()) );
             postCountList.add( postService.getCountByUser(user.getId()) );
             commentCountList.add( commentService.getCountByUser(user.getId()) );
         }
-        
+
         mav.addObject("roleList", roleList);
         mav.addObject("postCountList", postCountList);
         mav.addObject("commentCountList", commentCountList);
-        
+
         return mav;
     }
 

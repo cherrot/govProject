@@ -20,6 +20,5 @@ public interface BaseService<Model extends Serializable, PrimaryKey extends Seri
     void save(Model model);
     int getCount();
     List<Model> list();
-    List<Model> list(int pageNum);
     List<Model> list(int pageNum, int pageSize);
 }

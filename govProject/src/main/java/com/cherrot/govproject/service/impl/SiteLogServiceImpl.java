@@ -10,7 +10,6 @@ import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.SiteLog;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.SiteLogService;
-import com.cherrot.govproject.util.Constants;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,11 +80,6 @@ public class SiteLogServiceImpl implements SiteLogService{
     @Override
     public List<SiteLog> list() {
         return siteLogDao.findEntities();
-    }
-
-    @Override
-    public List<SiteLog> list(int pageNum) {
-        return list(pageNum, Constants.DEFAULT_PAGE_SIZE);
     }
 
     @Override

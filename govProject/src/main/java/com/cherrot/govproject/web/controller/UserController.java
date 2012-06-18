@@ -10,6 +10,7 @@ import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
 import static com.cherrot.govproject.util.Constants.LOGIN_TO_URL;
 import static com.cherrot.govproject.web.controller.BaseController.getSessionUser;
@@ -49,10 +50,10 @@ public class UserController {
         if ( user != null) {
             mav.addObject("user", user);
             List<Comment> userComments = commentService.listByUser(user.getId(),
-                commentPageNum==null ? 1 : commentPageNum);
+                commentPageNum==null ? 1 : commentPageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("userComments", userComments);
             List<Post> userPosts = postService.listByUser(user.getId(),
-                postPageNum==null ? 1 : postPageNum);
+                postPageNum==null ? 1 : postPageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("userPosts", userPosts);
         } else {
             request.getSession().setAttribute(ERROR_MSG_KEY, "请重新登录！");

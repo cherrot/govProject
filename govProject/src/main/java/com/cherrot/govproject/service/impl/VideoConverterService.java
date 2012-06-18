@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class VideoConverterService{
 
     public int videoConvert(final String absoluteFilename) {
-        //throw new UnsupportedOperationException("Not supported yet.");
         Thread videoConvertThread = new Thread(){
             @Override
             public void run() {
