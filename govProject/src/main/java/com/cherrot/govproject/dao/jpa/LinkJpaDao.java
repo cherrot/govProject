@@ -54,6 +54,8 @@ public class LinkJpaDao implements LinkDao {
             em.persist(link);
             if (linkCategory != null) {
                 linkCategory.getLinkList().add(link);
+                //设置count字段
+                linkCategory.setCount(linkCategory.getCount()+1);
                 linkCategory = em.merge(linkCategory);
             }
 //            em.getTransaction().commit();
@@ -82,10 +84,14 @@ public class LinkJpaDao implements LinkDao {
             link = em.merge(link);
             if (linkCategoryOld != null && !linkCategoryOld.equals(linkCategoryNew)) {
                 linkCategoryOld.getLinkList().remove(link);
+                //设置count字段
+                linkCategoryOld.setCount(linkCategoryOld.getCount()-1);
                 linkCategoryOld = em.merge(linkCategoryOld);
             }
             if (linkCategoryNew != null && !linkCategoryNew.equals(linkCategoryOld)) {
                 linkCategoryNew.getLinkList().add(link);
+                //设置count字段
+                linkCategoryNew.setCount(linkCategoryNew.getCount()+1);
                 linkCategoryNew = em.merge(linkCategoryNew);
             }
 //            em.getTransaction().commit();
@@ -124,6 +130,8 @@ public class LinkJpaDao implements LinkDao {
             LinkCategory linkCategory = link.getLinkCategory();
             if (linkCategory != null) {
                 linkCategory.getLinkList().remove(link);
+                //设置count字段
+                linkCategory.setCount(linkCategory.getCount()-1);
                 linkCategory = em.merge(linkCategory);
             }
             em.remove(link);

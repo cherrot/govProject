@@ -25,7 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FIXME 添加 修改 删除文章时记得处理 目录或标签的setCount()设置正确的文章数目. 还有LinkJpaDao
+ * 添加 修改 删除文章时记得处理 目录或标签的setCount()设置正确的文章数目. 还有LinkJpaDao、 CommentJpaDao
  * @author cherrot
  */
 @Repository
@@ -131,7 +131,7 @@ public class PostJpaDao implements PostDao {
                 postParent = em.merge(postParent);
             }
         /**
-         * 设置一对多关系映射的维护端（多方）。
+         * 设置一对多关系映射的维护端（多方）。 和 多对多关系
          */
             for (Postmeta postmetaListPostmeta : post.getPostmetaList()) {
                 Post oldPostOfPostmetaListPostmeta = postmetaListPostmeta.getPost();
@@ -153,10 +153,14 @@ public class PostJpaDao implements PostDao {
             }
             for (Category categoryListCategory : post.getCategoryList()) {
                 categoryListCategory.getPostList().add(post);
+                //设置count字段
+                categoryListCategory.setCount(categoryListCategory.getCount()+1);
                 categoryListCategory = em.merge(categoryListCategory);
             }
             for (Tag tagListTag : post.getTagList()) {
                 tagListTag.getPostList().add(post);
+                //设置count字段
+                tagListTag.setCount(tagListTag.getCount()+1);
                 tagListTag = em.merge(tagListTag);
             }
             for (Comment commentListComment : post.getCommentList()) {
@@ -299,7 +303,7 @@ public class PostJpaDao implements PostDao {
                 postParentNew = em.merge(postParentNew);
             }
             /**
-             * 设置一对多关系的关系维护端（多方）
+             * 设置一对多关系的关系维护端（多方） 和 多对多关系
              */
             for (Postmeta postmetaListNewPostmeta : postmetaListNew) {
                 if (!postmetaListOld.contains(postmetaListNewPostmeta)) {
@@ -332,24 +336,32 @@ public class PostJpaDao implements PostDao {
             for (Category categoryListOldCategory : categoryListOld) {
                 if (!categoryListNew.contains(categoryListOldCategory)) {
                     categoryListOldCategory.getPostList().remove(post);
+                    //设置count字段
+                    categoryListOldCategory.setCount(categoryListOldCategory.getCount()-1);
                     categoryListOldCategory = em.merge(categoryListOldCategory);
                 }
             }
             for (Category categoryListNewCategory : categoryListNew) {
                 if (!categoryListOld.contains(categoryListNewCategory)) {
                     categoryListNewCategory.getPostList().add(post);
+                    //设置count字段
+                    categoryListNewCategory.setCount(categoryListNewCategory.getCount()+1);
                     categoryListNewCategory = em.merge(categoryListNewCategory);
                 }
             }
             for (Tag tagListOldTag : tagListOld) {
                 if (!tagListNew.contains(tagListOldTag)) {
                     tagListOldTag.getPostList().remove(post);
+                    //设置count字段
+                    tagListOldTag.setCount(tagListOldTag.getCount()-1);
                     tagListOldTag = em.merge(tagListOldTag);
                 }
             }
             for (Tag tagListNewTag : tagListNew) {
                 if (!tagListOld.contains(tagListNewTag)) {
                     tagListNewTag.getPostList().add(post);
+                    //设置count字段
+                    tagListNewTag.setCount(tagListNewTag.getCount()+1);
                     tagListNewTag = em.merge(tagListNewTag);
                 }
             }
@@ -431,11 +443,15 @@ public class PostJpaDao implements PostDao {
             List<Category> categoryList = post.getCategoryList();
             for (Category categoryListCategory : categoryList) {
                 categoryListCategory.getPostList().remove(post);
+                //设置count字段
+                categoryListCategory.setCount(categoryListCategory.getCount()-1);
                 categoryListCategory = em.merge(categoryListCategory);
             }
             List<Tag> tagList = post.getTagList();
             for (Tag tagListTag : tagList) {
                 tagListTag.getPostList().remove(post);
+                //设置count字段
+                tagListTag.setCount(tagListTag.getCount()-1);
                 tagListTag = em.merge(tagListTag);
             }
             em.remove(post);

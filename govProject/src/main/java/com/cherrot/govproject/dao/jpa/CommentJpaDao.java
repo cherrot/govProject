@@ -90,6 +90,8 @@ public class CommentJpaDao implements CommentDao {
         }
             if (post != null) {
                 post.getCommentList().add(comment);
+                //设置count字段
+                post.setCommentCount(post.getCommentCount()+1);
                 post = em.merge(post);
             }
             if (commentParent != null) {
@@ -195,10 +197,14 @@ public class CommentJpaDao implements CommentDao {
             }
             if (postOld != null && !postOld.equals(postNew)) {
                 postOld.getCommentList().remove(comment);
+                //设置count字段
+                postOld.setCommentCount(postOld.getCommentCount()-1);
                 postOld = em.merge(postOld);
             }
             if (postNew != null && !postNew.equals(postOld)) {
                 postNew.getCommentList().add(comment);
+                //设置count字段
+                postNew.setCommentCount(postNew.getCommentCount()+1);
                 postNew = em.merge(postNew);
             }
             if (commentParentOld != null && !commentParentOld.equals(commentParentNew)) {
@@ -289,6 +295,8 @@ public class CommentJpaDao implements CommentDao {
             Post post = comment.getPost();
             if (post != null) {
                 post.getCommentList().remove(comment);
+                //设置count字段
+                post.setCommentCount(post.getCommentCount()-1);
                 post = em.merge(post);
             }
             Comment commentParent = comment.getCommentParent();
