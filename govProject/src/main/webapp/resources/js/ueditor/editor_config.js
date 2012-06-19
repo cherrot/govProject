@@ -9,8 +9,15 @@
  * 当升级编辑器时，可直接使用旧版配置文件替换新版配置文件,不用担心旧版配置文件中因缺少新功能所需的参数而导致脚本报错。
  **************************提示********************************/
 
-
+//TODO 部署前修改各个URL变量，去掉 /govProject 前缀
 (function () {
+    var now=new Date();
+    yyyy=now.getFullYear();
+    mm=now.getMonth()+1;
+    dd=now.getDate();
+    mm=mm <10? "0"+mm:mm;
+    dd=dd <10? "0"+dd:dd;
+    today=yyyy+"-"+mm+"-"+dd;
     /**
      * 编辑器资源文件根路径。它所表示的含义是：以编辑器实例化页面为当前路径，指向编辑器资源文件（即dialog等文件夹）的路径。
      * 鉴于很多同学在使用编辑器的时候出现的种种路径问题，此处强烈建议大家使用"相对于网站根目录的相对路径"进行配置。
@@ -37,15 +44,16 @@
         UEDITOR_HOME_URL : URL
 
         //图片上传配置区
-        ,imageUrl:URL+"jsp/imageUp.jsp"             //图片上传提交地址
-        ,imagePath:URL                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
-        //,imageFieldName:"upfile"                   //图片描述的key,若此处修改，需要在后台对应文件修改对应参数
+        ,imageUrl:"/post/uploadimage"             //图片上传提交地址
+        //,imagePath:URL                     //图片修正地址，引用了fixedImagePath,如有特殊需求，可自行配置
+        ,imagePath:""
+        ,imageFieldName:"imageFile"                   //图片描述的key,若此处修改，需要在后台对应文件修改对应参数
         //,compressSide:0                            //等比压缩的基准，确定maxImageSideLength参数的参照对象。0为按照最长边，1为按照宽度，2为按照高度
         //,maxImageSideLength:900                    //上传图片最大允许的边长，超过会自动等比缩放,不缩放就设置一个比较大的值，更多设置在image.html中
 
         //附件上传配置区
-        ,fileUrl:URL+"jsp/fileUp.jsp"               //附件上传提交地址
-        ,filePath:URL                   //附件修正地址，同imagePath
+        ,fileUrl:"/post/upload"               //附件上传提交地址
+        ,filePath:"/uploads"+yyyy-mm+"/"+dd+"/"                   //附件修正地址，同imagePath
         //,fileFieldName:"upfile"                    //附件提交的表单名，若此处修改，需要在后台对应文件修改对应参数
 
          //远程抓取配置区

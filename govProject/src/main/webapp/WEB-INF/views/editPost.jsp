@@ -44,7 +44,7 @@
         function createUploader(){
             var uploader = new qq.FileUploader({
                 element: document.getElementById('file-uploader'),
-                action: '<c:url value="/post/upload"/>',
+                action: '<c:url value="/post/uploadvideo"/>',
                 params: {postId:${post.id},f:2},
                 encoding: "multipart",
                 debug: false

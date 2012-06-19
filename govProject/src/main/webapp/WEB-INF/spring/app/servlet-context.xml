@@ -19,7 +19,7 @@
   <beans:bean id="uploadDirResource" name="uploadDir" class="org.springframework.core.io.FileSystemResource">
     <beans:constructor-arg>
       <!--PENDING modify this value befor deploying-->
-      <beans:value>/tmp</beans:value>
+      <beans:value>/tmp/</beans:value>
     </beans:constructor-arg>
     <beans:qualifier value="uploadDir"/>
   </beans:bean>

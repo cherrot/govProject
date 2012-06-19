@@ -38,7 +38,7 @@ public class TagServiceImpl implements TagService {
 
     @Override
     @Transactional
-    public List<Tag> createTagsByName(List<String> tagStrings) {
+    public <T extends Iterable<String>> List<Tag> createTagsByName(T tagStrings) {
         Tag tag = null;
         List<Tag> tags = new ArrayList<Tag>();
         for (String tagString : tagStrings) {

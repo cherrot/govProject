@@ -241,17 +241,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
-    public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
+    public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
         Post post = find(id);
-        processDependency(post, withComments, withPostmetas, withCategories, withTags);
+        processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
         return post;
     }
 
     @Override
     @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
-    public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
+    public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
         Post post = postDao.findBySlug(slug);
-        processDependency(post, withComments, withPostmetas, withCategories, withTags);
+        processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
         return post;
     }
 
@@ -326,11 +326,12 @@ public class PostServiceImpl implements PostService {
         postParent.setContent(content);
     }
 
-    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags){
+    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts){
         if (withComments) post.getCommentList().isEmpty();
         if (withPostmetas) post.getPostmetaList().isEmpty();
         if (withCategories) post.getCategoryList().isEmpty();
         if (withTags) post.getTagList().isEmpty();
+        if (withChildPosts) post.getPostList().isEmpty();
     }
 
     //TODO 待实现

@@ -5,7 +5,10 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--只有scope为session时才会覆盖用户浏览器设置--%>
+<fmt:setLocale value="zh_CN" scope="session"/>
 <!DOCTYPE html>
 <html>
   <head>
@@ -19,7 +22,7 @@
     <h1 class="postTitle"><a href="<c:url value="/post/${post.slug}" />" title="${post.title}" >${post.title}</a></h1>
     <h2 class="meta">
       由&nbsp;<a href="<c:url value="/user/${post.user.id}" />">${post.user.displayName}</a>&nbsp;发表&nbsp;
-      ${post.createDate}&nbsp;
+      <fmt:formatDate value="${post.createDate}" type="date" dateStyle="full"/> &nbsp;
       所属分类：
       <c:forEach items="${post.categoryList}" var="category">
         <a href="<c:url value="/term/${category.slug}"/>" title="点击察看 ${category.name} 分类的所有文章">${category.name}</a>&nbsp;
@@ -30,8 +33,11 @@
     <div class="postContent">
       ${post.content}
     </div>
-
     <p>文章标签： ${tagListString}</p>
+
+    <c:if test="${sessionScope[loginUser] eq post.user}">
+      <a href="<c:url value="/post/${post.slug}/edit"/>">编辑文章</a>
+    </c:if>
 
     <div id="comments" class="postComments">
       <ol>
@@ -42,9 +48,8 @@
         </c:forEach>
       </ol>
       <ul>
-        您的评论正等待审核:<br/>
         <c:forEach items="${pendingComments}" var="pendingComment">
-          <li><a href="${pendingComment.authorUrl}">${pendingComment.author}</a>: ${pendingComment.content}</li>
+          您的评论正等待审核:<li><a href="${pendingComment.authorUrl}">${pendingComment.author}</a>: ${pendingComment.content}</li>
         </c:forEach>
       </ul>
     </div>

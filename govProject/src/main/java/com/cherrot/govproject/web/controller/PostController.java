@@ -8,19 +8,27 @@ import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
+import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
+import com.cherrot.govproject.web.exceptions.ForbiddenException;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -52,6 +60,8 @@ public class PostController {
     private CommentService commentService;
     @Inject
     private CategoryService categoryService;
+    @Inject
+    private TagService tagService;
 
     /**
      * 返回一个新的Comment对象
@@ -62,24 +72,33 @@ public class PostController {
     public Comment getNewComment() {
         return new Comment();
     }
-    
+
     //TODO 要在Web控制器解决模型的不完整问题！
     @ModelAttribute("post")
-    public Post getPost() {
-        return null;
+    public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
+        Post post = null;
+        if (postId != null) {
+            System.err.println("Here!");
+            post = postService.find(postId, true, true, true, true, true);
+        } else {
+            post = new Post();
+            post.setTitle("新建文章");
+        }
+        return post;
     }
 
     /**
-     * 捕获URI为 /post?id=xxx的请求，显示文章
+     * 捕获URI为 /post?postId=xxx的请求，显示文章
      * @param postId post的主键
      * @return
      */
-    @RequestMapping(params="id")
-    public String viewPost(@RequestParam("id")int postId) {
+    @RequestMapping(params="postId")
+    public String viewPost(@RequestParam("postId")int postId) {
         try {
-            Post post = postService.find(postId, false, false, false, false);
+            Post post = postService.find(postId, false, false, false, false, false);
             return "redirect:/post/"+post.getSlug();
-        } catch (Exception ex) {
+        } catch (PersistenceException ex) {
+            Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
     }
@@ -91,19 +110,33 @@ public class PostController {
      */
     @RequestMapping(value="/{postSlug}", method= RequestMethod.GET)
     public ModelAndView viewPost(@PathVariable("postSlug")String postSlug
-        ,@CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId) {
+        ,@CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId
+        ,HttpServletResponse response) {
 
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.findBySlug(postSlug, true, true, true, true);
+            Post post = postService.findBySlug(postSlug, true, true, true, true, false);
             mav.addObject("post", post);
             mav.addObject("tagListString", tagList2String(post.getTagList()));
             //读取Cookie将访问者所有未审核评论显示在页面上
             if (pendingCommentsId != null) {
-                List<Comment> pendingComments = cookieString2CommentList(pendingCommentsId);
+                List<Comment> pendingComments = processPendingCommentsString(pendingCommentsId);
                 mav.addObject("pendingComments", pendingComments);
+                StringBuilder strBuilder = new StringBuilder();
+                for (Comment comment : pendingComments) {
+                    strBuilder.append(comment.getId()).append(",");
+                }
+                //去掉末尾的逗号
+                pendingCommentsId = strBuilder.length()>1 ? strBuilder.substring(0, strBuilder.length()-1) : null;
+                Cookie cookie = new Cookie("pendingCommentsId", pendingCommentsId);
+                if (pendingCommentsId == null) {
+                    //删除cookie
+                    cookie.setMaxAge(0);
+                }
+                response.addCookie(cookie);
             }
-        } catch (Exception ex) {
+        } catch (PersistenceException ex) {
+            Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -148,7 +181,8 @@ public class PostController {
         Post post = null;
         try {
             post = postService.find(postId);
-        } catch (Exception ex) {
+        } catch (PersistenceException ex) {
+            Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         comment.setPost(post);
@@ -157,19 +191,13 @@ public class PostController {
         /**
          * 将该访问者的所有未审核评论写入Cookie
          */
-        StringBuilder strBuilder = new StringBuilder();
-        //检验原cookie中的评论是否已通过审核，只有未通过审核的才放入cookie
-        if (pendingCommentsId != null) {
-            List<Comment> pendingComments = cookieString2CommentList(pendingCommentsId);
-            for (Comment pendingComment : pendingComments) {
-                if ( ! pendingComment.getApproved() ) {
-                    strBuilder.append(pendingComment.getId()).append(",");
-                }
-            }
-        }
         //将新增评论加入cookie
-        strBuilder.append(comment.getId());
-        Cookie pendingCommentsCookie = new Cookie("pendingCommentsId", strBuilder.toString());
+        if (pendingCommentsId != null) {
+            pendingCommentsId = pendingCommentsId + "," + comment.getId();
+        } else {
+            pendingCommentsId = comment.getId().toString();
+        }
+        Cookie pendingCommentsCookie = new Cookie("pendingCommentsId", pendingCommentsId);
         response.addCookie(pendingCommentsCookie);
         String referer = request.getHeader("Referer");
         return "redirect:"+ referer;
@@ -181,13 +209,19 @@ public class PostController {
      * @return
      */
     @RequestMapping(value="/{postSlug}/edit", method= RequestMethod.GET)
-    public ModelAndView editPost(@PathVariable("postSlug")final String postSlug) {
+    public ModelAndView editPost(@PathVariable("postSlug")final String postSlug
+        ,HttpSession session) {
 
         ModelAndView mav = null;
         try {
-            Post post = postService.findBySlug(postSlug, false, true, true, true);
+            Post post = postService.findBySlug(postSlug, false, true, true, true, false);
+            if ( (BaseController.getSessionUser(session) == null) || ( !BaseController.getSessionUser(session).equals(post.getUser()) ) ) {
+                //无权修改
+                throw new ForbiddenException();
+            }
             mav = processModels4EditPost(post);
-        } catch(Exception ex) {
+        } catch(PersistenceException ex) {
+            Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -200,9 +234,9 @@ public class PostController {
      * @return
      */
     @RequestMapping(value = "/create", method= RequestMethod.GET)
-    public ModelAndView createPost() {
-        Post post = new Post();
-        post.setTitle("新建文章");
+    public ModelAndView createPost(@ModelAttribute("post")Post post) {
+//        Post post = new Post();
+//        post.setTitle("新建文章");
         ModelAndView mav = processModels4EditPost(post);
         return mav;
     }
@@ -221,13 +255,29 @@ public class PostController {
         ,BindingResult bindingResult
         ,RedirectAttributes redirectAttr
         ,@RequestParam("postTags")String postTags
-        ,@RequestParam("postCategories")int[] postCategories) {
+        ,@RequestParam("postCategories")Integer[] postCategories) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
-            post.setUser(BaseController.getSessionUser(request.getSession()));
+            if (post.getId() == null) {
+                User author = BaseController.getSessionUser(request.getSession());
+                if (author == null) {
+                    throw new ForbiddenException();
+                }
+                post.setUser(author);
+            }
+            //文章标签
+            List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\W+")));
+            post.setTagList(tagList);
+            //文章目录
+            List<Category> categoryList = new ArrayList<Category>();
+            for (Integer categoryId : postCategories) {
+                categoryList.add(categoryService.find(categoryId));
+            }
+            post.setCategoryList(categoryList);
+            //保存
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }
@@ -254,8 +304,9 @@ public class PostController {
         List<Category> categories = categoryService.list();
         mav.addObject("categories", categories);
 
-        mav.addObject("post", post);
-        if (post.getId() != null) {
+        if ( post.getId() != null ) {
+            //覆盖@ModelAttribute注入的"post"对象
+            mav.addObject("post", post);
             //设置已选文章分类
             List<Category> postCategories = post.getCategoryList();
             for (Category category : postCategories) {
@@ -272,15 +323,22 @@ public class PostController {
         for (Tag tag : tagList) {
             strBuilder.append(tag.getName()).append(", ");
         }
-        return strBuilder.substring(0, strBuilder.length()-2);
+        return strBuilder.length()>2 ? strBuilder.substring(0, strBuilder.length()-2) : "";
     }
 
-    private List<Comment> cookieString2CommentList(String pendingCommentsId) {
+    /**
+     *
+     * @param pendingCommentsId 若该字符串中的某个评论已通过审核，也会将其从字符串中删除
+     * @return 根据pendingCommentsId得到的未审核的评论列表
+     */
+    private List<Comment> processPendingCommentsString(String pendingCommentsId) {
         List<Comment> comments = new ArrayList<Comment>();
         String[] commentIdStrings = pendingCommentsId.split(",");
         for (int i=0; i<commentIdStrings.length; i++) {
             Comment comment = commentService.find(Integer.parseInt(commentIdStrings[i]));
-            comments.add(comment);
+            if ( !comment.getApproved() ) {
+                comments.add(comment);
+            }
         }
         return comments;
     }

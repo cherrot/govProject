@@ -18,8 +18,9 @@ public interface TagService extends BaseService<Tag, Integer> {
     /**
      * Create Category and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.
+     * 改为泛型方法，但仍不支持String[] :(
      * @param term Category(tag, category, etc) object which would be created ()
      * @param type "type" property of the TermTaxonomy object
      */
-     List<Tag> createTagsByName(List<String> tags);
+     <T extends Iterable<String>> List<Tag> createTagsByName(T tags);
 }

@@ -19,8 +19,8 @@ public interface PostService extends BaseService<Post, Integer> {
 
     void create(Post post, List<Category> categories, List<String> tags);
     void create(Post post, List<Category> categories, List<String> tags, List<Postmeta> postmetas);
-    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags);
-    Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags);
+    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
+    Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
     /**
      * 向指定的文章(post)添加文章分类/文章标签（关键字）。此方法不会覆盖post原有的term关联
      * @param post 被操作的post对象

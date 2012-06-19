@@ -276,6 +276,7 @@
 				<artifactId>maven-jetty-plugin</artifactId>
 				<version>${jetty.version}</version>
 				<configuration>
+          <contextPath>/</contextPath>
 					<scanIntervalSeconds>3</scanIntervalSeconds>
 				</configuration>
 			</plugin>
