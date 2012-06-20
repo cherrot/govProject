@@ -5,6 +5,7 @@
 --%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%--@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" --%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
 <html>
@@ -83,8 +84,9 @@
       <form:errors path="slug"/>
       <form:input path="slug" placeholder="请输入文章短链接（可选）" /><br/>
       <%--不能直接用tagList，必须转成String--%>
-      <label for="postTags">文章标签</label><input id="postTags" name="postTags" type="text" value="${tagListString}" placeholder="请输入文章关键字，以英文逗号隔开"/>
-      <label>文章分类</label>
+      <label for="postTags">文章标签</label>
+      <input id="postTags" name="postTags" type="text" value="<c:forEach items="${tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
+      <br/><label>文章分类</label>
       <ul>
         <c:forEach items="${categories}" var="category">
           <li><input id="postCategories" name="postCategories" type="checkbox" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>

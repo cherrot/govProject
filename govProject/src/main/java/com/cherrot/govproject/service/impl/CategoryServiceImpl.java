@@ -73,7 +73,6 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public Category find(Integer id) {
         return categoryDao.find(id);
     }
@@ -85,6 +84,15 @@ public class CategoryServiceImpl implements CategoryService {
         if (withPosts) term.getPostList().isEmpty();
         if (withTerms) term.getCategoryList().isEmpty();
         return term;
+    }
+
+    @Override
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    public Category findBySlug(String slug, boolean withPosts, boolean withChildCategories) {
+        Category category = categoryDao.findBySlug(slug);
+        if (withPosts) category.getPostList().isEmpty();
+        if (withChildCategories) category.getCategoryList().isEmpty();
+        return category;
     }
 
     @Override
@@ -107,22 +115,20 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-//    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public List<Category> list() {
         return categoryDao.findEntities();
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public List<Category> list(int pageNum, int pageSize) {
         return categoryDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
-    private void processDependency(List<Category> terms, boolean withPosts, boolean withTerms) {
-        if (withPosts || withTerms) {
+    private void processDependency(List<Category> terms, boolean withPosts, boolean withChildCategories) {
+        if (withPosts || withChildCategories) {
             for (Category term : terms) {
                 if (withPosts) term.getPostList().isEmpty();
-                if (withTerms) term.getCategoryList().isEmpty();
+                if (withChildCategories) term.getCategoryList().isEmpty();
             }
         }
     }
@@ -135,11 +141,4 @@ public class CategoryServiceImpl implements CategoryService {
             edit(model);
         }
     }
-
-    //TODO 待实现
-    @Override
-    public Category findBySlug(String slug, boolean withPosts, boolean withChildCategories) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
 }

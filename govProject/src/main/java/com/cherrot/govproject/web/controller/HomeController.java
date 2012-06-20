@@ -76,10 +76,14 @@ public class HomeController {
             User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
             userService.create(user);
             //创建测试分类和标签
-            Category category = new Category(1, "我是文章分类", "test");
-            Tag tag = new Tag(1, "我是标签", "testtag");
+            Category category = new Category(0, "我是文章分类", "test");
+            Category category1 = new Category(0, "我也是分类", "test1");
+            Tag tag = new Tag(0, "我是标签", "testtag");
+            Tag tag1 = new Tag(0, "我也是标签", "test1");
             categoryService.create(category);
+            categoryService.create(category1);
             tagService.create(tag);
+            tagService.create(tag1);
             //创建测试文章
             Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
             post.setUser(user);
@@ -88,6 +92,7 @@ public class HomeController {
             post.setCategoryList(categoryList);
             List<Tag> tagList = new ArrayList<Tag>();
             tagList.add(tag);
+            tagList.add(tag1);
             post.setTagList(tagList);
             postService.create(post);
             //创建测试评论

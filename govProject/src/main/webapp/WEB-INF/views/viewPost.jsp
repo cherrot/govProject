@@ -6,7 +6,8 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
-<%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%--@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" --%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%--只有scope为session时才会覆盖用户浏览器设置--%>
 <fmt:setLocale value="zh_CN" scope="session"/>
 <!DOCTYPE html>
@@ -25,7 +26,7 @@
       <fmt:formatDate value="${post.createDate}" type="date" dateStyle="full"/> &nbsp;
       所属分类：
       <c:forEach items="${post.categoryList}" var="category">
-        <a href="<c:url value="/term/${category.slug}"/>" title="点击察看 ${category.name} 分类的所有文章">${category.name}</a>&nbsp;
+        <a href="<c:url value="/category/${category.slug}"/>" title="点击察看 ${category.name} 分类的所有文章">${category.name}</a>&nbsp;
       </c:forEach>
         <a href="#comments">${post.commentCount} 条评论</a>
     </h2>
@@ -33,7 +34,13 @@
     <div class="postContent">
       ${post.content}
     </div>
-    <p>文章标签： ${tagListString}</p>
+    <p>
+      <c:if test="${!empty tagList}">文章标签：</c:if>
+      <%--c:set value="${fn:length(tagList)}" var="tagListSize"/--%>
+      <c:forEach items="${tagList}" var="tag" varStatus="status">
+        <a href="<c:url value="/tag/${tag.slug}"/>">${tag.name}</a><c:if test="${!status.last}">,&nbsp;</c:if>
+      </c:forEach>
+    </p>
 
     <c:if test="${sessionScope[loginUser] eq post.user}">
       <a href="<c:url value="/post/${post.slug}/edit"/>">编辑文章</a>

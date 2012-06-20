@@ -374,7 +374,7 @@ public class CommentJpaDao implements CommentDao {
 
     @Override
     public List<Comment> findEntitiesByUserId(Integer userId, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Comment.findEntitiesByUserId", Comment.class);
+        Query q = em.createNamedQuery("Comment.findByUserId", Comment.class);
         q.setParameter("userId", userId);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -382,7 +382,21 @@ public class CommentJpaDao implements CommentDao {
     }
 
     @Override
+    public List<Comment> findEntitiesByUserIdDesc(Integer userId, int maxResults, int firsResult) {
+        Query q = em.createNamedQuery("Comment.findByUserIdDesc", Comment.class);
+        q.setParameter("userId", userId);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firsResult);
+        return q.getResultList();
+    }
+
+    @Override
     public Comment getReference(Integer id) {
         return em.getReference(Comment.class, id);
+    }
+
+    @Override
+    public int getCountByUser(Integer userId) {
+        return ((Long)em.createNamedQuery("Comment.getCountByUserId").getSingleResult()).intValue();
     }
 }

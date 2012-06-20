@@ -78,7 +78,6 @@ public class PostController {
     public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
         Post post = null;
         if (postId != null) {
-            System.err.println("Here!");
             post = postService.find(postId, true, true, true, true, true);
         } else {
             post = new Post();
@@ -97,7 +96,7 @@ public class PostController {
         try {
             Post post = postService.find(postId, false, false, false, false, false);
             return "redirect:/post/"+post.getSlug();
-        } catch (PersistenceException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
@@ -117,7 +116,7 @@ public class PostController {
         try {
             Post post = postService.findBySlug(postSlug, true, true, true, true, false);
             mav.addObject("post", post);
-            mav.addObject("tagListString", tagList2String(post.getTagList()));
+            mav.addObject("tagList", post.getTagList());
             //读取Cookie将访问者所有未审核评论显示在页面上
             if (pendingCommentsId != null) {
                 List<Comment> pendingComments = processPendingCommentsString(pendingCommentsId);
@@ -135,7 +134,7 @@ public class PostController {
                 }
                 response.addCookie(cookie);
             }
-        } catch (PersistenceException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
@@ -181,7 +180,7 @@ public class PostController {
         Post post = null;
         try {
             post = postService.find(postId);
-        } catch (PersistenceException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
@@ -269,7 +268,7 @@ public class PostController {
                 post.setUser(author);
             }
             //文章标签
-            List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\W+")));
+            List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\s*,|，\\s*")));//匹配非汉字： [^\\u4e00-\\u9fa5]+
             post.setTagList(tagList);
             //文章目录
             List<Category> categoryList = new ArrayList<Category>();
@@ -313,18 +312,18 @@ public class PostController {
                 mav.addObject(category.getName(), Boolean.TRUE);
             }
             //设置文章标签
-            mav.addObject("tagListString", tagList2String(post.getTagList()));
+            mav.addObject("tagList", post.getTagList());
         }
         return mav;
     }
 
-    private String tagList2String(List<Tag> tagList) {
-        StringBuilder strBuilder = new StringBuilder();
-        for (Tag tag : tagList) {
-            strBuilder.append(tag.getName()).append(", ");
-        }
-        return strBuilder.length()>2 ? strBuilder.substring(0, strBuilder.length()-2) : "";
-    }
+//    private String tagList2String(List<Tag> tagList) {
+//        StringBuilder strBuilder = new StringBuilder();
+//        for (Tag tag : tagList) {
+//            strBuilder.append(tag.getName()).append(", ");
+//        }
+//        return strBuilder.length()>2 ? strBuilder.substring(0, strBuilder.length()-2) : "";
+//    }
 
     /**
      *

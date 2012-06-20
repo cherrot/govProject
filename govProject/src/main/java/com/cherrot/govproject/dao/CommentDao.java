@@ -30,4 +30,6 @@ public interface CommentDao extends Serializable, BaseDao<Comment, Integer> {
 //
 //    EntityManager getEntityManager();
       List<Comment> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
+      List<Comment> findEntitiesByUserIdDesc(Integer userId, int maxResults, int firsResult);
+      int getCountByUser(Integer userId);
 }

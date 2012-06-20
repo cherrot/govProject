@@ -13,6 +13,8 @@ import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,7 +46,8 @@ public class TermController {
             mav.addObject("pageNum", 1);
             int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
             mav.addObject("pageCount", pageCount);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(TermController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -63,7 +66,8 @@ public class TermController {
             mav.addObject("pageNum", pageNum);
             int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
             mav.addObject("pageCount", pageCount);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(TermController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -81,7 +85,8 @@ public class TermController {
             mav.addObject("pageNum", 1);
             int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;
             mav.addObject("pageCount", pageCount);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(TermController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -100,7 +105,8 @@ public class TermController {
             mav.addObject("pageNum", pageNum);
             int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;
             mav.addObject("pageCount", pageCount);
-        } catch (Exception e) {
+        } catch (Exception ex) {
+            Logger.getLogger(TermController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
         return mav;
