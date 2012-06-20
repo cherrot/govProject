@@ -17,7 +17,6 @@ import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
-import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
 import java.util.ArrayList;
@@ -44,10 +43,10 @@ public class HomeController {
     private PostService postService;
 
     @RequestMapping("/")
-    public ModelAndView home(/*TOTO 仅用于测试*/HttpServletRequest request) {
-        //TODO 仅用于生成测试数据！
+    public ModelAndView home(/*TODO 仅用于测试HttpServletRequest request*/) {
+        //TODO 仅用于生成测试数据！ 和模拟session用户
         initData();
-        BaseController.setSessionUser(request.getSession(), userService.find(1));
+//        BaseController.setSessionUser(request.getSession(), userService.find(1));
 
         ModelAndView mav = new ModelAndView("home");
         List<Category> categories = categoryService.list();
@@ -65,15 +64,14 @@ public class HomeController {
      */
     @Inject private CommentService commentService;
     @Inject private UserService userService;
-    @Inject private SiteLogService siteLogService;
     @Inject private OptionService optionService;
     @Inject private TagService tagService;
     private void initData() {
         try {
-            userService.findByLoginName("cherrot+gov@cherrot.com", false, false, false, false);
+            userService.findByLoginName("f@f.f", false, false, false, false);
         } catch (Exception ex) {
-            //创建测试用户
-            User user = new User("cherrot+gov@cherrot.com", "root", 0, new Date(), "切萝卜可爱多");
+            //创建测试用户 用户名 f@f.f 密码 fff
+            User user = new User("f@f.f", "fff", 0, new Date(), "切萝卜可爱多");
             userService.create(user);
             //创建测试分类和标签
             Category category = new Category(0, "我是文章分类", "test");

@@ -54,6 +54,7 @@ public class LoginController {
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
 		session.removeAttribute(USER_CONTEXT);
+        session.invalidate();//总是忘记他！
 		return "redirect:/";
 	}
 

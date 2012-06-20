@@ -16,7 +16,7 @@
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <div>
-      <p>欢迎您，${loginUser.displayName} ！</p>
+      <p>欢迎您，${sessionUser.displayName} ！</p>
       <p>您的角色为： ${userRole}</p>
       <p>这是您的管理面板。</p>
     </div>

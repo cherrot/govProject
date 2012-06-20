@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="zh">
   <head>
@@ -19,7 +20,7 @@
     <div>
       <p><em>昵称：</em>${user.displayName}</p>
       <p><em>登录邮箱：</em>${user.login}</p>
-      <p><em>注册时间：</em>${user.registerDate}</p>
+      <p><em>注册时间：</em><fmt:formatDate value="${user.registerDate}" type="date" dateStyle="long"/></p>
       <p><em>个人主页：</em>${user.url}</p>
       <p><em>角色：</em>${userRole}</p>
     </div>
