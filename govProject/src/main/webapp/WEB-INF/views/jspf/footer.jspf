@@ -1,3 +1,4 @@
+<%--页面底部部分--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
   <div class="footer">
     <p>Copyright ? 2012 云南大学 地址：昆明市翠湖北路2号 邮编：650091</p>

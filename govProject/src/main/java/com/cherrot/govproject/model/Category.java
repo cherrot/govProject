@@ -66,7 +66,7 @@ public class Category implements Serializable {
     @Deprecated
     @Basic(optional = false)
     @NotNull
-    @Column(name = "count", nullable = false)
+    @Column(name = "postCount", nullable = false)
     private int count;
     @Basic(optional=false)
     @NotNull

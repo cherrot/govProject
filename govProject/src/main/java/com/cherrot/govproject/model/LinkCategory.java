@@ -46,7 +46,7 @@ public class LinkCategory implements Serializable {
     private Integer id;
     @Basic(optional = false)
     @NotNull
-    @Column(name = "count", nullable = false)
+    @Column(name = "linkCount", nullable = false)
     private int count;
     @Size(max = 100)
     @Column(name = "name", length = 100)

@@ -1,3 +1,4 @@
+<%--网页的头部内容，Logo和文章分类列表--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
   <div class="header">

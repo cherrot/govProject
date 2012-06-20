@@ -1,3 +1,3 @@
-<%-- any content can be specified here e.g.: --%>
+<%--网页公共<head>标签内容，比如公用的CSS定义，JS脚本等--%>
 <%@ page pageEncoding="UTF-8" %>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">

@@ -48,7 +48,9 @@
 			<groupId>org.hsqldb</groupId>
 			<artifactId>hsqldb</artifactId>
 			<version>2.2.8</version>
-      <scope>test</scope>
+      <!--<scope>test</scope>-->
+      <!--TODO: For testing only-->
+      <scope>runtime</scope>
 		</dependency>
 
 		<dependency>
