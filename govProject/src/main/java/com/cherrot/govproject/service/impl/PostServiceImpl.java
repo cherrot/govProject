@@ -11,12 +11,12 @@ import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -256,56 +256,52 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> listNewestPostsByCategory(Integer termId, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategoryDescOrder(termId, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listNewestPostsByCategory(Category category, int pageNum, int pageSize) {
+        return postDao.findEntitiesByCategoryDesc(category, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public List<Post> listNewestPostsByCategorySlug(String categoryName, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategorySlugDescOrder(categoryName, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listNewestPostsByCategorySlug(String categorySlug, int pageNum, int pageSize) {
+        return postDao.findEntitiesByCategorySlugDesc(categorySlug, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public void save(Post model) {
-        if (model.getId() == null) {
-            create(model);
-        } else {
-            edit(model);
-        }
-    }
-
-    @Override
-    public List<Post> listByUser(Integer userId, int pageNum, int pageSize) {
-        List<Post> posts = postDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listByUser(User user, int pageNum, int pageSize) {
+        List<Post> posts = postDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
         return posts;
     }
 
-//FIXME 尚未实现
     @Override
-    public List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Post> listNewesPostsByUser(User user, int pageNum, int pageSize) {
+        return postDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public int getCountByUser(Integer userId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int getCountByUser(User user) {
+        return postDao.getCountByUser(user);
     }
 
     @Override
-    public int getCountByCategory(Integer termId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int getCountByCategory(Category category) {
+        return postDao.getCountByCategory(category);
     }
 
     @Override
-    public List<Post> listNewestPostsByTag(Integer tagId, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int getCountByTag(Tag tag) {
+        return getCountByTag(tag);
     }
 
     @Override
-    public List<Post> listNewestPostsByTagSlug(String tagName, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public List<Post> listNewestPostsByTag(Tag tag, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTagDesc(tag, pageSize, (pageNum-1)*pageSize);
     }
 
+    @Override
+    public List<Post> listNewestPostsByTagSlug(String tagSlug, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTagSlugDesc(tagSlug, pageSize, (pageNum-1)*pageSize);
+    }
+
+    //TODO 此方法目前只用于添加视频。
     @Override
     @Transactional
     public void addAttachment(Integer postId, File localFile, String mime) {
@@ -334,9 +330,12 @@ public class PostServiceImpl implements PostService {
         if (withChildPosts) post.getPostList().isEmpty();
     }
 
-    //TODO 待实现
     @Override
-    public int getCountByTag(Integer tagId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void save(Post model) {
+        if (model.getId() == null) {
+            create(model);
+        } else {
+            edit(model);
+        }
     }
 }

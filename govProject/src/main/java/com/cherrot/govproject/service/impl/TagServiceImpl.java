@@ -136,10 +136,9 @@ public class TagServiceImpl implements TagService {
         }
     }
 
-    //TODO 待实现
     @Override
     public Tag findBySlug(String slug, boolean withPosts) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return tagDao.findBySlug(slug);
     }
 
 }

@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
-        //TODO: 最好在web层解决掉这些问题。
+        //已经在web层解决掉这些问题。
 //        User dbUser = userDao.find(model.getId());
 //        if (model.getCommentList() == null) model.setCommentList(dbUser.getCommentList());
 //        if (model.getPostList() == null) model.setPostList(dbUser.getPostList());

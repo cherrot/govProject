@@ -397,6 +397,6 @@ public class CommentJpaDao implements CommentDao {
 
     @Override
     public int getCountByUser(Integer userId) {
-        return ((Long)em.createNamedQuery("Comment.getCountByUserId").getSingleResult()).intValue();
+        return ( (Long) em.createNamedQuery("Comment.getCountByUserId").getSingleResult() ).intValue();
     }
 }

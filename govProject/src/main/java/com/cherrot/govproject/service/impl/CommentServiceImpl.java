@@ -152,18 +152,16 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
-        List<Comment> comments = commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
-        return comments;
+        return commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
     }
 
-    //FIXME!!!
     @Override
     public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return commentDao.findEntitiesByUserIdDesc(userId, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
     public int getCountByUser(Integer userId) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return commentDao.getCountByUser(userId);
     }
 }

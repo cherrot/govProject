@@ -53,7 +53,7 @@ public class HomeController {
         List<Category> categories = categoryService.list();
         mav.addObject("categories", categories);
         for (Category category : categories) {
-            mav.addObject(category.getName(), postService.listNewestPostsByCategory(category.getId(), 1, 5));
+            mav.addObject(category.getName(), postService.listNewestPostsByCategory(category, 1, 5));
         }
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
         mav.addObject("linkCategories", linkCategories);

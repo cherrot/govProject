@@ -48,7 +48,7 @@ public class SiteLogJpaDao implements SiteLogDao {
             User user = siteLog.getUser();
             if (user != null) {
 //                user = em.getReference(user.getClass(), user.getId());
-                //TODO 怀疑是延时加载导致user.getClass() 不等于 User.class。
+                //PENDING 怀疑是延时加载导致user.getClass() 不等于 User.class。
                 //显示结果：
                 //getClass:::class com.cherrot.govproject.model.User_$$_javassist_4
                 //getClass:::class com.cherrot.govproject.model.User

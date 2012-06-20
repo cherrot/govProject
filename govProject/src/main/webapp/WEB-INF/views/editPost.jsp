@@ -68,7 +68,7 @@
         <p>为了上传更快，请您启用JavaScript。</p>
         <form id="file_upload_form" method="post" action="<c:url value="/post/upload"/>" enctype="multipart/form-data">
           <input type="file" name="qqfile" />
-          <%--FIXME: 如果是新建文章，上传文件会出错：没有postId--%>
+          <%--FIXME: 如果是新建文章，上传文件会出错：没有postId。考虑等主Post更新后再更新附件所属的post。比如通过文件路径找到该文件对应的Post--%>
           <input type="hidden" name="postId" value="${post.id}"/>
           <input type="submit" value="上传"/>
           <iframe id="upload_target" name="upload_target" src="" style="width:0;height:0;border:0px solid #fff;"></iframe>

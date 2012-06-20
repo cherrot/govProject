@@ -8,6 +8,7 @@ import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.model.User;
 import java.io.File;
 import java.util.List;
 
@@ -46,20 +47,20 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param pageSize
      * @return
      */
-    List<Post> listNewestPostsByCategory(Integer categoryId, int pageNum, int pageSize);
+    List<Post> listNewestPostsByCategory(Category category, int pageNum, int pageSize);
     List<Post> listNewestPostsByCategorySlug(String categoryName, int pageNum, int pageSize);
-    List<Post> listNewestPostsByTag(Integer tagId, int pageNum, int pageSize);
-    List<Post> listNewestPostsByTagSlug(String tagName, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTag(Tag tag, int pageNum, int pageSize);
+    List<Post> listNewestPostsByTagSlug(String tagSlug, int pageNum, int pageSize);
     /**
      * @param userId 文章所属用户的id
      * @param pageNum
      * @return
      */
-    List<Post> listByUser(Integer userId, int pageNum, int pageSize);
-    List<Post> listNewesPostsByUser(Integer userId, int pageNum, int pageSize);
-    int getCountByUser(Integer userId);
-    int getCountByCategory(Integer categoryId);
-    int getCountByTag(Integer tagId);
+    List<Post> listByUser(User user, int pageNum, int pageSize);
+    List<Post> listNewesPostsByUser(User user, int pageNum, int pageSize);
+    int getCountByUser(User user);
+    int getCountByCategory(Category category);
+    int getCountByTag(Tag tag);
     void addAttachment(Integer postId, File localFile, String mime);
 
     //    /**

@@ -44,7 +44,7 @@ public class AdminUserController {
         mav.addObject("user", user);
         String userRole = userService.getDescriptionOfUserLevel(user.getUserLevel());
         mav.addObject("userRole", userRole);
-        List<Post> userPosts = postService.listNewesPostsByUser(userId, 1, DEFAULT_PAGE_SIZE);
+        List<Post> userPosts = postService.listNewesPostsByUser(user, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userPosts",userPosts);
         List<Comment> userComments = commentService.listNewesCommentsByUser(userId, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userComments", userComments);
@@ -71,7 +71,7 @@ public class AdminUserController {
 
         for (User user : userList) {
             roleList.add( userService.getDescriptionOfUserLevel(user.getUserLevel()) );
-            postCountList.add( postService.getCountByUser(user.getId()) );
+            postCountList.add( postService.getCountByUser(user) );
             commentCountList.add( commentService.getCountByUser(user.getId()) );
         }
 

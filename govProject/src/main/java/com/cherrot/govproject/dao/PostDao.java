@@ -4,7 +4,10 @@
  */
 package com.cherrot.govproject.dao;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Post;
+import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.model.User;
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,10 +18,16 @@ import java.util.List;
 public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
     Post findBySlug(String slug);
-    List<Post> findEntitiesByCategoryDescOrder(Integer termId, int maxResults, int firstResult);
-    List<Post> findEntitiesByCategorySlugDescOrder(String categoryName, int maxResults, int firstResult);
-    List<Post> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
-    
+    List<Post> findEntitiesByCategoryDesc(Category category, int maxResults, int firstResult);
+    List<Post> findEntitiesByCategorySlugDesc(String categorySlug, int maxResults, int firstResult);
+    List<Post> findEntitiesByTagDesc(Tag tag, int maxResults, int firstResult);
+    List<Post> findEntitiesByTagSlugDesc(String tagSlug, int maxResults, int firstResult);
+    List<Post> findEntitiesByUser(User user, int maxResults, int firstResult);
+    List<Post> findEntitiesByUserDesc(User user, int maxResults, int firstResult);
+    int getCountByUser(User user);
+    int getCountByCategory(Category category);
+    int getCountByTag(Tag tag);
+
 //    void create(Post post);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;

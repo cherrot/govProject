@@ -5,7 +5,6 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;
@@ -55,12 +54,16 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime = :mime"),
-    //下面两式  IN 和 JOIN 的作用等价
-    @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c.id = :categoryId ORDER BY p.id DESC"),
+    //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
+    @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByCategorySlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.id = :tagId ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p WHERE :tag MEMBER OF p.tagList ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByTagSlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByUserID",query="SELECT p FROM Post p WHERE p.user.id = :userId")
+    @NamedQuery(name = "Post.findByUser",query="SELECT p FROM Post p WHERE p.user = :user"),
+    @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.getCountByUser", query = "SELECT COUNT(p) FROM Post p WHERE :user = p.user"),
+    @NamedQuery(name = "Post.getCountByCategory", query = "SELECT COUNT(p) FROM Post p WHERE :category MEMBER OF p.categoryList"),
+    @NamedQuery(name = "Post.getCountByTag", query = "SELECT COUNT(p) FROM Post p WHERE :tag MEMBER OF p.tagList")
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.
@@ -83,7 +86,6 @@ public class Post implements Serializable {
         }
     }
 
-    //TODO 完成所有JPA类的枚举类型
     public enum PostType {
         POST("文章"), ATTACHMENT("附件");
 

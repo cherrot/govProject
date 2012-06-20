@@ -52,7 +52,7 @@ public class UserController {
             List<Comment> userComments = commentService.listByUser(user.getId(),
                 commentPageNum==null ? 1 : commentPageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("userComments", userComments);
-            List<Post> userPosts = postService.listByUser(user.getId(),
+            List<Post> userPosts = postService.listByUser(user,
                 postPageNum==null ? 1 : postPageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("userPosts", userPosts);
         } else {

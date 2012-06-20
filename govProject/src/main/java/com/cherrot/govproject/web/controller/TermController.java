@@ -41,7 +41,7 @@ public class TermController {
         try {
             Category category = categoryService.findBySlug(slug, false, false);
             mav.addObject("term", category);
-            List<Post> postList = postService.listNewestPostsByCategory(category.getId(), 1, DEFAULT_PAGE_SIZE);
+            List<Post> postList = postService.listNewestPostsByCategory(category, 1, DEFAULT_PAGE_SIZE);
             mav.addObject("postList", postList);
             mav.addObject("pageNum", 1);
             int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
@@ -61,7 +61,7 @@ public class TermController {
         try {
             Category category = categoryService.findBySlug(slug, false, false);
             mav.addObject("term", category);
-            List<Post> postList = postService.listNewestPostsByCategory(category.getId(), pageNum, DEFAULT_PAGE_SIZE);
+            List<Post> postList = postService.listNewestPostsByCategory(category, pageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("postList", postList);
             mav.addObject("pageNum", pageNum);
             int pageCount = category.getCount()/DEFAULT_PAGE_SIZE+1;
@@ -80,7 +80,7 @@ public class TermController {
         try {
             Tag tag = tagService.findBySlug(slug, false);
             mav.addObject("term", tag);
-            List<Post> postList = postService.listNewestPostsByTag(tag.getId(), 1, DEFAULT_PAGE_SIZE);
+            List<Post> postList = postService.listNewestPostsByTag(tag, 1, DEFAULT_PAGE_SIZE);
             mav.addObject("postList", postList);
             mav.addObject("pageNum", 1);
             int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;
@@ -100,7 +100,7 @@ public class TermController {
         try {
             Tag tag = tagService.findBySlug(slug, false);
             mav.addObject("term", tag);
-            List<Post> postList = postService.listNewestPostsByCategory(tag.getId(), pageNum, DEFAULT_PAGE_SIZE);
+            List<Post> postList = postService.listNewestPostsByTag(tag, pageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("postList", postList);
             mav.addObject("pageNum", pageNum);
             int pageCount = tag.getCount()/DEFAULT_PAGE_SIZE+1;

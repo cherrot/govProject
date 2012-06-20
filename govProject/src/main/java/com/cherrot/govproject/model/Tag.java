@@ -5,7 +5,6 @@
 package com.cherrot.govproject.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -49,6 +48,10 @@ public class Tag implements Serializable {
 //    @NotNull
     @Column(name = "id", nullable = false)
     private Integer id;
+    /**
+     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     */
+    @Deprecated
     @Basic(optional = false)
     @NotNull
     @Column(name = "count", nullable = false)
@@ -67,7 +70,7 @@ public class Tag implements Serializable {
     @Column(name = "description", length = 255)
     private String description;
     /**
-     * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
+     * PENDING: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
      *
      * If you choose to map the relationship in both directions, then one
      * direction must be defined as the owner and the other must use
@@ -106,6 +109,10 @@ public class Tag implements Serializable {
         this.id = id;
     }
 
+    /**
+     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     */
+    @Deprecated
     public int getCount() {
         return count;
     }

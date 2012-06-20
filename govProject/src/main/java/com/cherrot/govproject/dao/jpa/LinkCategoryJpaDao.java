@@ -62,8 +62,8 @@ public class LinkCategoryJpaDao implements LinkCategoryDao {
             List<Link> linkListOld = persistentLinkCategory.getLinkList();
             List<Link> linkListNew = linkCategory.getLinkList();
 
-            //FIXME 临时方案
-            if (linkListNew == null) linkListNew = linkListOld;
+            // 临时方案——已在控制器层解决。
+//            if (linkListNew == null) linkListNew = linkListOld;
 
             List<String> illegalOrphanMessages = null;
             for (Link linkListOldLink : linkListOld) {
