@@ -8,9 +8,9 @@
 <%--@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" --%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <%@include file="jspf/commonHead.jspf" %>
     <link href="<c:url value="/resources/js/fileuploader/fileuploader.css"/>" rel="stylesheet" type="text/css">
     <title>${post.title} | 昆明文化辞典</title>
 

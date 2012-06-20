@@ -17,8 +17,10 @@ import static com.cherrot.govproject.web.controller.BaseController.getSessionUse
 import java.util.List;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -40,16 +42,28 @@ public class UserController {
     @Inject
     private UserService userService;
 
-    @RequestMapping("/")
-    public ModelAndView viewSessionUser(HttpServletRequest request,
-        @RequestParam(value="commentPage", required=false)Integer commentPageNum,
-        @RequestParam(value="postPage", required=false)Integer postPageNum ) {
+    @ModelAttribute("user")
+    public User getUser(@RequestParam(value="id", required=false)Integer userId, HttpSession session) {
+        User user = null;
+        if (userId != null) {
+            user = userService.find(userId);
+        } else {
+            //可能为null
+            user = BaseController.getSessionUser(session);
+        }
+        return user;
+    }
+
+    @RequestMapping(value={"","/"})
+    public ModelAndView viewSessionUser(HttpServletRequest request
+        , @ModelAttribute("user")User user
+        , @RequestParam(value="commentPage", required=false)Integer commentPageNum
+        , @RequestParam(value="postPage", required=false)Integer postPageNum ) {
 
         ModelAndView mav = new ModelAndView("viewUser");
-        User user = getSessionUser(request.getSession());
         if ( user != null) {
             mav.addObject("user", user);
-            List<Comment> userComments = commentService.listByUser(user.getId(),
+            List<Comment> userComments = commentService.listByUser(user,
                 commentPageNum==null ? 1 : commentPageNum, DEFAULT_PAGE_SIZE);
             mav.addObject("userComments", userComments);
             List<Post> userPosts = postService.listByUser(user,
@@ -77,7 +91,9 @@ public class UserController {
     }
 
     @RequestMapping(value="/edit", method= RequestMethod.POST)
-    public String doEditUser(@Valid @ModelAttribute("user")User user) {
+    public String doEditUser(@Valid @ModelAttribute("user")User user
+        , final BindingResult result) {
+
         userService.edit(user);
         return "redirect:/user/";
     }

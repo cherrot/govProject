@@ -7,8 +7,9 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
+    <%@include file="jspf/commonHead.jspf" %>
     <title>${user.displayName} | 昆明文化辞典</title>
   </head>
   <body>

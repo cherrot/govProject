@@ -80,11 +80,14 @@ public class PostController {
     public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
         Post post = null;
         if (postId != null) {
+            //适用于用户提交（POST）文章时从数据库获取文章对象
             post = postService.find(postId, true, true, true, true, true);
         } else {
+            //适用于新建文章
             post = new Post();
             post.setTitle("新建文章");
         }
+        //既不是新建文章也不是提交文章时(如GET一个文章)，那么需要在对应的方法中注入对象。不然就变成新建文章了（@ModelAttribute会在每个控制器方法前调用）
         return post;
     }
 

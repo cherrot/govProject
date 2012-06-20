@@ -6,6 +6,7 @@ package com.cherrot.govproject.service;
 
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
+import com.cherrot.govproject.model.User;
 import java.util.List;
 /**
  *
@@ -23,7 +24,7 @@ public interface CommentService extends BaseService<Comment, Integer> {
      * @param pageNum 页码数
      * @return
      */
-    List<Comment> listByUser(Integer userId, int pageNum, int pageSize);
-    List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize);
-    int getCountByUser(Integer userId);
+    List<Comment> listByUser(User user, int pageNum, int pageSize);
+    List<Comment> listNewesCommentsByUser(User user, int pageNum, int pageSize);
+    int getCountByUser(User user);
 }

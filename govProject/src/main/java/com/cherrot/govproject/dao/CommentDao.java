@@ -5,6 +5,7 @@
 package com.cherrot.govproject.dao;
 
 import com.cherrot.govproject.model.Comment;
+import com.cherrot.govproject.model.User;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public interface CommentDao extends Serializable, BaseDao<Comment, Integer> {
 //    int getCommentCount();
 //
 //    EntityManager getEntityManager();
-      List<Comment> findEntitiesByUserId(Integer userId, int maxResults, int firstResult);
-      List<Comment> findEntitiesByUserIdDesc(Integer userId, int maxResults, int firsResult);
-      int getCountByUser(Integer userId);
+      List<Comment> findEntitiesByUser(User user, int maxResults, int firstResult);
+      List<Comment> findEntitiesByUserDesc(User user, int maxResults, int firsResult);
+      int getCountByUser(User user);
 }

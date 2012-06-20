@@ -6,8 +6,9 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
+    <%@include file="jspf/commonHead.jspf" %>
     <title>${term.name} | 昆明文化辞典</title>
   </head>
   <body>
@@ -32,7 +33,7 @@
 
     <h1>文章${typeString}：${term.name}</h1>
     <ol>
-      <c:forEach items="postList" var="post">
+      <c:forEach items="${postList}" var="post">
         <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a></li>
       </c:forEach>
     </ol>

@@ -11,9 +11,9 @@
 <%--只有scope为session时才会覆盖用户浏览器设置--%>
 <fmt:setLocale value="zh_CN" scope="session"/>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <%@include file="jspf/commonHead.jspf" %>
     <title>${post.title} | 昆明文化辞典</title>
   </head>
   <body>

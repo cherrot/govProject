@@ -8,7 +8,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="zh">
   <head>
     <script language=JavaScript>
       //<!--
@@ -23,7 +23,7 @@
       }
       //-->
     </script>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <%@include file="jspf/commonHead.jspf" %>
     <title>用户登录 | 昆明文化辞典</title>
   </head>
   <body>

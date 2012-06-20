@@ -10,6 +10,7 @@ import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.model.Commentmeta;
+import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.SiteLogService;
 import java.util.List;
@@ -151,17 +152,17 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> listByUser(Integer userId, int pageNum, int pageSize) {
-        return commentDao.findEntitiesByUserId(userId, pageSize, (pageNum-1)*pageSize);
+    public List<Comment> listByUser(User user, int pageNum, int pageSize) {
+        return commentDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public List<Comment> listNewesCommentsByUser(Integer userId, int pageNum, int pageSize) {
-        return commentDao.findEntitiesByUserIdDesc(userId, pageSize, (pageNum-1)*pageSize);
+    public List<Comment> listNewesCommentsByUser(User user, int pageNum, int pageSize) {
+        return commentDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public int getCountByUser(Integer userId) {
-        return commentDao.getCountByUser(userId);
+    public int getCountByUser(User user) {
+        return commentDao.getCountByUser(user);
     }
 }
