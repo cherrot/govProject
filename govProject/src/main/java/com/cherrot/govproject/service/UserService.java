@@ -19,8 +19,7 @@ public interface UserService extends BaseService<User, Integer> {
     User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments);
     /**
      * 验证用户名、密码是否合法
-     * @param user
-     * @return 如果用户验证成功，则返回对应的User对象，否则返回null
+     * @return 如果用户验证成功，则返回对应的User对象，否则返回null。该user的usermetaList可以被访问，其他一对多关联均不能访问。
      */
     User validateUser(String loginName, String password);
     /**

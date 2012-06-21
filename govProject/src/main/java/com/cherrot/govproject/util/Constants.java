@@ -12,8 +12,9 @@ public class Constants {
 
     /**
      * Default number of items per page.
+     * This value may be changed at runtime (not a final value)
      */
-    public static final int DEFAULT_PAGE_SIZE = 15;
+    public static int DEFAULT_PAGE_SIZE = 15;
 
     /**
      * Session Attributes

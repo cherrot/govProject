@@ -13,15 +13,18 @@ import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
 import static com.cherrot.govproject.util.Constants.LOGIN_TO_URL;
-import static com.cherrot.govproject.web.controller.BaseController.getSessionUser;
+import com.cherrot.govproject.web.exceptions.ForbiddenException;
+import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,7 +49,11 @@ public class UserController {
     public User getUser(@RequestParam(value="id", required=false)Integer userId, HttpSession session) {
         User user = null;
         if (userId != null) {
-            user = userService.find(userId);
+            try {
+                user = userService.find(userId, false, false, true, false);
+            } catch (PersistenceException e) {
+                throw new ResourceNotFoundException();
+            }
         } else {
             //可能为null
             user = BaseController.getSessionUser(session);
@@ -56,36 +63,49 @@ public class UserController {
 
     @RequestMapping(value={"","/"})
     public ModelAndView viewSessionUser(HttpServletRequest request
-        , @ModelAttribute("user")User user
-        , @RequestParam(value="commentPage", required=false)Integer commentPageNum
-        , @RequestParam(value="postPage", required=false)Integer postPageNum ) {
+        , @ModelAttribute("user")User user ) {
 
         ModelAndView mav = new ModelAndView("viewUser");
         if ( user != null) {
             mav.addObject("user", user);
-            List<Comment> userComments = commentService.listByUser(user,
-                commentPageNum==null ? 1 : commentPageNum, DEFAULT_PAGE_SIZE);
-            mav.addObject("userComments", userComments);
-            List<Post> userPosts = postService.listByUser(user,
-                postPageNum==null ? 1 : postPageNum, DEFAULT_PAGE_SIZE);
-            mav.addObject("userPosts", userPosts);
+            processComments(mav, user, 1);
+            processPosts(mav, user, 1);
         } else {
-            request.getSession().setAttribute(ERROR_MSG_KEY, "请重新登录！");
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURI());
-            mav.setViewName("redirect:/login");
+            request.getSession().setAttribute(ERROR_MSG_KEY, "您必须登录才能查看自己的个人资料");
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+//            mav.setViewName("redirect:/login");
+            throw new ForbiddenException();
+        }
+        return mav;
+    }
+    
+    @RequestMapping("/{userId}")
+    public ModelAndView viewUser(@PathVariable("userId")Integer userId) {
+
+        ModelAndView mav = new ModelAndView("viewUser");
+        try {
+            User user = userService.find(userId, false, false, true, false);
+            mav.addObject("user", user);
+            processComments(mav, user, 1);
+            processPosts(mav, user, 1);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
 
     @RequestMapping(value="/edit", method=RequestMethod.GET)
-    public ModelAndView editUser(HttpServletRequest request) {
+    public ModelAndView editUser(HttpServletRequest request
+        , @ModelAttribute("user")User user) {
+        
         ModelAndView mav = new ModelAndView("editUser");
-        User user = BaseController.getSessionUser(request.getSession());
+//        User user = BaseController.getSessionUser(request.getSession());
         if (user != null) {
             mav.addObject("user", user);
         } else {
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURI());
-            mav.setViewName("redirect:/login");
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+//            mav.setViewName("redirect:/login");
+            throw new ForbiddenException();
         }
         return mav;
     }
@@ -98,8 +118,75 @@ public class UserController {
         return "redirect:/user/";
     }
 
-//    @RequestMapping("/posts", params="userId")
-//    public ModelAndView listPostsByUser(@RequestParam("userId")Integer userId) {
-//        //根据用户ID分页查询文章列表.
-//    }
+    @RequestMapping("/posts")
+    public ModelAndView listPostsByUser(@ModelAttribute("user")User user
+        , HttpServletRequest request) {
+        
+        ModelAndView mav = new ModelAndView("listPostsByUser");
+        if (user != null) {
+            mav.addObject("user", user);
+            processPosts(mav, user, 1);
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+            throw new ForbiddenException();
+        }
+        return mav;
+    }
+    
+    @RequestMapping("/posts/page/{pageNum}")
+    public ModelAndView listPostsByUser(@ModelAttribute("user")User user
+        , @PathVariable("pageNum")int pageNum
+        , HttpServletRequest request) {
+        
+        ModelAndView mav = new ModelAndView("listPostsByUser");
+        if (user != null) {
+            mav.addObject("user", user);
+            processPosts(mav, user, pageNum);
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+            throw new ForbiddenException();
+        }
+        return mav;
+    }
+    
+    @RequestMapping("/comments")
+    public ModelAndView listComments(@ModelAttribute("user")User user
+        , HttpServletRequest request) {
+        
+        ModelAndView mav = new ModelAndView("listCommentsByUser");
+        if (user != null) {
+            mav.addObject("user", user);
+            processComments(mav, user, 1);
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+            throw new ForbiddenException();
+        }
+        return mav;
+    }
+    
+    @RequestMapping("/comments/page/{pageNum}")
+    public ModelAndView listComments(@ModelAttribute("user")User user
+        , @PathVariable("pageNum")int pageNum
+        , HttpServletRequest request) {
+        
+        ModelAndView mav = new ModelAndView("listCommentsByUser");
+        if (user != null) {
+            mav.addObject("user", user);
+            processComments(mav, user, pageNum);
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+            throw new ForbiddenException();
+        }
+        return mav;
+    }
+    
+    private void processPosts(ModelAndView mav, User user, int pageNum) {
+        List<Post> userPosts = postService.listNewesPostsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
+        mav.addObject("postList", userPosts);
+    }
+
+    private void processComments(ModelAndView mav, User user, int pageNum) {
+        List<Comment> userComments = commentService.listNewesCommentsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
+        mav.addObject("commentList", userComments);
+    }
 }

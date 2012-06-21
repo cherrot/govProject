@@ -39,9 +39,9 @@
     </ol>
 
     <ul class="pageNav">
-      页面导航：
+      页码：
       <c:forEach begin="1" end="${pageCount}" varStatus="status">
-        <li><a href="<c:url value="/${type}/${term.slug}/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+        <li><a href="<c:url value="/${type}/${term.slug}/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
       </c:forEach>
     </ul>
 

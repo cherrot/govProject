@@ -1,3 +1,5 @@
 <%--网页公共<head>标签内容，比如公用的CSS定义，JS脚本等--%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page pageEncoding="UTF-8" %>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/screen.css"/>" />

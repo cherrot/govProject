@@ -43,16 +43,16 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void create(User user, List<Usermeta> usermetas) {
-        userDao.create(user);
         for (Usermeta usermeta : usermetas) {
-            usermeta.setUser(user);
+//            usermeta.setUser(user);
             usermetaDao.create(usermeta);
         }
+        user.setUsermetaList(usermetas);
+        userDao.create(user);
         siteLogService.create(user, "创建用户" + user.getLogin() + " 。ID: "+user.getId());
     }
 
     @Override
-//    @Transactional(readOnly=true)
     public User find(Integer id) {
         return userDao.find(id);
     }
@@ -139,9 +139,8 @@ public class UserServiceImpl implements UserService{
     public User validateUser(String loginName, String password) {
         User user = null;
         try {
-            user = findByLoginName(loginName, false, false, false, false);
+            user = findByLoginName(loginName, false, false, true, false);
         } catch (Exception e) {
-
         }
         return user;
     }

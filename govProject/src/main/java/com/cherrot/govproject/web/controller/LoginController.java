@@ -97,15 +97,15 @@ public class LoginController {
         }
 
         List<Usermeta> usermetas = new ArrayList<Usermeta>(2);
-        Usermeta birthdayMeta = new Usermeta("birthday");
+        Usermeta birthdayMeta = new Usermeta("生日");
         birthdayMeta.setMetaValue(birthday.toString());
-        Usermeta genderMeta = new Usermeta("gender");
+        Usermeta genderMeta = new Usermeta("性别");
         genderMeta.setMetaValue(gender);
-        birthdayMeta.setUser(user);
-        genderMeta.setUser(user);
+//        birthdayMeta.setUser(user);
+//        genderMeta.setUser(user);
         usermetas.add(birthdayMeta);
         usermetas.add(genderMeta);
-        userService.create(user);
+        userService.create(user, usermetas);
         BaseController.setSessionUser(request.getSession(), user);
         return "redirect:/";
     }
