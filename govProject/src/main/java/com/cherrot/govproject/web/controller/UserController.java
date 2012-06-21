@@ -54,18 +54,18 @@ public class UserController {
             } catch (PersistenceException e) {
                 throw new ResourceNotFoundException();
             }
-        } else {
+        }/* else {
             //可能为null
             user = BaseController.getSessionUser(session);
-        }
+        }*/
         return user;
     }
 
     @RequestMapping(value={"","/"})
-    public ModelAndView viewSessionUser(HttpServletRequest request
-        , @ModelAttribute("user")User user ) {
+    public ModelAndView viewSessionUser(HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("viewUser");
+        User user = BaseController.getSessionUser(request.getSession());
         if ( user != null) {
             mav.addObject("user", user);
             processComments(mav, user, 1);
@@ -78,7 +78,7 @@ public class UserController {
         }
         return mav;
     }
-    
+
     @RequestMapping("/{userId}")
     public ModelAndView viewUser(@PathVariable("userId")Integer userId) {
 
@@ -95,11 +95,10 @@ public class UserController {
     }
 
     @RequestMapping(value="/edit", method=RequestMethod.GET)
-    public ModelAndView editUser(HttpServletRequest request
-        , @ModelAttribute("user")User user) {
-        
+    public ModelAndView editUser(HttpServletRequest request) {
+
         ModelAndView mav = new ModelAndView("editUser");
-//        User user = BaseController.getSessionUser(request.getSession());
+        User user = BaseController.getSessionUser(request.getSession());
         if (user != null) {
             mav.addObject("user", user);
         } else {
@@ -112,74 +111,82 @@ public class UserController {
 
     @RequestMapping(value="/edit", method= RequestMethod.POST)
     public String doEditUser(@Valid @ModelAttribute("user")User user
-        , final BindingResult result) {
+        , final BindingResult result
+        , HttpServletRequest request) {
 
-        userService.edit(user);
-        return "redirect:/user/";
+        if (result.hasErrors()) {
+            return "editUser";
+        }
+
+        User sessionUser = BaseController.getSessionUser(request.getSession());
+        //XXX 不能写成sessionUser.equals(user):sessionUser可能为null；而且user是刚刚从数据库中取出的user.getClass可能并不是User.class(因为有动态代理)
+        if (user.equals(sessionUser)) {
+            userService.edit(user);
+            return "redirect:/user/";
+        } else {
+            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
+            throw new ForbiddenException();
+        }
     }
 
-    @RequestMapping("/posts")
-    public ModelAndView listPostsByUser(@ModelAttribute("user")User user
-        , HttpServletRequest request) {
-        
+    @RequestMapping("/{userId}/posts")
+    public ModelAndView listPostsByUser(@PathVariable("userId")Integer userId) {
+
         ModelAndView mav = new ModelAndView("listPostsByUser");
-        if (user != null) {
+        try {
+            User user = userService.find(userId);
             mav.addObject("user", user);
             processPosts(mav, user, 1);
-        } else {
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
-            throw new ForbiddenException();
+        } catch(PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
-    
-    @RequestMapping("/posts/page/{pageNum}")
-    public ModelAndView listPostsByUser(@ModelAttribute("user")User user
-        , @PathVariable("pageNum")int pageNum
-        , HttpServletRequest request) {
-        
+
+    @RequestMapping("/{userId}/posts/page/{pageNum}")
+    public ModelAndView listPostsByUser(@PathVariable("userId")Integer userId
+        , @PathVariable("pageNum")Integer pageNum) {
+
         ModelAndView mav = new ModelAndView("listPostsByUser");
-        if (user != null) {
+        try {
+            User user = userService.find(userId);
             mav.addObject("user", user);
             processPosts(mav, user, pageNum);
-        } else {
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
-            throw new ForbiddenException();
+        } catch(PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
-    
-    @RequestMapping("/comments")
-    public ModelAndView listComments(@ModelAttribute("user")User user
-        , HttpServletRequest request) {
-        
+
+    @RequestMapping("/{userId}/comments")
+    public ModelAndView listComments(@PathVariable("userId")Integer userId) {
+
         ModelAndView mav = new ModelAndView("listCommentsByUser");
-        if (user != null) {
+        try {
+            User user = userService.find(userId);
             mav.addObject("user", user);
             processComments(mav, user, 1);
-        } else {
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
-            throw new ForbiddenException();
+        } catch(PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
-    
-    @RequestMapping("/comments/page/{pageNum}")
-    public ModelAndView listComments(@ModelAttribute("user")User user
-        , @PathVariable("pageNum")int pageNum
-        , HttpServletRequest request) {
-        
+
+    @RequestMapping("/{userId}/comments/page/{pageNum}")
+    public ModelAndView listComments(@PathVariable("userId")Integer userId
+        , @PathVariable("pageNum")int pageNum) {
+
         ModelAndView mav = new ModelAndView("listCommentsByUser");
-        if (user != null) {
+        try {
+            User user = userService.find(userId);
             mav.addObject("user", user);
             processComments(mav, user, pageNum);
-        } else {
-            request.getSession().setAttribute(LOGIN_TO_URL, request.getRequestURL());
-            throw new ForbiddenException();
+        } catch(PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
         return mav;
     }
-    
+
     private void processPosts(ModelAndView mav, User user, int pageNum) {
         List<Post> userPosts = postService.listNewesPostsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
         mav.addObject("postList", userPosts);

@@ -42,8 +42,7 @@
               <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a></li>
             </c:forEach>
           </ul>
-          <%--使用相对路径（不以/开头），因为该页面可能同时用于/user和/user/{userId}--%>
-          <a href="<c:url value="posts"/>" title="查看${user.displayName}的全部文章">查看全部</a>
+          <a href="<c:url value="/user/${user.id}/posts"/>" title="查看${user.displayName}的全部文章">查看全部</a>
         </c:when>
         <c:otherwise>
           用户还未发表任何文章。

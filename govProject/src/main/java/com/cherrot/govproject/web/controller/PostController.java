@@ -267,7 +267,7 @@ public class PostController {
         } else {
             if (post.getId() == null) {
                 User author = BaseController.getSessionUser(request.getSession());
-                if (author == null) {
+                if ( author == null || ( post.getUser()!=null && !post.getUser().equals(author) ) ) {
                     throw new ForbiddenException();
                 }
                 post.setUser(author);
