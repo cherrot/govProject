@@ -124,6 +124,21 @@ public class CategoryServiceImpl implements CategoryService {
         return categoryDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
+    @Override
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    public List<Category> listTopLevelCategories(boolean withChildCategories) {
+        List<Category> categorys = categoryDao.findEntitiesHavingNullParent();
+        processDependency(categorys, false, withChildCategories);
+        return categorys;
+    }
+
+    @Override
+    public List<Category> listSecondLevelCategories(boolean withPosts, boolean withChildCategories) {
+        List<Category> categorys = categoryDao.findEntitiesHavingTopLevelParent();
+        processDependency(categorys, withPosts, withChildCategories);
+        return categorys;
+    }
+
     private void processDependency(List<Category> terms, boolean withPosts, boolean withChildCategories) {
         if (withPosts || withChildCategories) {
             for (Category term : terms) {

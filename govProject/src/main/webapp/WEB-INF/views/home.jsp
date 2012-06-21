@@ -10,7 +10,8 @@
       <%@include file="jspf/header.jspf" %>
       <%@include file="jspf/sidebar.jspf" %>
     <!--Start MainContent-->
-    <c:forEach items="${categories}" var="category">
+    <c:forEach items="${categoryGroups}" var="category" varStatus="status">
+      文章群组${status.count}：
       <h2>${category.name}</h2>
       <ol>
         <c:forEach items="${requestScope[category.name]}" var="post">

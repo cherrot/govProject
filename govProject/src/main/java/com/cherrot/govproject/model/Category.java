@@ -41,6 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Category.findByName", query = "SELECT c FROM Category c WHERE c.name = :name"),
     @NamedQuery(name = "Category.findBySlug", query = "SELECT c FROM Category c WHERE c.slug = :slug"),
     @NamedQuery(name = "Category.findByDescription", query = "SELECT c FROM Category c WHERE c.description = :description"),
+    @NamedQuery(name = "Category.findAllHavingNullParent", query = "SELECT c FROM Category c WHERE c.categoryParent IS NULL"),
+    @NamedQuery(name = "Category.findAllHavingTopLevelParent", query = "SELECT c FROM Category c WHERE c.categoryParent IN (SELECT c FROM Category c WHERE c.categoryParent IS NULL)")
 })
 public class Category implements Serializable {
     private static final long serialVersionUID = 1L;

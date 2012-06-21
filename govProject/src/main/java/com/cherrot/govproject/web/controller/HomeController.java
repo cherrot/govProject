@@ -48,10 +48,16 @@ public class HomeController {
 //        BaseController.setSessionUser(request.getSession(), userService.find(1));
 
         ModelAndView mav = new ModelAndView("home");
-        List<Category> categories = categoryService.list();
+        //添加顶部导航栏的文章分类
+        List<Category> categories = categoryService.listSecondLevelCategories(false, false);
         mav.addObject("categories", categories);
-        for (Category category : categories) {
-            mav.addObject(category.getName(), postService.listNewestPostsByCategory(category, 1, 5));
+        //添加首页主体部分的文章群组分类和该分类的最新文章
+        List<Category> topLevelCategorys = categoryService.listTopLevelCategories(true);
+        mav.addObject("categoryGroups", topLevelCategorys);
+        for (Category group : topLevelCategorys) {
+            for (Category category : group.getCategoryList()) {
+                mav.addObject(category.getName(), postService.listNewestPostsByCategory(category, 1, 5));
+            }
         }
         List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
         mav.addObject("linkCategories", linkCategories);
@@ -72,20 +78,46 @@ public class HomeController {
             //创建测试用户 用户名 f@f.f 密码 fff
             User user = new User("f@f.f", "fff", 0, new Date(), "切萝卜可爱多");
             userService.create(user);
-            //创建测试分类和标签
-            Category category = new Category(0, "我是文章分类", "test");
-            Category category1 = new Category(0, "我也是分类", "test1");
+            //创建测试分类
+            Category group1 = new Category(0, "分类群组1", "group1");
+            Category group2 = new Category(0, "分类群组2", "group2");
+            Category group3 = new Category(0, "分类群组3", "group3");
+            Category group4 = new Category(0, "分类群组4", "group4");
+            Category group5 = new Category(0, "分类群组5", "group5");
+            Category groupHidden = new Category(0, "隐藏群组", "hiddenGroup");
+            Category wenxue = new Category(0, "文学作品", "wenxue");
+            Category shufa = new Category(0, "书法作品", "shufa");
+            Category meishu = new Category(0, "美术作品", "meishu");
+            Category sheying = new Category(0, "摄影作品", "sheying");
+            Category zongjiao = new Category(0, "宗教文化", "zongjiao");
+            categoryService.create(group1);
+            categoryService.create(group2);
+            categoryService.create(group3);
+            categoryService.create(group4);
+            categoryService.create(group5);
+            categoryService.create(groupHidden);
+            wenxue.setCategoryParent(group1);
+            shufa.setCategoryParent(group1);
+            meishu.setCategoryParent(group1);
+            sheying.setCategoryParent(group1);
+            zongjiao.setCategoryParent(groupHidden);
+            categoryService.create(wenxue);
+            categoryService.create(shufa);
+            categoryService.create(meishu);
+            categoryService.create(sheying);
+            categoryService.create(zongjiao);
+            //创建测试文章标签
             Tag tag = new Tag(0, "我是标签", "testtag");
             Tag tag1 = new Tag(0, "我也是标签", "test1");
-            categoryService.create(category);
-            categoryService.create(category1);
             tagService.create(tag);
             tagService.create(tag1);
             //创建测试文章
             Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
             post.setUser(user);
             List<Category> categoryList = new ArrayList<Category>();
-            categoryList.add(category);
+            categoryList.add(wenxue);
+            categoryList.add(sheying);
+            categoryList.add(zongjiao);
             post.setCategoryList(categoryList);
             List<Tag> tagList = new ArrayList<Tag>();
             tagList.add(tag);

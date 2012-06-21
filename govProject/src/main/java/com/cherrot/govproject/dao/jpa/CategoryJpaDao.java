@@ -277,4 +277,14 @@ public class CategoryJpaDao implements CategoryDao {
     public Category findByName(String name) {
         return em.createNamedQuery("Category.findByName", Category.class).setParameter("name", name).getSingleResult();
     }
+
+    @Override
+    public List<Category> findEntitiesHavingNullParent() {
+        return em.createNamedQuery("Category.findAllHavingNullParent", Category.class).getResultList();
+    }
+
+    @Override
+    public List<Category> findEntitiesHavingTopLevelParent() {
+        return em.createNamedQuery("Category.findAllHavingTopLevelParent", Category.class).getResultList();
+    }
 }
