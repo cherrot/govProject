@@ -18,7 +18,7 @@
     <!--Start MainContent-->
     <c:catch var="ex">
         <%--判断term是目录还是标签--%>
-        ${term.categoryParent}
+        <c:set value="${term.categoryParent}" var="rubbish"/>
     </c:catch>
     <c:choose>
       <c:when test="${ex == null}">

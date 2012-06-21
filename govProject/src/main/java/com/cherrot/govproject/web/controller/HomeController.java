@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- * 关于forward: 和 redirect: ，见文档P474
+ * 关于forward: 和 redirect: ，见Spring3.1文档P474
  * @author cherrot
  */
 @Controller
@@ -42,10 +42,9 @@ public class HomeController {
     private PostService postService;
 
     @RequestMapping("/")
-    public ModelAndView home(/*TODO 仅用于测试HttpServletRequest request*/) {
-        //TODO 仅用于生成测试数据！ 和模拟session用户
+    public ModelAndView home() {
+        //XXX 仅用于生成测试数据！ 
         initData();
-//        BaseController.setSessionUser(request.getSession(), userService.find(1));
 
         ModelAndView mav = new ModelAndView("home");
         //添加顶部导航栏的文章分类
