@@ -99,11 +99,11 @@ public class HomeController {
             Category group5 = new Category(0, "分类群组5", "group5");
             Category groupHidden = new Category(0, "隐藏群组", "hidden");
             Category groupMultimedia = new Category(0, "多媒体分组", "multimedia");
-            Category wenxue = new Category(0, "文学作品", "wenxue");
-            Category shufa = new Category(0, "书法作品", "shufa");
-            Category meishu = new Category(0, "美术作品", "meishu");
-            Category sheying = new Category(0, "摄影作品", "sheying");
-            Category zongjiao = new Category(0, "宗教文化", "zongjiao");
+            Category wenxue = new Category(0, "文学", "wenxue");
+            Category shufa = new Category(0, "书法", "shufa");
+            Category meishu = new Category(0, "美术", "meishu");
+            Category sheying = new Category(0, "摄影", "sheying");
+          //  Category zongjiao = new Category(0, "宗教", "zongjiao");
             categoryService.create(group1);
             categoryService.create(group2);
             categoryService.create(group3);
@@ -115,12 +115,12 @@ public class HomeController {
             shufa.setCategoryParent(group1);
             meishu.setCategoryParent(group1);
             sheying.setCategoryParent(group1);
-            zongjiao.setCategoryParent(groupHidden);
+        //    zongjiao.setCategoryParent(groupHidden);
             categoryService.create(wenxue);
             categoryService.create(shufa);
             categoryService.create(meishu);
             categoryService.create(sheying);
-            categoryService.create(zongjiao);
+        //   categoryService.create(zongjiao);
             //创建测试文章标签
             Tag tag = new Tag(0, "我是标签", "testtag");
             Tag tag1 = new Tag(0, "我也是标签", "test1");
@@ -132,7 +132,7 @@ public class HomeController {
             List<Category> categoryList = new ArrayList<Category>();
             categoryList.add(wenxue);
             categoryList.add(sheying);
-            categoryList.add(zongjiao);
+          //  categoryList.add(zongjiao);
             post.setCategoryList(categoryList);
             List<Tag> tagList = new ArrayList<Tag>();
             tagList.add(tag);
