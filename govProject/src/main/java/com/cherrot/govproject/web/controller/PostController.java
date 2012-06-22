@@ -330,7 +330,7 @@ public class PostController {
         List<Category> categories = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("postCategories", categories);
 
-        if ( post.getId() != null ) {
+        if ( post.getId() != null ) {//不是新建文章
             //覆盖@ModelAttribute注入的"post"对象
             mav.addObject("post", post);
             //设置已选文章分类
@@ -338,8 +338,6 @@ public class PostController {
             for (Category category : postCategories) {
                 mav.addObject(category.getName(), Boolean.TRUE);
             }
-            //设置文章标签
-            mav.addObject("tagList", post.getTagList());
         }
         return mav;
     }

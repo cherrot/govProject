@@ -37,7 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Tag.findByCount", query = "SELECT t FROM Tag t WHERE t.count = :count"),
     @NamedQuery(name = "Tag.findByName", query = "SELECT t FROM Tag t WHERE t.name = :name"),
     @NamedQuery(name = "Tag.findBySlug", query = "SELECT t FROM Tag t WHERE t.slug = :slug"),
-    @NamedQuery(name = "Tag.findByDescription", query = "SELECT t FROM Tag t WHERE t.description = :description"),
+    @NamedQuery(name = "Tag.findByDescription", query = "SELECT t FROM Tag t WHERE t.description = :description")
 })
 public class Tag implements Serializable {
     private static final long serialVersionUID = 1L;

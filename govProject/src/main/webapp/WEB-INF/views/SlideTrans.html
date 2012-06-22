@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!--还有以下可选属性：
+Vertical: true,//是否垂直方向（方向不能改）
+Auto: true,//是否自动
+Change: 0,//改变量
+Duration: 50,//滑动持续时间
+Time: 10,//滑动延时
+Pause: 2000,//停顿时间(Auto为true时有效)
+onStart: function(){},//开始转换时执行
+onFinish: function(){},//完成转换时执行
+Tween: Tween.Quart.easeOut//tween算子
+其中Vertical初始化后就不能修改，Tween算子可参照这里的缓动效果选择（实例中选了其中3个）。
+还有提供了以下方法：
+Next: 切换下一个
+Previous: 切换上一个
+Stop: 停止自动切换
+还有上面说到的Run
+http://www.cnblogs.com/cloudgamer/archive/2008/07/06/1236770.html
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>JavaScript 图片滑动切换效果</title>
+<script src="SlideTrans.js"></script>
+</head>
+<body>
+<style type="text/css"> 
+.container, .container img{width:280px; height:200px;}
+.container img{border:0;vertical-align:top;}
+.container ul, .container li{list-style:none;margin:0;padding:0;}
+
+.num{ position:absolute; right:5px; bottom:5px; font:12px/1.5 tahoma, arial; height:18px;}
+.num li{
+	float: left;
+	color: #d94b01;
+	text-align: center;
+	line-height: 16px;
+	width: 16px;
+	height: 16px;
+	font-family: Arial;
+	font-size: 11px;
+	cursor: pointer;
+	margin-left: 3px;
+	border: 1px solid #f47500;
+	background-color: #fcf2cf;
+}
+.num li.on{
+	line-height: 18px;
+	width: 18px;
+	height: 18px;
+	font-size: 14px;
+	margin-top:-2px;
+	background-color: #ff9415;
+	font-weight: bold;
+	color:#FFF;
+}
+</style>
+
+<div class="container" id="idContainer2">
+	<ul id="idSlider2">
+		<li><a href="http://www.cnblogs.com/cloudgamer/archive/2009/12/22/ImagePreview.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song1.jpg" alt="图片上传预览" /> </a></li>
+		<li><a href="http://www.cnblogs.com/cloudgamer/archive/2009/08/10/FixedMenu.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song2.jpg" alt="多级联动菜单" /> </a></li>
+		<li><a href="http://www.cnblogs.com/cloudgamer/archive/2009/07/07/FixedTips.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song3.jpg" alt="浮动定位提示" /> </a></li>
+		<li><a href="http://www.cnblogs.com/cloudgamer/archive/2010/02/01/LazyLoad.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song4.jpg" alt="数据延迟加载" /> </a></li>
+		<li><a href="http://www.cnblogs.com/cloudgamer/archive/2009/12/01/Quick_Upload.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song5.jpg" alt="简便文件上传" /> </a></li>
+	</ul>
+	<ul class="num" id="idNum">
+	</ul>
+</div>
+<script>
+var nums = [], timer, n = $$("idSlider2").getElementsByTagName("li").length,
+	st = new SlideTrans("idContainer2", "idSlider2", n, {
+		onStart: function(){//设置按钮样式
+			forEach(nums, function(o, i){ o.className = st.Index == i ? "on" : ""; })
+		}
+	});
+for(var i = 1; i <= n; AddNum(i++)){};
+function AddNum(i){
+	var num = $$("idNum").appendChild(document.createElement("li"));
+	num.innerHTML = i--;
+	num.onmouseover = function(){
+		timer = setTimeout(function(){ num.className = "on"; st.Auto = false; st.Run(i); }, 200);
+	}
+	num.onmouseout = function(){ clearTimeout(timer); num.className = ""; st.Auto = true; st.Run(); }
+	nums[i] = num;
+}
+st.Run();
+
+
+
+
+</script>
+
+
+</body>
+</html>

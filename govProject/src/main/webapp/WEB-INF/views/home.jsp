@@ -7,7 +7,7 @@
     <title>昆明文化辞典</title>
     <style type="text/css">
 			*{font-size:12px;margin:0;padding:0;}
-			.groupPanel{width:340px; height:255px; overflow:hidden; border:1px #cccbc9 solid; line-height:20px;margin:2em;padding:2em;}
+			.groupPanel{width:340px; height:255px; overflow:hidden; border:1px #cccbc9 solid; line-height:20px;margin:2em;padding:0;}
 			ul{list-style: none;}
 			a{text-decoration: none;}
 			a:hover{text-decoration: underline;}

@@ -6,7 +6,6 @@ package com.cherrot.govproject.model;
 
 import com.cherrot.govproject.util.Constants;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Basic;

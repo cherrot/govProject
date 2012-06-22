@@ -83,7 +83,7 @@
       <form:errors path="slug"/>
       <form:input path="slug" placeholder="请输入文章短链接（可选）" /><br/>
       <label for="postTags">文章标签</label>
-      <input id="postTags" name="postTags" type="text" value="<c:forEach items="${tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
+      <input id="postTags" name="postTags" type="text" value="<c:forEach items="${post.tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
       <br/><label>文章分类</label>
       <ul>
         <c:forEach items="${postCategories}" var="category">
@@ -99,8 +99,8 @@
       </ul>
 
       <form:errors path="content"/>
-      <form:textarea path="content"/><br/>
-      <%--<div id="content">正文：</div>--%>
+      <%--<form:textarea path="content"/>--%><br/>
+
       <script type="text/plain" id="content" name="content">
         ${post.content}
       </script>
@@ -108,6 +108,10 @@
       <label for="comment_status">允许评论</label><form:checkbox id="comment_status" path="commentStatus" value="true" selected="selected" /><br/>
       <form:password path="password" placeholder="文章访问密码，不设请留空" /><br/>
       <label>发布状态</label><form:select path="status" items="${postStatus}"/><br/>
+
+      <%--更改文章属主。只对管理员有效(/admin/post/{postId}/edit)--%>
+
+
       <form:hidden path="id" value="${post.id}"/>
       <input type="submit" value="发布" />
     </form:form>

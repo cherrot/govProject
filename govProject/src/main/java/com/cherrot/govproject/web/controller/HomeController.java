@@ -115,7 +115,7 @@ public class HomeController {
             shufa.setCategoryParent(group1);
             meishu.setCategoryParent(group1);
             sheying.setCategoryParent(group1);
-            zongjiao.setCategoryParent(groupHidden);
+            zongjiao.setCategoryParent(group2);
             categoryService.create(wenxue);
             categoryService.create(shufa);
             categoryService.create(meishu);
