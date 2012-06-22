@@ -16,8 +16,6 @@
       <%@include file="jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
-    ${user.commentList} ${user.login} ${user.displayName} ${user.postList} ${user.registerDate}
-    ${user.siteLogList} ${user.url} ${user.userLevel} ${user.usermetaList}
     <div>
       <%--XXX 这里不规定form的action，以便使此form可以映射到/user/edit和/admin/user/edit两个路径--%>
       <form:form modelAttribute="user">

@@ -48,6 +48,8 @@ public class HomeController {
      */
     @ModelAttribute("categories")
     public List<Category> getSecondLevelCategoryList() {
+        //XXX 仅用于生成测试数据！
+        initData();
         return categoryService.listSecondLevelCategories(false, false);
     }
     /**
@@ -61,8 +63,6 @@ public class HomeController {
 
     @RequestMapping("/")
     public ModelAndView home() {
-        //XXX 仅用于生成测试数据！
-        initData();
 
         ModelAndView mav = new ModelAndView("home");
 

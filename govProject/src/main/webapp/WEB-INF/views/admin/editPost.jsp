@@ -82,13 +82,19 @@
       <%--TODO: 短链接可使用javascript自动生成，并使用AJAX验证是否可用--%>
       <form:errors path="slug"/>
       <form:input path="slug" placeholder="请输入文章短链接（可选）" /><br/>
-      <%--不能直接用tagList，必须转成String--%>
       <label for="postTags">文章标签</label>
       <input id="postTags" name="postTags" type="text" value="<c:forEach items="${tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
       <br/><label>文章分类</label>
       <ul>
-        <c:forEach items="${categories}" var="category">
-          <li><input id="postCategories" name="postCategories" type="checkbox" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>
+        <c:forEach items="${postCategories}" var="category">
+          <li><input type="checkbox" name="postCategories" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>
+          <c:if test="${!empty category.categoryList}">
+            <ul>
+              <c:forEach items="${category.categoryList}" var="childCategory">
+                <li><input type="checkbox" name="postCategories" value="${childCategory.id}" <c:if test="${requestScope[childCategory.name]}">checked="checked"</c:if>/>${childCategory.name}</li>
+              </c:forEach>
+            </ul>
+          </c:if>
         </c:forEach>
       </ul>
 

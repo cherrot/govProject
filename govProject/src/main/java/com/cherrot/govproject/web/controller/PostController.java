@@ -53,7 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
-@RequestMapping({"/post","admin/post"})
+@RequestMapping("/post")
 public class PostController {
 
     @Inject
@@ -281,7 +281,7 @@ public class PostController {
         ,BindingResult bindingResult
         ,RedirectAttributes redirectAttr
         ,@RequestParam("postTags")String postTags
-        ,@RequestParam("postCategories")Integer[] postCategories) {
+        ,@RequestParam("postCategories")Integer[] categoryIds) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
@@ -299,7 +299,7 @@ public class PostController {
             post.setTagList(tagList);
             //文章目录
             List<Category> categoryList = new ArrayList<Category>();
-            for (Integer categoryId : postCategories) {
+            for (Integer categoryId : categoryIds) {
                 categoryList.add(categoryService.find(categoryId));
             }
             post.setCategoryList(categoryList);
@@ -326,9 +326,9 @@ public class PostController {
         postStatusMap.put(Post.PostStatus.DRAFT, Post.PostStatus.DRAFT.getDescription());
         postStatusMap.put(Post.PostStatus.PENDING, Post.PostStatus.PENDING.getDescription());
         mav.addObject("postStatus", postStatusMap);
-        //添加全部文章分类
-        List<Category> categories = categoryService.list();
-        mav.addObject("categories", categories);
+        //添加全部文章分类(二级分类和子分类)
+        List<Category> categories = categoryService.listSecondLevelCategories(false, true);
+        mav.addObject("postCategories", categories);
 
         if ( post.getId() != null ) {
             //覆盖@ModelAttribute注入的"post"对象
