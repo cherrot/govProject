@@ -24,6 +24,7 @@ import java.util.Date;
 import java.util.List;
 import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,15 +42,30 @@ public class HomeController {
     @Inject
     private PostService postService;
 
+    /**
+     * 顶部导航栏的文章分类
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+    /**
+     * 友情链接分类和分类下的友情链接
+     * @return
+     */
+    @ModelAttribute("linkCategories")
+    public List<LinkCategory> getLinkCategoryList() {
+        return linkService.listLinkCategories(true);
+    }
+
     @RequestMapping("/")
     public ModelAndView home() {
-        //XXX 仅用于生成测试数据！ 
+        //XXX 仅用于生成测试数据！
         initData();
 
         ModelAndView mav = new ModelAndView("home");
-        //添加顶部导航栏的文章分类
-        List<Category> categories = categoryService.listSecondLevelCategories(false, false);
-        mav.addObject("categories", categories);
+
         //添加首页主体部分的文章群组分类和该分类的最新文章
         List<Category> topLevelCategorys = categoryService.listTopLevelCategories(true);
         mav.addObject("categoryGroups", topLevelCategorys);
@@ -58,8 +74,6 @@ public class HomeController {
                 mav.addObject(category.getName(), postService.listNewestPostsByCategory(category, 1, 5));
             }
         }
-        List<LinkCategory> linkCategories = linkService.listLinkCategories(true);
-        mav.addObject("linkCategories", linkCategories);
         return mav;
     }
 
@@ -83,7 +97,8 @@ public class HomeController {
             Category group3 = new Category(0, "分类群组3", "group3");
             Category group4 = new Category(0, "分类群组4", "group4");
             Category group5 = new Category(0, "分类群组5", "group5");
-            Category groupHidden = new Category(0, "隐藏群组", "hiddenGroup");
+            Category groupHidden = new Category(0, "隐藏群组", "hidden");
+            Category groupMultimedia = new Category(0, "多媒体分组", "multimedia");
             Category wenxue = new Category(0, "文学作品", "wenxue");
             Category shufa = new Category(0, "书法作品", "shufa");
             Category meishu = new Category(0, "美术作品", "meishu");
@@ -95,6 +110,7 @@ public class HomeController {
             categoryService.create(group4);
             categoryService.create(group5);
             categoryService.create(groupHidden);
+            categoryService.create(groupMultimedia);
             wenxue.setCategoryParent(group1);
             shufa.setCategoryParent(group1);
             meishu.setCategoryParent(group1);

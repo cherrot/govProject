@@ -4,8 +4,12 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
+import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
 import static com.cherrot.govproject.util.Constants.LOGIN_TO_URL;
@@ -34,6 +38,27 @@ public class LoginController {
 
     @Inject
     private UserService userService;
+    @Inject
+    private CategoryService categoryService;
+    @Inject
+    private LinkService linkService;
+
+    /**
+     * 顶部导航栏的文章分类
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+    /**
+     * 友情链接分类和分类下的友情链接
+     * @return
+     */
+    @ModelAttribute("linkCategories")
+    public List<LinkCategory> getLinkCategoryList() {
+        return linkService.listLinkCategories(true);
+    }
 
     @ModelAttribute("newUser")
     public User getNewUser() {

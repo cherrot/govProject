@@ -6,11 +6,13 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Comment;
+import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
+import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
@@ -62,6 +64,26 @@ public class PostController {
     private CategoryService categoryService;
     @Inject
     private TagService tagService;
+    @Inject
+    private LinkService linkService;
+
+    /**
+     * 顶部导航栏的文章分类
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+
+    /**
+     * 友情链接分类和分类下的友情链接
+     * @return
+     */
+    @ModelAttribute("linkCategories")
+    public List<LinkCategory> getLinkCategoryList() {
+        return linkService.listLinkCategories(true);
+    }
 
     /**
      * 返回一个新的Comment对象

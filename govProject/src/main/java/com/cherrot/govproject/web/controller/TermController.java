@@ -5,9 +5,11 @@
 package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.LinkCategory;
 import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
@@ -18,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,6 +37,26 @@ public class TermController {
     private TagService tagService;
     @Inject
     private PostService postService;
+    @Inject
+    private LinkService linkService;
+
+    /**
+     * 顶部导航栏的文章分类
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+
+    /**
+     * 友情链接分类和分类下的友情链接
+     * @return
+     */
+    @ModelAttribute("linkCategories")
+    public List<LinkCategory> getLinkCategoryList() {
+        return linkService.listLinkCategories(true);
+    }
 
     @RequestMapping("/category/{categorySlug}")
     public ModelAndView listPostsByCategoryPage1(@PathVariable("categorySlug")String slug) {
@@ -92,14 +115,14 @@ public class TermController {
         }
         return mav;
     }
-    
+
     /**
-     * 
+     *
      * @param <Term>
      * @param mav
      * @param categoryOrTag
      * @param isCategory 使用该标志判断categoryOrTag的类型。 不使用instanceof是为了防止动态代理带来的类型问题
-     * @param pageNum 
+     * @param pageNum
      */
     private <Term extends Serializable> void processPosts4CategoryOrTag(ModelAndView mav, Term categoryOrTag, boolean isCategory, int pageNum) {
         int pageCount;

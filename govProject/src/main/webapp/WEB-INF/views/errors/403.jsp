@@ -12,6 +12,9 @@
     <title>403</title>
   </head>
   <body>
+    <%@include file="../jspf/header.jspf" %>
+    <%@include file="../jspf/sidebar.jspf" %>
     <h1>403</h1>
+    <%@include file="../jspf/footer.jspf" %>
   </body>
 </html>

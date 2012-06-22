@@ -533,7 +533,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByTagDesc(Tag tag, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByTagDescOrder", Tag.class);
+        Query q = em.createNamedQuery("Post.findByTagDescOrder", Post.class);
         q.setParameter("tag", tag);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
