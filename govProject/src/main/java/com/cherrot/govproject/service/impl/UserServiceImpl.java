@@ -136,11 +136,17 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
     public User validateUser(String loginName, String password) {
-        User user = null;
+        User user;
         try {
             user = findByLoginName(loginName, false, false, true, false);
+            if ( !user.getPass().equals(password)) {
+                user = null;
+            }
         } catch (Exception e) {
+            Logger.getLogger(UserServiceImpl.class.getSimpleName()).log(Level.SEVERE, e.getMessage(), e);
+            user = null;
         }
         return user;
     }

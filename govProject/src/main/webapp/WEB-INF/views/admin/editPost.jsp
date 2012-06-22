@@ -58,7 +58,7 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      <%@include file="jspf/sidebar.jspf" %>
+      <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>
 

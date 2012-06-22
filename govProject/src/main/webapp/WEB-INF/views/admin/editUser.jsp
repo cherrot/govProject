@@ -14,7 +14,7 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      <%@include file="jspf/sidebar.jspf" %>
+      <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     ${user.commentList} ${user.login} ${user.displayName} ${user.postList} ${user.registerDate}
     ${user.siteLogList} ${user.url} ${user.userLevel} ${user.usermetaList}

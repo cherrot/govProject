@@ -1,0 +1,12 @@
+/*
+    Document   : admin
+    Created on : 2012-6-22, 12:08:19
+    Author     : Cherrot Luo<cherrot+dev@cherrot.com>
+    Description: 用于后台管理面板的样式表
+        Purpose of the stylesheet follows.
+*/
+
+root {
+  display: block;
+}
+

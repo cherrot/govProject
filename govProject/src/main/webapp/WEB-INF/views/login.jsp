@@ -29,6 +29,7 @@
       <%@include file="jspf/header.jspf" %>
       <%@include file="jspf/sidebar.jspf" %>
 
+    <p>${errorMsg}</p>
     <h1>用户登录</h1>
     <div class="loginForm">
       <form action="<c:url value="/login" />" method="POST">

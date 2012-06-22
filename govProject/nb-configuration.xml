@@ -24,5 +24,6 @@ Any value defined here will override the pom.xml file value but is only applicab
 -->
         <netbeans.compile.on.save>all</netbeans.compile.on.save>
         <org-netbeans-modules-whitelist.whitelist-oracle>false</org-netbeans-modules-whitelist.whitelist-oracle>
+        <org-netbeans-modules-html-editor-lib.default-html-public-id>HTML5</org-netbeans-modules-html-editor-lib.default-html-public-id>
     </properties>
 </project-shared-configuration>

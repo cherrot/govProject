@@ -319,7 +319,7 @@ public class PostController {
      */
     private ModelAndView processModels4EditPost(Post post) {
         //使用editPost.jsp
-        ModelAndView mav = new ModelAndView("editPost");
+        ModelAndView mav = new ModelAndView("admin/editPost");
         //设置文章发布状态的Map，用于<form:select>
         Map<Post.PostStatus, String> postStatusMap = new EnumMap<Post.PostStatus, String>(Post.PostStatus.class);
         postStatusMap.put(Post.PostStatus.PUBLISHED, Post.PostStatus.PUBLISHED.getDescription());

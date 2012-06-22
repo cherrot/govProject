@@ -124,7 +124,7 @@ public class UserController {
     @RequestMapping(value="/edit", method=RequestMethod.GET)
     public ModelAndView editUser(HttpServletRequest request) {
 
-        ModelAndView mav = new ModelAndView("editUser");
+        ModelAndView mav = new ModelAndView("admin/editUser");
         User user = BaseController.getSessionUser(request.getSession());
         if (user != null) {
             mav.addObject("user", user);
@@ -142,7 +142,7 @@ public class UserController {
         , HttpServletRequest request) {
 
         if (result.hasErrors()) {
-            return "editUser";
+            return "admin/editUser";
         }
 
         User sessionUser = BaseController.getSessionUser(request.getSession());
