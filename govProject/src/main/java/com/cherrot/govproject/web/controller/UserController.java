@@ -87,7 +87,7 @@ public class UserController {
         return user;
     }
 
-    @RequestMapping(value={"","/"})
+    @RequestMapping("")
     public ModelAndView viewSessionUser(HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("viewUser");

@@ -9,13 +9,13 @@
 <html lang="zh">
   <head>
     <%@include file="jspf/commonHead.jspf" %>
-    <title>${user.displayName} | 昆明文化辞典</title>
+    <title>文章评论管理 | 昆明文化辞典</title>
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
       <!--Start MainContent-->
-      
+
       <!--End MainContent-->
       <%@include file="jspf/footer.jspf" %>
   </body>

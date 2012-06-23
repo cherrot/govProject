@@ -15,6 +15,7 @@ public interface CategoryService extends BaseService<Category, Integer> {
 
     Category find(Integer id, boolean withPosts, boolean withChildCategories);
     Category findBySlug(String slug, boolean withPosts, boolean withChildCategories);
+    Category getDefaultCategory();
     /**
      * Create Category and TermTaxonomy objects. Only the "type" property of the
      * TermTaxonomy object is set.
@@ -35,4 +36,7 @@ public interface CategoryService extends BaseService<Category, Integer> {
      * @return
      */
     List<Category> listSecondLevelCategories(boolean withPosts, boolean withChildCategories);
+
+    boolean isSecondLevelCategory(Category category);
+    boolean isTopLevelCategory(Category category);
 }

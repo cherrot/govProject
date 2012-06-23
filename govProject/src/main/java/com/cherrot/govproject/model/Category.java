@@ -97,7 +97,7 @@ public class Category implements Serializable {
      * Post.java为主控端， Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
 //    @OrderColumn(name="termOrder")
-    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "categoryList")
+    @ManyToMany(cascade={CascadeType.REFRESH}, mappedBy = "categoryList")
     private List<Post> postList;
 
     public Category() {

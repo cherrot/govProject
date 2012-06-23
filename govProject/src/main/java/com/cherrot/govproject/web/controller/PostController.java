@@ -318,7 +318,7 @@ public class PostController {
     }
 
     @RequestMapping("/{postSlug}/delete")
-    public String deletePost(@PathVariable("postSlug")String postSlug, HttpServletRequest request) {
+    public String doDeletePost(@PathVariable("postSlug")String postSlug, HttpServletRequest request) {
         Post post = null;
         try {
             post = postService.findBySlug(postSlug, false, false, false, false, false);

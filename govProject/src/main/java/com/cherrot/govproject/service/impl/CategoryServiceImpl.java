@@ -8,6 +8,7 @@ import com.cherrot.govproject.dao.CategoryDao;
 import com.cherrot.govproject.dao.exceptions.IllegalOrphanException;
 import com.cherrot.govproject.dao.exceptions.NonexistentEntityException;
 import com.cherrot.govproject.model.Category;
+import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.service.CategoryService;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +100,17 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     public void destroy(Integer id) {
         try {
+            Category category = find(id);
+            //子分类上升一级
+            for (Category child : category.getCategoryList()) {
+                child.setCategoryParent(category.getCategoryParent());
+            }
+            for (Post post : category.getPostList()) {
+                //如果此文章只属于要删除的分类，那么将默认分类添加到该文章的分类中。
+                if (post.getCategoryList().size() == 1) {
+                    post.getCategoryList().add(category);
+                }
+            }
             categoryDao.destroy(id);
         }
         catch (IllegalOrphanException ex) {
@@ -155,5 +167,21 @@ public class CategoryServiceImpl implements CategoryService {
         } else {
             edit(model);
         }
+    }
+
+    @Override
+    public boolean isSecondLevelCategory(Category category) {
+        return listTopLevelCategories(false).contains(category.getCategoryParent());
+    }
+
+    @Override
+    public boolean isTopLevelCategory(Category category) {
+        return category.getCategoryParent() == null;
+    }
+
+    @Override
+    public Category getDefaultCategory() {
+        //PENDING: 本方法将返回第一个二级分类
+        return listSecondLevelCategories(false, false).get(0);
     }
 }

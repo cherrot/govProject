@@ -82,7 +82,7 @@
       <label for="postTitle">标题</label><form:input id="postTitle" path="title" placeholder="请输入文章标题" /><br/>
       <%--TODO: 短链接可使用javascript自动生成，并使用AJAX验证是否可用--%>
       <form:errors path="slug"/>
-      <form:input path="slug" placeholder="请输入文章短链接（可选）" /><br/>
+      <form:input path="slug" placeholder="请输入文章短链接（可以是文章标题）" /><br/>
       <label for="postTags">文章标签</label>
       <input id="postTags" name="postTags" type="text" value="<c:forEach items="${post.tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
           <br/><label>文章分类</label>

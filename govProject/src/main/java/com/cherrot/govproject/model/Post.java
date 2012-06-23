@@ -179,12 +179,12 @@ public class Post implements Serializable {
 //     */
 //    @OrderBy("commentDate")
     private List<Comment> commentList;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name="category_relationships",
             inverseJoinColumns=@JoinColumn(name="category_id"),
             joinColumns=@JoinColumn(name="post_id"))
     private List<Category> categoryList;
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(name="tag_relationships",
             inverseJoinColumns=@JoinColumn(name="tag_id"),
             joinColumns=@JoinColumn(name="post_id"))
