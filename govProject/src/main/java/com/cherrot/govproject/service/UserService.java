@@ -28,4 +28,16 @@ public interface UserService extends BaseService<User, Integer> {
      * @return  用户角色的描述（如“系统管理员”、“文联官员”之类）
      */
     String getDescriptionOfUserLevel(int userLevel);
+    /**
+     * 是否是最高管理员
+     * @param user
+     * @return true if the user has the role of administrator
+     */
+    boolean isAdministrator(User user);
+    /**
+     * 是否是二级管理员（版主）
+     * @param user
+     * @return
+     */
+    boolean isModerator(User user);
 }

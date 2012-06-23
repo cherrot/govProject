@@ -15,6 +15,7 @@ import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
+import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
 import com.cherrot.govproject.web.exceptions.ForbiddenException;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
@@ -66,6 +67,8 @@ public class PostController {
     private TagService tagService;
     @Inject
     private LinkService linkService;
+    @Inject
+    private UserService userService;
 
     /**
      * 顶部导航栏的文章分类
@@ -313,11 +316,12 @@ public class PostController {
 
     @RequestMapping("/{postSlug}/delete")
     public String deletePost(@PathVariable("postSlug")String postSlug, HttpServletRequest request) {
+        Post post = null;
         try {
-            Post post = postService.findBySlug(postSlug, false, false, false, false, false);
-            //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
+            post = postService.findBySlug(postSlug, false, false, false, false, false);
+            //只有文章的作者或网站管理员可以删除该文章
             User author = BaseController.getSessionUser(request.getSession());
-            if (author == null || (post.getUser() != null && !post.getUser().equals(author))) {
+            if (author==null || !userService.isAdministrator(author) || ( post.getUser()!=null && !post.getUser().equals(author) )) {
                 throw new ForbiddenException();
             }
             //删除文章
@@ -326,10 +330,10 @@ public class PostController {
             throw new ResourceNotFoundException();
         }
 
-        //返回之前页面。若用户之前在浏览此文章，则返回首页
+        //返回之前页面。若用户之前在浏览此文章，则返回用户文章页
         String referer = request.getHeader("Referer");
         if (referer.endsWith(postSlug)) {
-            referer = "/";
+            referer = "user/"+post.getUser().getId()+"/posts";
         }
         return "redirect:"+ referer;
     }

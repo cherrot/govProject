@@ -12,6 +12,9 @@ import com.cherrot.govproject.model.User;
 import com.cherrot.govproject.model.Usermeta;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.UserService;
+import static com.cherrot.govproject.util.Constants.USER_NORMAL;
+import static com.cherrot.govproject.util.Constants.USER_WENLIAN;
+import static com.cherrot.govproject.util.Constants.USER_XUANCHUANBU;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -164,9 +167,29 @@ public class UserServiceImpl implements UserService{
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
         StringBuilder stringBuilder = new StringBuilder();
-        if ( (userLevel & 0xE0) > 0 ) stringBuilder.append("宣传部管理员 ");
-        if ( (userLevel & 0x1E) > 0 ) stringBuilder.append("文联工作人员 ");
-        if ( (userLevel & 0x1) > 0 ) stringBuilder.append("普通用户 ");
+        if ( (userLevel & USER_XUANCHUANBU) != 0 ) stringBuilder.append("宣传部管理员 ");
+        if ( (userLevel & USER_WENLIAN) != 0 ) stringBuilder.append("文联工作人员 ");
+        if ( (userLevel & USER_NORMAL) != 0 ) stringBuilder.append("普通用户 ");
         return stringBuilder.toString();
+    }
+
+    @Override
+    public boolean isAdministrator(User user) {
+        if ( (user.getUserLevel() & USER_XUANCHUANBU) != 0 ) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean isModerator(User user) {
+        if ( (user.getUserLevel() & USER_WENLIAN) != 0 ) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }
