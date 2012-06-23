@@ -6,6 +6,7 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.service.CommentService;
+import com.cherrot.govproject.util.Constants;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
@@ -32,7 +33,7 @@ public class AdminCommentController {
     private CommentService commentService;
 
     @ModelAttribute("comment")
-    public Comment get2ndCategory(@RequestParam(value="id", required=false)Integer categoryId) {
+    public Comment getComment(@RequestParam(value="id", required=false)Integer categoryId) {
         Comment comment = null;
         if (categoryId != null) {
             try {
@@ -44,63 +45,58 @@ public class AdminCommentController {
         return comment;
     }
 
-    @RequestMapping(value="", method= RequestMethod.GET)
-    public ModelAndView viewComments() {
+    @RequestMapping("")
+    public ModelAndView viewComments(@RequestParam(value="pending", required=false)Boolean onlyPending) {
+        return processCommentList(1, onlyPending);
+    }
+    
+    @RequestMapping("/page/{pageNum}")
+    public ModelAndView viewComments(@PathVariable("pageNum")int pageNum
+        , @RequestParam(value="pending", required=false)Boolean onlyPending) {
+        return processCommentList(pageNum, onlyPending);
+    }
+
+    @RequestMapping(value="/*/edit", method= RequestMethod.POST)
+    public String doEditComment(@Valid @ModelAttribute("comment")Comment comment
+        , BindingResult result) {
+
+        String returnString = "redirect:/admin/comment";
+        if (result.hasErrors()) {
+            returnString = "admin/editComment";
+        } else {
+            commentService.edit(comment);
+        }
+        return returnString;
+    }
+
+    @RequestMapping(value="/{commentId}/edit", method= RequestMethod.GET)
+    public ModelAndView editComment(@PathVariable("commentId")Integer commentId) {
+        ModelAndView mav = new ModelAndView("admin/editComment");
+        try {
+            Comment comment = commentService.find(commentId);
+            mav.addObject("comment", comment);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
+        }
+        return mav;
+    }
+
+    @RequestMapping("/{commentId}/delete")
+    public String doDeleteComment(@PathVariable("commentId")Integer commentId) {
+        try {
+            commentService.destroy(commentId);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
+        }
+        return "redirect:/admin/comment";
+    }
+    
+    private ModelAndView processCommentList(int pageNum, boolean onlyPending) {
         ModelAndView mav = new ModelAndView("admin/comments");
-
-       return mav;
-    }
-
-    @RequestMapping(value={"","/*/edit"}, method= RequestMethod.POST)
-    public ModelAndView doEditCategory(@Valid @ModelAttribute("category")Category category
-        , BindingResult result
-        , @RequestParam("categoryParent")Integer categoryParentId) {
-
-        ModelAndView mav = new ModelAndView("admin/categories");
-        if ( !result.hasErrors() ) {
-            Category parent = categoryService.find(categoryParentId);
-            category.setCategoryParent(parent);
-            if (category.getId() != null) {
-                processCategoryParentList4Category(mav, category);
-            }
-            categoryService.save(parent);
-        }
-        processCategoryLists(mav);
+        //FIXME: 添加只获取未审核评论的方法
+        List<Comment> comments = commentService.list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        mav.addObject("commentList", comments);
+        //TODO: 添加pageNum和pageCount
         return mav;
-    }
-
-    @RequestMapping(value="/{categoryId}/edit")
-    public ModelAndView editCategory(@PathVariable("categoryId")Integer categoryId) {
-        ModelAndView mav = new ModelAndView("admin/editCategory");
-        try {
-            Category category = categoryService.find(categoryId);
-            mav.addObject("category", category);
-        } catch (PersistenceException e) {
-            throw new ResourceNotFoundException();
-        }
-        return mav;
-    }
-
-    @RequestMapping("/{categoryId}/delete")
-    public String doDeleteCategory(@PathVariable("categoryId")Integer categoryId) {
-
-        try {
-            Category category = categoryService.find(categoryId, false, false);
-            //顶级分类不可删除！
-            if (categoryService.isTopLevelCategory(category)) {
-                return "redirect:/admin/categories";
-            }
-            categoryService.destroy(categoryId);
-        } catch (PersistenceException e) {
-            throw new ResourceNotFoundException();
-        }
-        return "redirect:/admin/categories";
-    }
-
-    private void processCategoryLists(ModelAndView mav) {
-        List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
-        mav.addObject("categoryList", secondCategorys);
-        List<Category> topCategorys = categoryService.listTopLevelCategories(true);
-        mav.addObject("categoryGroups", topCategorys);
     }
 }

@@ -58,25 +58,32 @@ public class AdminCategoryController {
         , BindingResult result
         , @RequestParam("categoryParent")Integer categoryParentId) {
 
-        ModelAndView mav = new ModelAndView("admin/categories");
-        if ( !result.hasErrors() ) {
-            Category parent = categoryService.find(categoryParentId);
-            category.setCategoryParent(parent);
-            if (category.getId() != null) {
-                processCategoryParentList4Category(mav, category);
-            }
-            categoryService.save(parent);
+        ModelAndView mav = new ModelAndView("redirect:/admin/category");
+        Category parent = null;
+        try {
+            parent = categoryService.find(categoryParentId);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
         }
-        processCategoryLists(mav);
+        category.setCategoryParent(parent);
+        if (result.hasErrors() ) {
+            //此页面也可处理新建目录的请求。
+            mav.setViewName("/admin/editCategory");
+            //调用该方法须确保category的categoryParent属性已被设置
+            processCategoryParentList4Category(mav, category);
+        } else {
+            categoryService.save(category);
+        }
         return mav;
     }
 
-    @RequestMapping(value="/{categoryId}/edit")
+    @RequestMapping(value="/{categoryId}/edit", method= RequestMethod.GET)
     public ModelAndView editCategory(@PathVariable("categoryId")Integer categoryId) {
         ModelAndView mav = new ModelAndView("admin/editCategory");
         try {
             Category category = categoryService.find(categoryId);
             mav.addObject("category", category);
+            processCategoryParentList4Category(mav, category);
         } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
@@ -90,13 +97,13 @@ public class AdminCategoryController {
             Category category = categoryService.find(categoryId, false, false);
             //顶级分类不可删除！
             if (categoryService.isTopLevelCategory(category)) {
-                return "redirect:/admin/categories";
+                return "redirect:/admin/category";
             }
             categoryService.destroy(categoryId);
         } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
-        return "redirect:/admin/categories";
+        return "redirect:/admin/category";
     }
 
     private void processCategoryLists(ModelAndView mav) {
