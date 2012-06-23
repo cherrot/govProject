@@ -110,7 +110,13 @@
       <label>发布状态</label><form:select path="status" items="${postStatus}"/><br/>
 
       <%--更改文章属主。只对管理员有效(/admin/post/{postId}/edit)--%>
-
+      <c:if test="${!empty userList}">
+        <select name="postAuthor">
+          <c:forEach items="${userList}" var="postAuthor">
+            <option value="${postAuthor.id}" <c:if test="${postAuthor eq sessionUser}">selected="selected"</c:if>>${postAuthor.displayName}</option>
+          </c:forEach>
+        </select>
+      </c:if>
 
       <form:hidden path="id" value="${post.id}"/>
       <input type="submit" value="发布" />

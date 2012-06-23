@@ -57,13 +57,20 @@ public interface PostService extends BaseService<Post, Integer> {
      * @return
      */
     List<Post> listByUser(User user, int pageNum, int pageSize);
-    List<Post> listNewesPostsByUser(User user, int pageNum, int pageSize);
+    List<Post> listNewestPostsByUser(User user, int pageNum, int pageSize);
+    /**
+     * 取回MIME类型为image/XXX的post
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    List<Post> listNewestImagePosts(int pageNum, int pageSize);
     int getCountByUser(User user);
     int getCountByCategory(Category category);
     int getCountByTag(Tag tag);
     void addAttachment(Integer postId, File localFile, String mime);
 
-    //    /**
+//    /**
 //     * 只得到Post的引用，不取回post。主要用于验证该slug是否存在（通过捕获EntityNotFoundException）。
 //     * @param slug post的slug（用户自定义的文章链接）
 //     * @return Post的引用

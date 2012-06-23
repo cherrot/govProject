@@ -76,7 +76,8 @@ public class AdminPostController {
         ,BindingResult bindingResult
         ,RedirectAttributes redirectAttr
         ,@RequestParam("postTags")String postTags
-        ,@RequestParam("postCategories")Integer[] categoryIds) {
+        ,@RequestParam("postCategories")Integer[] categoryIds
+        ,@RequestParam("postAuthor")Integer postAuthorId) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
@@ -91,6 +92,9 @@ public class AdminPostController {
                 categoryList.add(categoryService.find(categoryId));
             }
             post.setCategoryList(categoryList);
+            //文章作者
+            User author = userService.find(postAuthorId);
+            post.setUser(author);
             //保存
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");

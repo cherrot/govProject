@@ -574,6 +574,11 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
+    public List<Post> findEntitiesByMimeDesc(String mime, int maxResults, int firstResult) {
+        return em.createNamedQuery("Post.findByMimeDesc", Post.class).setParameter("mime", mime).getResultList();
+    }
+
+    @Override
     public Post getReference(Integer id) {
         return em.getReference(Post.class, id);
     }

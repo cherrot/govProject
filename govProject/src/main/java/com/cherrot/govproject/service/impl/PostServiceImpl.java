@@ -256,6 +256,17 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    public List<Post> listByUser(User user, int pageNum, int pageSize) {
+        List<Post> posts = postDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
+        return posts;
+    }
+
+    @Override
+    public List<Post> listNewestPostsByUser(User user, int pageNum, int pageSize) {
+        return postDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
+    }
+
+    @Override
     public List<Post> listNewestPostsByCategory(Category category, int pageNum, int pageSize) {
         return postDao.findEntitiesByCategoryDesc(category, pageSize, (pageNum-1)*pageSize);
     }
@@ -266,14 +277,18 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<Post> listByUser(User user, int pageNum, int pageSize) {
-        List<Post> posts = postDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
-        return posts;
+    public List<Post> listNewestPostsByTag(Tag tag, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTagDesc(tag, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
-    public List<Post> listNewesPostsByUser(User user, int pageNum, int pageSize) {
-        return postDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
+    public List<Post> listNewestPostsByTagSlug(String tagSlug, int pageNum, int pageSize) {
+        return postDao.findEntitiesByTagSlugDesc(tagSlug, pageSize, (pageNum-1)*pageSize);
+    }
+
+    @Override
+    public List<Post> listNewestImagePosts(int pageNum, int pageSize) {
+        return postDao.findEntitiesByMimeDesc("image/%", pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
@@ -289,16 +304,6 @@ public class PostServiceImpl implements PostService {
     @Override
     public int getCountByTag(Tag tag) {
         return getCountByTag(tag);
-    }
-
-    @Override
-    public List<Post> listNewestPostsByTag(Tag tag, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTagDesc(tag, pageSize, (pageNum-1)*pageSize);
-    }
-
-    @Override
-    public List<Post> listNewestPostsByTagSlug(String tagSlug, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTagSlugDesc(tagSlug, pageSize, (pageNum-1)*pageSize);
     }
 
     //TODO 此方法目前只用于添加视频。

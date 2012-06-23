@@ -13,7 +13,6 @@ import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.LinkService;
 import com.cherrot.govproject.service.PostService;
-import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import static com.cherrot.govproject.util.Constants.ERROR_MSG_KEY;
@@ -215,7 +214,7 @@ public class UserController {
     }
 
     private void processPosts(ModelAndView mav, User user, int pageNum) {
-        List<Post> userPosts = postService.listNewesPostsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
+        List<Post> userPosts = postService.listNewestPostsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
         mav.addObject("postList", userPosts);
     }
 

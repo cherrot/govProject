@@ -44,13 +44,11 @@ public class FileUploadController {
      * 用于 qqFileUpload JS插件
      *
      * @param file
-     * @param postId
      * @param response
      * @throws IOException
      */
     @RequestMapping("/post/uploadvideo")
     public void doUploadVideo(@RequestParam("qqfile") MultipartFile file
-        , @RequestParam("postId")Integer postId
         , HttpServletResponse response) throws IOException {
 
         if (!file.isEmpty()) {
@@ -63,8 +61,6 @@ public class FileUploadController {
 
                 response.setStatus(HttpServletResponse.SC_OK);
                 response.getWriter().print("{success: true}");
-                //PENDING file.getContentType() 是否返回MIME？
-                postService.addAttachment(postId, localFile, file.getContentType());
                 videoConvertService.videoConvert(localFile.getAbsolutePath());
             } catch (Exception ex) {
                 Logger.getLogger(FileUploadController.class.getSimpleName()).log(Level.SEVERE, ex.getMessage(), ex);
@@ -79,7 +75,6 @@ public class FileUploadController {
 
     @RequestMapping(value = "/post/uploadimage"/*, produces="application/json"*/)
     public void doUploadImage(@RequestParam("imageFile") MultipartFile imageFile
-        , @RequestParam(value="postId", required=false)Integer postId /*TODO 实现和Post的关联*/
         , HttpServletResponse response) throws IOException {
 
         if (!imageFile.isEmpty()) {
@@ -112,7 +107,6 @@ public class FileUploadController {
             }
             response.getWriter().print("{'original':'" + originalName + "','url':'" + url + "','title':'" + title + "','state':'" + state + "'}");
 //            response.getWriter().print("{ 'url':'" +url +"','title':'" +title +",'state':'" +state +"'}");
-//            System.err.println("{'url':'" +url +"','title':'" +title +",'state':'" +state +"'}");
         }
     }
 }

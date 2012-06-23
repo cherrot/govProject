@@ -24,6 +24,12 @@ public interface PostDao extends Serializable, BaseDao<Post, Integer> {
     List<Post> findEntitiesByTagSlugDesc(String tagSlug, int maxResults, int firstResult);
     List<Post> findEntitiesByUser(User user, int maxResults, int firstResult);
     List<Post> findEntitiesByUserDesc(User user, int maxResults, int firstResult);
+    /**
+     * mime支持模糊查询。可以使用JPQL的模糊字符串。(如"image/%")
+     * @param mime
+     * @return
+     */
+    List<Post> findEntitiesByMimeDesc(String mime, int maxResults, int firstResult);
     int getCountByUser(User user);
     int getCountByCategory(Category category);
     int getCountByTag(Tag tag);

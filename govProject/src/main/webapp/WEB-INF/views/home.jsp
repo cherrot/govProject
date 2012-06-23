@@ -5,11 +5,24 @@
   <head>
     <%@include file="jspf/commonHead.jspf" %>
     <title>昆明文化辞典</title>
-    <style type="text/css" title="imageSlide"> 
-      .container, .container img{width:280px; height:200px;}
+
+    <style type="text/css">
+			*{font-size:12px;margin:0;padding:0;}
+			.groupPanel{width:340px; height:255px; overflow:hidden; border:1px #cccbc9 solid; line-height:20px;margin:2em;padding:0;}
+			ul{list-style: none;}
+			a{text-decoration: none;}
+			a:hover{text-decoration: underline;}
+			.TabADS{width:340px;}
+			.TabADS ul{width:340px; height:24px;background:#fff;}
+      .TabADS li{width:84px; float:left; height:18px; padding:6px 0 0 0; background:url(<c:url value="/resources/images/sinahome_ws_013.gif"/>) no-repeat right #e4e4e4; text-align:center; color:#333; cursor:pointer;}
+      .TabADS .TasADSOn{background:url(<c:url value="/resources/images/sinahome_ws_012.gif"/>) no-repeat right #ffe4a6; text-align:center; color:#333; font-weight:bold; cursor:pointer;}
+			.TabADSCon{background:#FFD77B;padding:5px;width:330px;}
+			.TabADSCon li{text-align:left; line-height:20px;}
+			.dreamdu{margin-bottom:2em;}
+
+      .container, .container img{width:340px; height:255px;}
       .container img{border:0;vertical-align:top;}
       .container ul, .container li{list-style:none;margin:0;padding:0;}
-
       .num{ position:absolute; right:5px; bottom:5px; font:12px/1.5 tahoma, arial; height:18px;}
       .num li{
         float: left;
@@ -35,22 +48,6 @@
         font-weight: bold;
         color:#FFF;
       }
-    </style>
-    <script src="<c:url value="/resources/js/SlideTrans.js"/>"></script>
-    
-    <style type="text/css" title="categoryGroup">
-			*{font-size:12px;margin:0;padding:0;}
-			.groupPanel{width:340px; height:255px; overflow:hidden; border:1px #cccbc9 solid; line-height:20px;margin:2em;padding:0;}
-			ul{list-style: none;}
-			a{text-decoration: none;}
-			a:hover{text-decoration: underline;}
-			.TabADS{width:340px;}
-			.TabADS ul{width:340px; height:24px;background:#fff;}
-      .TabADS li{width:84px; float:left; height:18px; padding:6px 0 0 0; background:url(<c:url value="/resources/images/sinahome_ws_013.gif"/>) no-repeat right #e4e4e4; text-align:center; color:#333; cursor:pointer;}
-      .TabADS .TasADSOn{background:url(<c:url value="/resources/images/sinahome_ws_012.gif"/>) no-repeat right #ffe4a6; text-align:center; color:#333; font-weight:bold; cursor:pointer;}
-			.TabADSCon{background:#FFD77B;padding:5px;width:330px;}
-			.TabADSCon li{text-align:left; line-height:20px;}
-			.dreamdu{margin-bottom:2em;}
 		</style>
     <script language="javascript" type="text/javascript" title="categoryGroup">
 			function Show_TabADSMenu(tabadid_num,tabadnum)
@@ -61,6 +58,7 @@
 				document.getElementById("tabadcontent_"+tabadid_num+tabadnum).style.display="block";
 			}
 		</script>
+    <script src="<c:url value="/resources/js/SlideTrans.js"/>"></script>
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
@@ -74,8 +72,7 @@
         <li><a href="http://www.cnblogs.com/cloudgamer/archive/2010/02/01/LazyLoad.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song4.jpg" alt="数据延迟加载" /> </a></li>
         <li><a href="http://www.cnblogs.com/cloudgamer/archive/2009/12/01/Quick_Upload.html"> <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song5.jpg" alt="简便文件上传" /> </a></li>
       </ul>
-      <ul class="num" id="idNum">
-      </ul>
+      <ul class="num" id="idNum"></ul>
     </div>
     <script title="imageSlide">
       var nums = [], timer, n = $$("idSlider2").getElementsByTagName("li").length,

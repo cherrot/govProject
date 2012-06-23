@@ -268,6 +268,7 @@ public class PostController {
     }
 
     /**
+     * TODO: 保存文章时同时搜索文章中的图片和视频 并保存成子文章
      * 注入的Post对象，用户提交文章时表单中未包含的post字段（比如post.id）会丢失，因此应显式添加
      * @param request 用于返回用户请求前的页面(编辑文章页)
      * @param post 提交的post
@@ -287,13 +288,12 @@ public class PostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
-            if (post.getId() == null) {
-                User author = BaseController.getSessionUser(request.getSession());
-                if ( author == null || ( post.getUser()!=null && !post.getUser().equals(author) ) ) {
-                    throw new ForbiddenException();
-                }
-                post.setUser(author);
+            //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
+            User author = BaseController.getSessionUser(request.getSession());
+            if (author == null || (post.getUser() != null && !post.getUser().equals(author))) {
+                throw new ForbiddenException();
             }
+            post.setUser(author);
             //文章标签
             List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\s*,|，\\s*")));//匹配非汉字： [^\\u4e00-\\u9fa5]+
             post.setTagList(tagList);
@@ -311,6 +311,28 @@ public class PostController {
         return "redirect:/post/" + post.getSlug() + "/edit";
     }
 
+    @RequestMapping("/{postSlug}/delete")
+    public String deletePost(@PathVariable("postSlug")String postSlug, HttpServletRequest request) {
+        try {
+            Post post = postService.findBySlug(postSlug, false, false, false, false, false);
+            //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
+            User author = BaseController.getSessionUser(request.getSession());
+            if (author == null || (post.getUser() != null && !post.getUser().equals(author))) {
+                throw new ForbiddenException();
+            }
+            //删除文章
+            postService.destroy(post.getId());
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
+        }
+
+        //返回之前页面。若用户之前在浏览此文章，则返回首页
+        String referer = request.getHeader("Referer");
+        if (referer.endsWith(postSlug)) {
+            referer = "/";
+        }
+        return "redirect:"+ referer;
+    }
 
     /**
      * 注入editPost页面所必需的对象，比如以Map注入枚举类型PostStatus
@@ -341,14 +363,6 @@ public class PostController {
         }
         return mav;
     }
-
-//    private String tagList2String(List<Tag> tagList) {
-//        StringBuilder strBuilder = new StringBuilder();
-//        for (Tag tag : tagList) {
-//            strBuilder.append(tag.getName()).append(", ");
-//        }
-//        return strBuilder.length()>2 ? strBuilder.substring(0, strBuilder.length()-2) : "";
-//    }
 
     /**
      *
