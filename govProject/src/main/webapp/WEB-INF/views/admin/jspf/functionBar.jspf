@@ -2,14 +2,14 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
       <div class="functionBar">
         <c:set value="<%= Constants.USER_XUANCHUANBU%>" var="adminLevel"/>
-        <c:if test="${sessionUser.userLevel >= adminLevel}">
           <ul>
+            <c:if test="${sessionUser.userLevel >= adminLevel}">
             <li><a href="<c:url value="/admin/user/list" />">用户管理</a></li>
             <li><a href="<c:url value="/admin/post/list" />">文章管理</a></li>
             <li><a href="<c:url value="/admin/comment/list"/>">评论管理</a></li>
             <li><a href="<c:url value="/admin/media/list"/>">媒体库</a></li>
             <li><a href="<c:url value="/admin/category/list"/>">文章分类</a></li>
             <li><a href="<c:url value="/admin/tag/list"/>">文章标签</a></li>
+            </c:if>
           </ul>
-        </c:if>
       </div>

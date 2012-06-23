@@ -9,9 +9,19 @@
 <html lang="zh">
   <head>
     <%@include file="jspf/commonHead.jspf" %>
-    <title>JSP Page</title>
+    <title>文章目录管理 | 昆明文化辞典</title>
   </head>
   <body>
-    <h1>Hello World!</h1>
+    <%@include file="jspf/header.jspf" %>
+    <%@include file="jspf/functionBar.jspf" %>
+    <!--Start MainContent-->
+    <div class="mainContent">
+      <div>
+        <h1>当前文章目录</h1>
+        
+      </div>
+    </div>
+    <!--End MainContent-->
+    <%@include file="jspf/footer.jspf" %>
   </body>
 </html>

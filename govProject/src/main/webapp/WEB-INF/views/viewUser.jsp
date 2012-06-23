@@ -19,6 +19,7 @@
     <h1>${user.displayName} 的个人资料</h1>
     <c:if test="${user eq sessionUser}">
       <a href="<c:url value="/user/edit"/>">编辑个人资料</a>
+      <a href="<c:url value="/post/create"/>">新建文章</a>
     </c:if>
     <div>
       <p><em>昵称：</em>${user.displayName}</p>

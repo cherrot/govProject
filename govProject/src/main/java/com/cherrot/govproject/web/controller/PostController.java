@@ -244,7 +244,8 @@ public class PostController {
         ModelAndView mav = null;
         try {
             Post post = postService.findBySlug(postSlug, false, true, true, true, false);
-            if ( (BaseController.getSessionUser(session) == null) || ( !BaseController.getSessionUser(session).equals(post.getUser()) ) ) {
+            User user = BaseController.getSessionUser(session);
+            if ( (user ==null) || ( !post.getUser().equals(user)) ) {
                 //无权修改
                 throw new ForbiddenException();
             }
@@ -263,9 +264,11 @@ public class PostController {
      * @return
      */
     @RequestMapping(value = "/create", method= RequestMethod.GET)
-    public ModelAndView createPost(@ModelAttribute("post")Post post) {
-//        Post post = new Post();
-//        post.setTitle("新建文章");
+    public ModelAndView createPost(@ModelAttribute("post")Post post, HttpSession session) {
+        User user = BaseController.getSessionUser(session);
+        if (user == null || !userService.canEditPost(user)) {
+            throw new ForbiddenException();
+        }
         ModelAndView mav = processModels4EditPost(post);
         return mav;
     }

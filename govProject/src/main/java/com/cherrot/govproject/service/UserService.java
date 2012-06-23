@@ -40,4 +40,6 @@ public interface UserService extends BaseService<User, Integer> {
      * @return
      */
     boolean isModerator(User user);
+
+    boolean canEditPost(User user);
 }

@@ -192,4 +192,13 @@ public class UserServiceImpl implements UserService{
             return false;
         }
     }
+
+    @Override
+    public boolean canEditPost(User user) {
+        if ( (user.getUserLevel() & (USER_WENLIAN | USER_XUANCHUANBU)) !=0 ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

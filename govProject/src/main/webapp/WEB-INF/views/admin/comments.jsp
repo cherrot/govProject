@@ -14,9 +14,9 @@
   <body>
       <%@include file="jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
-    <!--Start MainContent-->
-
-    <!--End MainContent-->
+      <!--Start MainContent-->
+      
+      <!--End MainContent-->
       <%@include file="jspf/footer.jspf" %>
   </body>
 </html>
