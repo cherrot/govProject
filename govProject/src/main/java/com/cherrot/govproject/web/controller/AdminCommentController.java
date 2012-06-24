@@ -6,7 +6,7 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Comment;
 import com.cherrot.govproject.service.CommentService;
-import com.cherrot.govproject.util.Constants;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
 import javax.inject.Inject;
@@ -47,13 +47,22 @@ public class AdminCommentController {
 
     @RequestMapping("")
     public ModelAndView viewComments(@RequestParam(value="pending", required=false)Boolean onlyPending) {
-        return processCommentList(1, onlyPending);
+        if (onlyPending == null) {
+            return processCommentList(1, false);
+        } else {
+            return processCommentList(1, onlyPending);
+        }
     }
-    
+
     @RequestMapping("/page/{pageNum}")
     public ModelAndView viewComments(@PathVariable("pageNum")int pageNum
         , @RequestParam(value="pending", required=false)Boolean onlyPending) {
-        return processCommentList(pageNum, onlyPending);
+
+        if (onlyPending == null) {
+            return processCommentList(pageNum, false);
+        } else {
+            return processCommentList(pageNum, onlyPending);
+        }
     }
 
     @RequestMapping(value="/*/edit", method= RequestMethod.POST)
@@ -81,6 +90,20 @@ public class AdminCommentController {
         return mav;
     }
 
+    @RequestMapping(value="/{commentId}/edit", params="approved", method= RequestMethod.GET)
+    public String doApproveComment(@PathVariable("commentId")Integer commentId
+        , @RequestParam("approved")Boolean approved) {
+
+        try {
+            Comment comment = commentService.find(commentId);
+            comment.setApproved(approved);
+            commentService.edit(comment);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
+        }
+        return "redirect:/admin/comment";
+    }
+
     @RequestMapping("/{commentId}/delete")
     public String doDeleteComment(@PathVariable("commentId")Integer commentId) {
         try {
@@ -90,13 +113,19 @@ public class AdminCommentController {
         }
         return "redirect:/admin/comment";
     }
-    
+
     private ModelAndView processCommentList(int pageNum, boolean onlyPending) {
         ModelAndView mav = new ModelAndView("admin/comments");
-        //FIXME: 添加只获取未审核评论的方法
-        List<Comment> comments = commentService.list(pageNum, Constants.DEFAULT_PAGE_SIZE);
+        List<Comment> comments;
+        if (onlyPending) {
+            comments = commentService.listPendingComments(pageNum, DEFAULT_PAGE_SIZE);
+        } else {
+            comments = commentService.list(pageNum, DEFAULT_PAGE_SIZE);
+        }
         mav.addObject("commentList", comments);
-        //TODO: 添加pageNum和pageCount
+        mav.addObject("pageNum", pageNum);
+        int pageCount = commentService.getCountOfPendingComments()/DEFAULT_PAGE_SIZE +1;
+        mav.addObject("pageCount", pageCount);
         return mav;
     }
 }

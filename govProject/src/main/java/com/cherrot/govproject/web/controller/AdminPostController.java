@@ -13,6 +13,7 @@ import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
+import com.cherrot.govproject.web.exceptions.ForbiddenException;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,6 +84,10 @@ public class AdminPostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
+            //不能编辑子文章
+            if (!postService.isNormalPost(post)) {
+                throw new ForbiddenException();
+            }
             //文章标签
             List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\s*,|，\\s*")));//匹配非汉字： [^\\u4e00-\\u9fa5]+
             post.setTagList(tagList);

@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *
+ * XXX 返回Post集合和COUNT()的方法都应过滤掉子Post
  * @author sai
  */
 @Entity
@@ -42,7 +42,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
+    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p WHERE p.postParent IS NULL"),
     @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
     @NamedQuery(name = "Post.findByCreateDate", query = "SELECT p FROM Post p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "Post.findByModifyDate", query = "SELECT p FROM Post p WHERE p.modifyDate = :modifyDate"),
@@ -59,10 +59,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByCategorySlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p WHERE :tag MEMBER OF p.tagList ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByTagSlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByUser",query="SELECT p FROM Post p WHERE p.user = :user"),
-    @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByUser",query="SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL"),
+    @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByMimeDesc", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.getCountByUser", query = "SELECT COUNT(p) FROM Post p WHERE :user = p.user"),
+    @NamedQuery(name = "Post.getCount", query = "SELECT COUNT(p) FROM Post p WHERE p.postParent IS NULL"),
+    @NamedQuery(name = "Post.getCountByUser", query = "SELECT COUNT(p) FROM Post p WHERE :user = p.user AND p.postParent IS NULL"),
     @NamedQuery(name = "Post.getCountByCategory", query = "SELECT COUNT(p) FROM Post p WHERE :category MEMBER OF p.categoryList"),
     @NamedQuery(name = "Post.getCountByTag", query = "SELECT COUNT(p) FROM Post p WHERE :tag MEMBER OF p.tagList")
 })

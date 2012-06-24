@@ -12,7 +12,6 @@ import com.cherrot.govproject.model.Post;
 import com.cherrot.govproject.model.Postmeta;
 import com.cherrot.govproject.model.Tag;
 import com.cherrot.govproject.model.User;
-import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.SiteLogService;
 import com.cherrot.govproject.service.TagService;
@@ -34,8 +33,6 @@ public class PostServiceImpl implements PostService {
     @Inject
     private PostDao postDao;
     @Inject
-    private CategoryService categoryService;
-    @Inject
     private TagService tagService;
     @Inject
     private SiteLogService siteLogService;
@@ -49,6 +46,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(Post post, List<Category> categories, List<String> tagStrings, List<Postmeta> postmetas) {
+        //TODO: 需要扫描文章内容，将链接在本网站的图片和视频作为子post添加
         post.setCategoryList(categories);
         post.setPostmetaList(postmetas);
         List<Tag> tags = tagService.createTagsByName(tagStrings);
@@ -60,6 +58,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void create(Post post) {
+        //TODO: 需要扫描文章内容，将链接在本网站的图片和视频作为子post添加
         postDao.create(post);
         siteLogService.create(post.getUser(), "文章已创建（ID:" + post.getId() + "）。标题：" + post.getTitle() );
     }
@@ -100,9 +99,34 @@ public class PostServiceImpl implements PostService {
         return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
     }
 
+    /**
+     * PENDING: 此方法只适用于post是普通文章（而不是子文章）的情况！
+     * @param post
+     */
     @Override
     @Transactional
     public void edit(Post post) {
+        //XXX Post在控制器中已改变的一对多关系不会被覆盖（分类列表、标签列表、postmeta列表），其他一对多关系会被覆盖。
+        Post dbPost = postDao.find(post.getId());
+        //FIXME: 需要扫描文章内容，将链接在本网站的图片和视频作为子post添加。需要处理dbpost的postList集合
+        post.setPostList(dbPost.getPostList());
+        try {
+            post.getCategoryList().size();
+        } catch (Exception e) {
+            post.setCategoryList(dbPost.getCategoryList());
+        }
+        try {
+            post.getPostmetaList().size();
+        } catch (Exception e) {
+            post.setPostmetaList(dbPost.getPostmetaList());
+        }
+        try {
+            post.getTagList().size();
+        } catch (Exception e) {
+            post.setTagList(dbPost.getTagList());
+        }
+        post.setCommentList(dbPost.getCommentList());
+
         try {
             postDao.edit(post);
         }
@@ -304,6 +328,11 @@ public class PostServiceImpl implements PostService {
     @Override
     public int getCountByTag(Tag tag) {
         return getCountByTag(tag);
+    }
+
+    @Override
+    public boolean isNormalPost(Post post) {
+        return post.getPostParent() == null;
     }
 
     //TODO 此方法目前只用于添加视频。

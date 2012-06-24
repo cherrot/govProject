@@ -25,6 +25,8 @@ public interface CommentService extends BaseService<Comment, Integer> {
      * @return
      */
     List<Comment> listByUser(User user, int pageNum, int pageSize);
-    List<Comment> listNewesCommentsByUser(User user, int pageNum, int pageSize);
+    List<Comment> listNewestCommentsByUser(User user, int pageNum, int pageSize);
+    List<Comment> listPendingComments(int pageNum, int pageSize);
     int getCountByUser(User user);
+    int getCountOfPendingComments();
 }

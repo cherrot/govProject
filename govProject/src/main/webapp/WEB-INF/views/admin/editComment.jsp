@@ -10,17 +10,17 @@
 <html lang="zh">
   <head>
     <%@include file="jspf/commonHead.jspf" %>
-    <title>编辑文章分类 | 昆明文化辞典</title>
+    <title>编辑文章评论 | 昆明文化辞典</title>
   </head>
   <body>
     <%@include file="jspf/header.jspf" %>
     <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <div class="mainContent">
-      <h1>文章分类管理</h1>
+      <h1>文章评论管理</h1>
       <div>
-        <h2>编辑分类：{category.name}</h2>
-        <form:form modelAttribute="category">
+        <h2>编辑评论</h2>
+        <form:form modelAttribute="comment">
           <form:errors path="*"/><br/>
           <label for="category_name">分类名：</label>
           <form:input path="name" id="category_name" placeholder="请输入文章分类的名字"/><br/>

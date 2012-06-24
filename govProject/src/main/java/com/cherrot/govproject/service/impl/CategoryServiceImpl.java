@@ -59,6 +59,10 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     @Transactional
     public void edit(Category model) {
+        //XXX: 覆盖传入实体的一对多关系，解决延时加载导致的问题。 必须假定传入实体没有修改其一对多关系集合
+        Category dbModel = find(model.getId());
+        model.setCategoryList(dbModel.getCategoryList());
+        model.setPostList(dbModel.getPostList());
         try {
             categoryDao.edit(model);
         }

@@ -223,7 +223,7 @@ public class UserController {
     }
 
     private void processComments(ModelAndView mav, User user, int pageNum) {
-        List<Comment> userComments = commentService.listNewesCommentsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
+        List<Comment> userComments = commentService.listNewestCommentsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
         mav.addObject("commentList", userComments);
     }
 }

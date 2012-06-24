@@ -110,12 +110,17 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public void edit(User model) {
-        //已经在web层解决掉这些问题。
-//        User dbUser = userDao.find(model.getId());
-//        if (model.getCommentList() == null) model.setCommentList(dbUser.getCommentList());
-//        if (model.getPostList() == null) model.setPostList(dbUser.getPostList());
-//        if (model.getSiteLogList() == null) model.setSiteLogList(dbUser.getSiteLogList());
-//        if (model.getUsermetaList() == null) model.setUsermetaList(dbUser.getUsermetaList());
+        //XXX 解决可恶的延时加载问题，必须假定传入实体不会在事务外操作其一对多关系（usermeta除外）
+        User dbUser = userDao.find(model.getId());
+        model.setCommentList(dbUser.getCommentList());
+        model.setPostList(dbUser.getPostList());
+        model.setSiteLogList(dbUser.getSiteLogList());
+        try {
+            model.getUsermetaList().size();
+        } catch (Exception e) {
+            model.setUsermetaList(dbUser.getUsermetaList());
+        }
+
         try {
             userDao.edit(model);
         }

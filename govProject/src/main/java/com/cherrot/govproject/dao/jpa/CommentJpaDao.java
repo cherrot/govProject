@@ -391,6 +391,15 @@ public class CommentJpaDao implements CommentDao {
     }
 
     @Override
+    public List<Comment> findEntitiesByApprovedDesc(boolean approved, int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Comment.findByApprovedDesc", Comment.class);
+        q.setParameter("approved", approved);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
+
+    @Override
     public Comment getReference(Integer id) {
         return em.getReference(Comment.class, id);
     }
@@ -398,5 +407,10 @@ public class CommentJpaDao implements CommentDao {
     @Override
     public int getCountByUser(User user) {
         return ( (Long) em.createNamedQuery("Comment.getCountByUser").setParameter("user", user).getSingleResult() ).intValue();
+    }
+
+    @Override
+    public int getCountByApproved(boolean approved) {
+        return em.createNamedQuery("Comment.getCountByApproved", Long.class).setParameter("approved", approved).getSingleResult().intValue();
     }
 }

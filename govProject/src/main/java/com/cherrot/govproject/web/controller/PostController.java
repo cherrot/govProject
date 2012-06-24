@@ -106,7 +106,7 @@ public class PostController {
         Post post = null;
         if (postId != null) {
             //适用于用户提交（POST）文章时从数据库获取文章对象
-            post = postService.find(postId, true, true, true, true, true);
+            post = postService.find(postId, false, true, true, true, false);
         } else {
             //适用于新建文章
             post = new Post();
@@ -294,11 +294,16 @@ public class PostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
+            //如果用户编辑的不是普通文章（而是普通文章的子文章），返回403错误
+            if ( !postService.isNormalPost(post)) {
+                throw new ForbiddenException();
+            }
             //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
             User author = BaseController.getSessionUser(request.getSession());
             if (author == null || (post.getUser() != null && !post.getUser().equals(author))) {
                 throw new ForbiddenException();
             }
+
             post.setUser(author);
             //文章标签
             List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\s*,|，\\s*")));//匹配非汉字： [^\\u4e00-\\u9fa5]+

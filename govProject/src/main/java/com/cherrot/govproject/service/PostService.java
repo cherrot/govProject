@@ -69,6 +69,12 @@ public interface PostService extends BaseService<Post, Integer> {
     int getCountByCategory(Category category);
     int getCountByTag(Tag tag);
     void addAttachment(Integer postId, File localFile, String mime);
+    /**
+     *
+     * @param post
+     * @return true if post is a normal post, false if post is a child post.
+     */
+    boolean isNormalPost(Post post);
 
 //    /**
 //     * 只得到Post的引用，不取回post。主要用于验证该slug是否存在（通过捕获EntityNotFoundException）。

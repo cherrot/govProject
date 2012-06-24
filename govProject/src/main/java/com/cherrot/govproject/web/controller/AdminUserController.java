@@ -46,7 +46,7 @@ public class AdminUserController {
         mav.addObject("userRole", userRole);
         List<Post> userPosts = postService.listNewestPostsByUser(user, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userPosts",userPosts);
-        List<Comment> userComments = commentService.listNewesCommentsByUser(user, 1, DEFAULT_PAGE_SIZE);
+        List<Comment> userComments = commentService.listNewestCommentsByUser(user, 1, DEFAULT_PAGE_SIZE);
         mav.addObject("userComments", userComments);
         return mav;
     }

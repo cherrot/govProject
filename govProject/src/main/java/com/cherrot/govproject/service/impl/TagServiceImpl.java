@@ -59,6 +59,10 @@ public class TagServiceImpl implements TagService {
     @Override
     @Transactional
     public void edit(Tag model) {
+        //XXX 解决延时加载可能导致的一对多关系问题
+        Tag dbModel = tagDao.find(model.getId());
+        model.setPostList(dbModel.getPostList());
+
         try {
             tagDao.edit(model);
         }

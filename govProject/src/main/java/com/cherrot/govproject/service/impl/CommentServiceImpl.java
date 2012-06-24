@@ -71,7 +71,7 @@ public class CommentServiceImpl implements CommentService{
     @Transactional
     public void destroy(Integer id) {
         Comment comment = commentDao.find(id);
-        siteLogService.create(comment.getUser(), comment.getAuthor()+"的评论被删除了");
+//        siteLogService.create(comment.getUser(), comment.getAuthor()+"的评论被删除了");
         try {
             commentDao.destroy(id);
         }
@@ -107,6 +107,15 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void edit(Comment model) {
+        //XXX 防止延时加载导致的问题
+        Comment dbModel = commentDao.find(model.getId());
+        try {
+            model.getCommentmetaList().size();
+        } catch (Exception e) {
+            model.setCommentmetaList(dbModel.getCommentmetaList());
+        }
+        model.setCommentList(dbModel.getCommentList());
+
         try {
             commentDao.edit(model);
         }
@@ -157,12 +166,22 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<Comment> listNewesCommentsByUser(User user, int pageNum, int pageSize) {
+    public List<Comment> listNewestCommentsByUser(User user, int pageNum, int pageSize) {
         return commentDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
+    }
+
+    @Override
+    public List<Comment> listPendingComments(int pageNum, int pageSize) {
+        return commentDao.findEntitiesByApprovedDesc(false, pageSize, (pageNum-1)*pageSize);
     }
 
     @Override
     public int getCountByUser(User user) {
         return commentDao.getCountByUser(user);
+    }
+
+    @Override
+    public int getCountOfPendingComments() {
+        return commentDao.getCountByApproved(false);
     }
 }

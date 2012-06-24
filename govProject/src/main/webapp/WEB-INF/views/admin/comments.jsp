@@ -37,6 +37,14 @@
           <td><a href="<c:url value="/post/${comment.post.slug}"/>">${comment.post.title}</a></td>
           <td>${comment.content}</td>
           <td>
+            <c:choose>
+              <c:when test="${comment.approved}">
+                <a href=""
+              </c:when>
+              <c:otherwise>
+              </c:otherwise>
+            </c:choose>
+
             <a href="<c:url value="/admin/comment/${comment.id}/edit"/>">编辑</a>&nbsp;
             <a href="<c:url value="/admin/comment/${comment.id}/delete"/>">删除</a>
           </td>

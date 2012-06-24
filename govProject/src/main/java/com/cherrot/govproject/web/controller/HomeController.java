@@ -19,6 +19,7 @@ import com.cherrot.govproject.service.OptionService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
+import com.cherrot.govproject.util.Constants;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -89,7 +90,7 @@ public class HomeController {
             userService.findByLoginName("f@f.f", false, false, false, false);
         } catch (Exception ex) {
             //创建测试用户 用户名 f@f.f 密码 fff
-            User user = new User("f@f.f", "fff", 0, new Date(), "切萝卜可爱多");
+            User user = new User("f@f.f", "fff", Constants.USER_XUANCHUANBU, new Date(), "切萝卜可爱多");
             userService.create(user);
             //创建测试分类
             Category group1 = new Category(0, "分类群组1", "group1");
