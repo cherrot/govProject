@@ -10,11 +10,14 @@
   <head>
     <%@include file="jspf/commonHead.jspf" %>
     <title>${term.name} | 昆明文化辞典</title>
+   
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      <%@include file="jspf/sidebar.jspf" %>
-
+      <div style="text-align:center;font-size:12px">
+      <table>
+          <tr>
+              <td width="800px">
     <!--Start MainContent-->
     <c:catch var="ex">
         <%--判断term是目录还是标签--%>
@@ -31,7 +34,7 @@
       </c:otherwise>
     </c:choose>
 
-    <h1>文章${typeString}：${term.name}</h1>
+    <h3>文章${typeString}：${term.name}</h3>
     <ol>
       <c:forEach items="${postList}" var="post">
         <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a></li>
@@ -44,8 +47,12 @@
         <li><a href="<c:url value="/${type}/${term.slug}/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
       </c:forEach>
     </ul>
+    </td>
+    <td width="200px" align="left"><%@include file="jspf/sidebar.jspf" %></td>
+    </tr></table>
 
     <!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>
+    </div>
   </body>
 </html>

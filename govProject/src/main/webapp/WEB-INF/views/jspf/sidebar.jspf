@@ -1,10 +1,11 @@
 <%--侧边栏，目前只考虑友情链接--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
       <div class="sidebar">
         <c:forEach items="${linkCategories}" var="linkcategory">
           <div class="links">
-            <h3>${linkcategory.name}</h3>
+            <h5>${linkcategory.name}</h5>
             <ul>
               <c:forEach items="${linkcategory.linkList}" var="link" >
                 <li><a href="${link.url}">${link.name}</a></li>

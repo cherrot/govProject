@@ -19,7 +19,7 @@
     <h1>查看用户${user.displayName}的文章</h1>
     <ol>
       <c:forEach items="${postList}" var="post">
-        <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a> 发布日期：<fmt:formatDate value="${post.creatDate}" type="date" dateStyle="medium"/></li>
+        <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a> 发布日期：<fmt:formatDate value="${post.createDate}" type="date" dateStyle="medium"/></li>
       </c:forEach>
     </ol>
 

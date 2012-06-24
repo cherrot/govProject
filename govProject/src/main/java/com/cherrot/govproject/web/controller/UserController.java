@@ -216,6 +216,10 @@ public class UserController {
     private void processPosts(ModelAndView mav, User user, int pageNum) {
         List<Post> userPosts = postService.listNewestPostsByUser(user, pageNum, DEFAULT_PAGE_SIZE);
         mav.addObject("postList", userPosts);
+        mav.addObject("pageNum", pageNum);
+        int postCount = postService.getCountByUser(user);
+        int pageCount = postCount/DEFAULT_PAGE_SIZE +1;
+        mav.addObject("pageCount", pageCount);
     }
 
     private void processComments(ModelAndView mav, User user, int pageNum) {
