@@ -7,7 +7,7 @@
             <li><a href="<c:url value="/admin/user" />">用户管理</a></li>
             <li><a href="<c:url value="/admin/post" />">文章管理</a></li>
             <li><a href="<c:url value="/admin/comment"/>">评论管理</a></li>
-            <li><a href="<c:url value="/admin/media"/>">媒体库</a></li>
+            <%--<li><a href="<c:url value="/admin/media"/>">媒体库</a></li>--%>
             <li><a href="<c:url value="/admin/category"/>">文章分类</a></li>
             <li><a href="<c:url value="/admin/tag"/>">文章标签</a></li>
             </c:if>

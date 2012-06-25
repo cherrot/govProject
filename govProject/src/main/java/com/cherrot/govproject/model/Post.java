@@ -54,6 +54,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
     @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime"),
+    @NamedQuery(name = "Post.findAllDesc", query = "SELECT p FROM Post p ORDER BY p.id DESC"),
     //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
     @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByCategorySlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),

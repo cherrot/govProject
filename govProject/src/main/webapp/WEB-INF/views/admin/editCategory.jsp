@@ -19,7 +19,7 @@
     <div class="mainContent">
       <h1>文章分类管理</h1>
       <div>
-        <h2>编辑分类：{category.name}</h2>
+        <h2>编辑分类：${category.name}</h2>
         <form:form modelAttribute="category">
           <form:errors path="*"/><br/>
           <label for="category_name">分类名：</label>
@@ -31,7 +31,7 @@
           <label for="category_parent">所属分类群组</label>
           <select id="category_parent" name="parent">
             <c:forEach items="${categoryParents}" var="parent">
-              <option value="${categoryParent.id}">${categoryParent.name}</option>
+              <option value="${parent.id}" <c:if test="${category.categoryParent eq parent}">selected="selected"</c:if>>${parent.name}</option>
             </c:forEach>
           </select>
           <form:hidden path="id"/>

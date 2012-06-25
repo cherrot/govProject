@@ -85,19 +85,22 @@
       <form:input path="slug" placeholder="请输入文章短链接（可以是文章标题）" /><br/>
       <label for="postTags">文章标签</label>
       <input id="postTags" name="postTags" type="text" value="<c:forEach items="${post.tagList}" var="tag" varStatus="status" >${tag.name}<c:if test="${! status.last}">,&nbsp;</c:if></c:forEach>" placeholder="请输入文章关键字，以英文逗号隔开"/>
-          <br/><label>文章分类</label>
+          <br/>
+          <label>文章分类</label>
           <ul>
-        <c:forEach items="${postCategories}" var="category">
-          <li><input type="checkbox" name="postCategories" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}</li>
-            <c:if test="${!empty category.categoryList}">
-            <ul>
-              <c:forEach items="${category.categoryList}" var="childCategory">
-                <li><input type="checkbox" name="postCategories" value="${childCategory.id}" <c:if test="${requestScope[childCategory.name]}">checked="checked"</c:if>/>${childCategory.name}</li>
-                </c:forEach>
-            </ul>
-          </c:if>
-        </c:forEach>
-      </ul>
+            <c:forEach items="${postCategories}" var="category">
+              <li>
+                <input type="checkbox" name="postCategories" value="${category.id}" <c:if test="${requestScope[category.name]}">checked="checked"</c:if>/>${category.name}
+              </li>
+              <c:if test="${!empty category.categoryList}">
+                <ul>
+                  <c:forEach items="${category.categoryList}" var="childCategory">
+                    <li><input type="checkbox" name="postCategories" value="${childCategory.id}" <c:if test="${requestScope[childCategory.name]}">checked="checked"</c:if>/>${childCategory.name}</li>
+                    </c:forEach>
+                </ul>
+              </c:if>
+            </c:forEach>
+          </ul>
 
       <form:errors path="content"/>
       <%--<form:textarea path="content"/>--%><br/>
@@ -112,11 +115,12 @@
 
       <%--更改文章属主。只对管理员有效(/admin/post/{postId}/edit)--%>
       <c:if test="${!empty userList}">
-        <select name="postAuthor">
+        <label for="post_author">发布作者：</label>
+        <select id="post_author" name="postAuthor">
           <c:forEach items="${userList}" var="postAuthor">
             <option value="${postAuthor.id}" <c:if test="${postAuthor eq sessionUser}">selected="selected"</c:if>>${postAuthor.displayName}</option>
           </c:forEach>
-        </select>
+        </select><br/>
       </c:if>
 
       <form:hidden path="id" value="${post.id}"/>

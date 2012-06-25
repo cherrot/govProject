@@ -295,6 +295,14 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    public List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+        List<Post> posts =  postDao.findEntitiesDesc(pageSize, (pageNum-1)*pageSize);
+        processDependency(posts, withComments, withPostmetas, withCategories, withTags, withChildPosts);
+        return posts;
+    }
+
+    @Override
     public int getCountByUser(User user) {
         return postDao.getCountByUser(user);
     }
@@ -341,6 +349,18 @@ public class PostServiceImpl implements PostService {
         if (withCategories) post.getCategoryList().isEmpty();
         if (withTags) post.getTagList().isEmpty();
         if (withChildPosts) post.getPostList().isEmpty();
+    }
+
+    private void processDependency(List<Post> posts, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts){
+        if (withComments || withPostmetas || withCategories || withTags || withChildPosts) {
+            for (Post post : posts) {
+                if (withComments) post.getCommentList().isEmpty();
+                if (withPostmetas) post.getPostmetaList().isEmpty();
+                if (withCategories) post.getCategoryList().isEmpty();
+                if (withTags) post.getTagList().isEmpty();
+                if (withChildPosts) post.getPostList().isEmpty();
+            }
+        }
     }
 
     @Override

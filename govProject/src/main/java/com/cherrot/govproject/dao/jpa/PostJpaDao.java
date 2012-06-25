@@ -607,4 +607,12 @@ public class PostJpaDao implements PostDao {
         return ( (Long) em.createNamedQuery("Post.getCountByUser")
             .setParameter("tag", tag).getSingleResult() ).intValue();
     }
+
+    @Override
+    public List<Post> findEntitiesDesc(int maxResults, int firstResult) {
+        Query q = em.createNamedQuery("Post.findAllDesc", Post.class);
+        q.setMaxResults(maxResults);
+        q.setFirstResult(firstResult);
+        return q.getResultList();
+    }
 }

@@ -28,8 +28,8 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
-@RequestMapping("/admin/category")
-public class AdminCategoryController {
+@RequestMapping("/admin/tag")
+public class AdminTagController {
 
     @Inject
     private CategoryService categoryService;
@@ -56,7 +56,7 @@ public class AdminCategoryController {
        return mav;
     }
 
-    @RequestMapping(value={"","/*"}, method= RequestMethod.POST)
+    @RequestMapping(value="/*", method= RequestMethod.POST)
     public ModelAndView doEditCategory(@Valid @ModelAttribute("category")Category category
         , BindingResult result
         , @RequestParam("parent")Integer categoryParentId) {
@@ -72,7 +72,7 @@ public class AdminCategoryController {
         try {
             parent = categoryService.find(categoryParentId);
         } catch (PersistenceException e) {
-            Logger.getLogger(AdminCategoryController.class.getSimpleName()).log(Level.WARNING, e.getMessage(), e);
+            Logger.getLogger(AdminTagController.class.getSimpleName()).log(Level.WARNING, e.getMessage(), e);
             throw new ResourceNotFoundException();
         }
         category.setCategoryParent(parent);

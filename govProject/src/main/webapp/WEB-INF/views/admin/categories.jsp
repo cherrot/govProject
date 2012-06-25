@@ -24,7 +24,7 @@
           <c:forEach items="${categoryList}" var="category2nd">
             <li>
               ${category2nd.name} &nbsp;
-              <a href="<c:url value="/admin/category/${category2nd.id}/edit"/>">编辑</a> &nbsp;
+              <a href="<c:url value="/admin/category/${category2nd.id}"/>">编辑</a> &nbsp;
               <a href="<c:url value="/admin/category/${category2nd.id}/delete"/>">删除</a>
             </li>
             <c:if test="${!empty category2nd.categoryList}">
@@ -32,7 +32,7 @@
                 <c:forEach items="${category2nd.categoryList}" var="category3rd">
                   <li>
                     ${category3rd.name} &nbsp;
-                    <a href="<c:url value="/admin/category/${category3rd.id}/edit"/>">编辑</a> &nbsp;
+                    <a href="<c:url value="/admin/category/${category3rd.id}"/>">编辑</a> &nbsp;
                     <a href="<c:url value="/admin/category/${category3rd.id}/delete"/>">删除</a>
                   </li>
                 </c:forEach>

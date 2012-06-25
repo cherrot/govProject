@@ -65,7 +65,7 @@ public class AdminCommentController {
         }
     }
 
-    @RequestMapping(value="/*/edit", method= RequestMethod.POST)
+    @RequestMapping(value="/*", method= RequestMethod.POST)
     public String doEditComment(@Valid @ModelAttribute("comment")Comment comment
         , BindingResult result) {
 
@@ -78,7 +78,7 @@ public class AdminCommentController {
         return returnString;
     }
 
-    @RequestMapping(value="/{commentId}/edit", method= RequestMethod.GET)
+    @RequestMapping(value="/{commentId}", method= RequestMethod.GET)
     public ModelAndView editComment(@PathVariable("commentId")Integer commentId) {
         ModelAndView mav = new ModelAndView("admin/editComment");
         try {

@@ -45,7 +45,7 @@
                 <a href="<c:url value="/admin/comment/${comment.id}/edit?approved=true"/>">批准</a>
               </c:otherwise>
             </c:choose>
-            <a href="<c:url value="/admin/comment/${comment.id}/edit"/>">编辑</a>&nbsp;
+            <a href="<c:url value="/admin/comment/${comment.id}"/>">编辑</a>&nbsp;
             <a href="<c:url value="/admin/comment/${comment.id}/delete"/>">删除</a>
           </td>
         </tr>

@@ -12,6 +12,7 @@ import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.TagService;
 import com.cherrot.govproject.service.UserService;
+import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import static com.cherrot.govproject.util.Constants.SUCCESS_MSG_KEY;
 import com.cherrot.govproject.web.exceptions.ForbiddenException;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
@@ -53,14 +54,26 @@ public class AdminPostController {
     private UserService userService;
 
     @ModelAttribute("post")
-    public Post getPost(@PathVariable("postId")Integer postId) {
+    public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
         Post post = null;
-        try {
-            post = postService.find(postId, false, true, true, true, false);
-        } catch (PersistenceException e) {
-            throw new ResourceNotFoundException();
+        if (postId != null) {
+            try {
+                post = postService.find(postId);
+            } catch (PersistenceException e) {
+                throw new ResourceNotFoundException();
+            }
         }
         return post;
+    }
+
+    @RequestMapping("")
+    public ModelAndView viewPosts() {
+        return processPostList(1);
+    }
+
+    @RequestMapping("/page/{pageNum}")
+    public ModelAndView viewPosts(@PathVariable("pageNum")int pageNum) {
+        return processPostList(pageNum);
     }
 
     /**
@@ -104,13 +117,20 @@ public class AdminPostController {
             postService.save(post);
             redirectAttr.addFlashAttribute(SUCCESS_MSG_KEY, "文章保存成功！");
         }
-        return "redirect:/admin/post/" + post.getId() + "/edit";
+        return "redirect:/admin/post/" + post.getId();
     }
 
     @RequestMapping(value="/{postId}", method= RequestMethod.GET)
-    public ModelAndView editPost(@ModelAttribute("post")Post post) {
+    public ModelAndView editPost(@PathVariable("postId")Integer postId) {
 
+        Post post = null;
+        try {
+            post = postService.find(postId, false, true, true, true, false);
+        } catch (PersistenceException e) {
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = processModels4EditPost(post);
+        mav.addObject("post", post);
         return mav;
     }
 
@@ -130,7 +150,7 @@ public class AdminPostController {
         mav.addObject("postStatus", postStatusMap);
         //添加全部文章分类(二级分类和子分类)
         List<Category> categories = categoryService.listSecondLevelCategories(false, true);
-        mav.addObject("categories", categories);
+        mav.addObject("postCategories", categories);
 
         //设置已选文章分类
         List<Category> postCategories = post.getCategoryList();
@@ -141,6 +161,17 @@ public class AdminPostController {
         //设置用户列表。管理员可以更改文章的作者。
         List<User> users = userService.list();
         mav.addObject("userList", users);
+        return mav;
+    }
+
+    private ModelAndView processPostList(int pageNum) {
+        ModelAndView mav = new ModelAndView("admin/posts");
+        List<Post> posts;
+        posts = postService.listNewestPosts(pageNum, DEFAULT_PAGE_SIZE, false, false, true, false, false);
+        mav.addObject("postList", posts);
+        mav.addObject("pageNum", pageNum);
+        int pageCount = postService.getCount();
+        mav.addObject("pageCount", pageCount);
         return mav;
     }
 }

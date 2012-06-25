@@ -5,9 +5,9 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" --%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--只有scope为session时才会覆盖用户浏览器设置--%>
 <fmt:setLocale value="zh_CN" scope="session"/>
 <!DOCTYPE html>

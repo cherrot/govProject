@@ -40,6 +40,8 @@ public interface PostService extends BaseService<Post, Integer> {
     void addTagList(Post post, List<Tag> tags);
     void removeTag(Post post, Tag tag);
     void removeTagList(Post post, List<Tag> tags);
+
+    List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
     /**
      * 根据文章分类取出对应文章。
      * @param term
