@@ -133,6 +133,15 @@ public class CommentJpaDao implements CommentDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Comment persistentComment = em.find(Comment.class, comment.getId());
+
+            //XXX 防止延时加载导致的问题
+            try {
+                comment.getCommentmetaList().size();
+            } catch (Exception e) {
+                comment.setCommentmetaList(persistentComment.getCommentmetaList());
+            }
+            comment.setCommentList(persistentComment.getCommentList());
+
             User userOld = persistentComment.getUser();
             User userNew = comment.getUser();
             Post postOld = persistentComment.getPost();

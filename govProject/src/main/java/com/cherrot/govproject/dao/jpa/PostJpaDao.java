@@ -19,8 +19,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,15 +181,31 @@ public class PostJpaDao implements PostDao {
     @Override
     @Transactional
     public void edit(Post post) throws IllegalOrphanException, NonexistentEntityException, Exception {
-//        EntityManager em = null;
-        try {
-//            em = getEntityManager();
-//            em.getTransaction().begin();
 
+        try {
             /**
              * 取出新旧实体的 一对多关系 和 多对一关系所关联的实体
              */
             Post persistentPost = em.find(Post.class, post.getId());
+            //XXX Post在控制器中已改变的一对多关系不会被覆盖（分类列表、标签列表、postmeta列表），其他一对多关系会被覆盖。
+            post.setPostList(persistentPost.getPostList());
+            try {
+                post.getCategoryList().size();
+            } catch (Exception e) {
+                post.setCategoryList(persistentPost.getCategoryList());
+            }
+            try {
+                post.getPostmetaList().size();
+            } catch (Exception e) {
+                post.setPostmetaList(persistentPost.getPostmetaList());
+            }
+            try {
+                post.getTagList().size();
+            } catch (Exception e) {
+                post.setTagList(persistentPost.getTagList());
+            }
+            post.setCommentList(persistentPost.getCommentList());
+
             User userOld = persistentPost.getUser();
             User userNew = post.getUser();
             Post postParentOld = persistentPost.getPostParent();
@@ -207,6 +221,7 @@ public class PostJpaDao implements PostDao {
             List<Comment> commentListOld = persistentPost.getCommentList();
             List<Comment> commentListNew = post.getCommentList();
             List<String> illegalOrphanMessages = null;
+
             /**
              * 检查一对多关系是否正确，即确保之前已关联的实体没有被漏掉造成孤儿实体
              */

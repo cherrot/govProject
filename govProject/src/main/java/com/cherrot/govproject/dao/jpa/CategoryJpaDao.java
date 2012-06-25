@@ -104,6 +104,11 @@ public class CategoryJpaDao implements CategoryDao {
              * 取出新旧Category对象的 一对多关系 和 多对一关系所关联的实体
              */
             Category persistentCategory = em.find(Category.class, category.getId());
+
+            //XXX: 覆盖传入实体的一对多关系，解决延时加载导致的问题。 必须假定传入实体没有修改其一对多关系集合
+            category.setCategoryList(persistentCategory.getCategoryList());
+            category.setPostList(persistentCategory.getPostList());
+
             Category categoryParentOld = persistentCategory.getCategoryParent();
             Category categoryParentNew = category.getCategoryParent();
             List<Category> categoryListOld = persistentCategory.getCategoryList();

@@ -139,7 +139,19 @@ public class UserJpaDao implements UserDao {
         try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
+            
             User persistentUser = em.find(User.class, user.getId());
+
+            //XXX 解决可恶的延时加载问题，必须假定传入实体不会在事务外操作其一对多关系（usermeta除外）
+            user.setCommentList(persistentUser.getCommentList());
+            user.setPostList(persistentUser.getPostList());
+            user.setSiteLogList(persistentUser.getSiteLogList());
+            try {
+                user.getUsermetaList().size();
+            } catch (Exception e) {
+                user.setUsermetaList(persistentUser.getUsermetaList());
+            }
+
             List<SiteLog> siteLogListOld = persistentUser.getSiteLogList();
             List<SiteLog> siteLogListNew = user.getSiteLogList();
             List<Post> postListOld = persistentUser.getPostList();

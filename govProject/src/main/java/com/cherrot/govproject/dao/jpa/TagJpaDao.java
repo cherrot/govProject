@@ -75,6 +75,10 @@ public class TagJpaDao implements TagDao {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
             Tag persistentTag = em.find(Tag.class, tag.getId());
+
+            //XXX 解决延时加载可能导致的一对多关系问题
+            tag.setPostList(persistentTag.getPostList());
+
             List<Post> postListOld = persistentTag.getPostList();
             List<Post> postListNew = tag.getPostList();
             List<Post> attachedPostListNew = new ArrayList<Post>();

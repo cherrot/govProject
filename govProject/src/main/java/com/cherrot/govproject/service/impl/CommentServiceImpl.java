@@ -107,15 +107,6 @@ public class CommentServiceImpl implements CommentService{
     @Override
     @Transactional
     public void edit(Comment model) {
-        //XXX 防止延时加载导致的问题
-        Comment dbModel = commentDao.find(model.getId());
-        try {
-            model.getCommentmetaList().size();
-        } catch (Exception e) {
-            model.setCommentmetaList(dbModel.getCommentmetaList());
-        }
-        model.setCommentList(dbModel.getCommentList());
-
         try {
             commentDao.edit(model);
         }

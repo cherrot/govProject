@@ -106,27 +106,6 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void edit(Post post) {
-        //XXX Post在控制器中已改变的一对多关系不会被覆盖（分类列表、标签列表、postmeta列表），其他一对多关系会被覆盖。
-        Post dbPost = postDao.find(post.getId());
-        //FIXME: 需要扫描文章内容，将链接在本网站的图片和视频作为子post添加。需要处理dbpost的postList集合
-        post.setPostList(dbPost.getPostList());
-        try {
-            post.getCategoryList().size();
-        } catch (Exception e) {
-            post.setCategoryList(dbPost.getCategoryList());
-        }
-        try {
-            post.getPostmetaList().size();
-        } catch (Exception e) {
-            post.setPostmetaList(dbPost.getPostmetaList());
-        }
-        try {
-            post.getTagList().size();
-        } catch (Exception e) {
-            post.setTagList(dbPost.getTagList());
-        }
-        post.setCommentList(dbPost.getCommentList());
-
         try {
             postDao.edit(post);
         }
