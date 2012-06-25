@@ -51,9 +51,7 @@ public class AdminCategoryController {
 
     @RequestMapping(value="", method= RequestMethod.GET)
     public ModelAndView viewCategories() {
-        ModelAndView mav = new ModelAndView("admin/categories");
-        processCategoryLists(mav);
-       return mav;
+        return processCategoryLists();
     }
 
     @RequestMapping(value={"","/*"}, method= RequestMethod.POST)
@@ -120,12 +118,14 @@ public class AdminCategoryController {
         return "redirect:/admin/category";
     }
 
-    private void processCategoryLists(ModelAndView mav) {
+    private ModelAndView processCategoryLists() {
+        ModelAndView mav = new ModelAndView("admin/categories");
         List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("categoryList", secondCategorys);
         List<Category> topCategorys = categoryService.listTopLevelCategories(true);
         topCategorys.remove(topCategorys.size()-1);//XXX 去掉多媒体分组（该分组必须由系统管理）
         mav.addObject("categoryGroups", topCategorys);
+        return mav;
     }
 
     private void processCategoryParentList4Category(ModelAndView mav, Category category) {

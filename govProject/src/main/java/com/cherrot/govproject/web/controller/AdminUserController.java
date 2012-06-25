@@ -11,11 +11,14 @@ import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
+import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.persistence.PersistenceException;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -35,27 +38,20 @@ public class AdminUserController {
     @Inject
     private PostService postService;
 
-    @RequestMapping(params="id")
-    public ModelAndView viewUser(@RequestParam("id")Integer userId) {
-        ModelAndView mav = new ModelAndView("/viewUser");
-        //TODO 获取User对象。查看 viewUser.jsp确定需要注入的对象。 可以参考UserController的同名方法。
-        //注意此方法是给管理员用的
-        User user = userService.find(userId);
-        mav.addObject("user", user);
-        String userRole = userService.getDescriptionOfUserLevel(user.getUserLevel());
-        mav.addObject("userRole", userRole);
-        List<Post> userPosts = postService.listNewestPostsByUser(user, 1, DEFAULT_PAGE_SIZE);
-        mav.addObject("userPosts",userPosts);
-        List<Comment> userComments = commentService.listNewestCommentsByUser(user, 1, DEFAULT_PAGE_SIZE);
-        mav.addObject("userComments", userComments);
-        return mav;
+    @ModelAttribute("user")
+    public User getUser(@RequestParam(value="id", required=false)Integer userId) {
+        User user = null;
+        if (userId != null) {
+            try {
+                user = userService.find(userId);
+            } catch (PersistenceException e) {
+                throw new ResourceNotFoundException();
+            }
+        }
+        return user;
     }
 
-    /**
-     * 分页返回所有用户的列表。
-     * @return
-     */
-    @RequestMapping("/list")
+    @RequestMapping("")
     public ModelAndView viewUserList(
             @RequestParam(value="pageNum", required=false)Integer pageNum,
             @RequestParam(value="pageSize",required=false)Integer pageSize) {

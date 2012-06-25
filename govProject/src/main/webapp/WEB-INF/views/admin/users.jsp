@@ -45,9 +45,12 @@
         </tbody>
       </table>
     </div>
-    <div id="pageNav">
-      <!--分页-->
-    </div>
+    <ul class="pageNav">
+      页码：
+      <c:forEach begin="1" end="${pageCount}" varStatus="status">
+        <li><a href="<c:url value="/admin/user/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+      </c:forEach>
+    </ul>
     <!--End MainContent-->
       <%@include file="jspf/footer.jspf" %>
   </body>
