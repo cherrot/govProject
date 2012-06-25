@@ -56,8 +56,12 @@ public class AdminCategoryController {
     @RequestMapping(value={"","/*/edit"}, method= RequestMethod.POST)
     public ModelAndView doEditCategory(@Valid @ModelAttribute("category")Category category
         , BindingResult result
-        , @RequestParam("categoryParent")Integer categoryParentId) {
+        , @RequestParam("parent")Integer categoryParentId) {
 
+        //不允许编辑顶级分类！
+        if (categoryService.isTopLevelCategory(category)) {
+            throw new ResourceNotFoundException();
+        }
         ModelAndView mav = new ModelAndView("redirect:/admin/category");
         Category parent = null;
         try {
@@ -82,6 +86,10 @@ public class AdminCategoryController {
         ModelAndView mav = new ModelAndView("admin/editCategory");
         try {
             Category category = categoryService.find(categoryId);
+            //不允许编辑顶级分类！
+            if (categoryService.isTopLevelCategory(category)) {
+                throw new ResourceNotFoundException();
+            }
             mav.addObject("category", category);
             processCategoryParentList4Category(mav, category);
         } catch (PersistenceException e) {
@@ -110,6 +118,7 @@ public class AdminCategoryController {
         List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("categoryList", secondCategorys);
         List<Category> topCategorys = categoryService.listTopLevelCategories(true);
+        topCategorys.remove(topCategorys.size()-1);//XXX 去掉多媒体分组（该分组必须由系统管理）
         mav.addObject("categoryGroups", topCategorys);
     }
 
@@ -117,6 +126,7 @@ public class AdminCategoryController {
         List<Category> categoryParents = null;
         if (categoryService.isSecondLevelCategory(category)) {
             categoryParents = categoryService.listTopLevelCategories(false);
+            categoryParents.remove(categoryParents.size()-1);//XXX 去掉多媒体分组（该分组必须由系统管理）
         } else {
             categoryParents = categoryService.listSecondLevelCategories(false, false);
         }

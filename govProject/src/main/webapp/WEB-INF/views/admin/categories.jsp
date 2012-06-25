@@ -21,12 +21,20 @@
       <div>
         <h2>当前文章分类</h2>
         <ul>
-          <c:forEach items="categoryList" var="category2nd">
-            <li>${category2nd.name} &nbsp; 编辑 &nbsp; 删除</li>
+          <c:forEach items="${categoryList}" var="category2nd">
+            <li>
+              ${category2nd.name} &nbsp;
+              <a href="<c:url value="/admin/category/${category2nd.id}/edit"/>">编辑</a> &nbsp;
+              <a href="<c:url value="/admin/category/${category2nd.id}/delete"/>">删除</a>
+            </li>
             <c:if test="${!empty category2nd.categoryList}">
               <ul>
                 <c:forEach items="${category2nd.categoryList}" var="category3rd">
-                  <li>${category3rd.name} &nbsp; 编辑 &nbsp; 删除</li>
+                  <li>
+                    ${category3rd.name} &nbsp;
+                    <a href="<c:url value="/admin/category/${category3rd.id}/edit"/>">编辑</a> &nbsp;
+                    <a href="<c:url value="/admin/category/${category3rd.id}/delete"/>">删除</a>
+                  </li>
                 </c:forEach>
               </ul>
             </c:if>
@@ -45,7 +53,7 @@
           <label for="category2nd_description">分类描述（可选）</label>
           <form:textarea path="description" id="category2nd_description"/>
           <label for="category2nd_parent">所属分类群组</label>
-          <select id="category2nd_parent" name="categoryParent">
+          <select id="category2nd_parent" name="parent">
             <c:forEach items="${categoryGroups}" var="category1st">
               <option value="${category1st.id}">${category1st.name}</option>
             </c:forEach>
@@ -64,7 +72,7 @@
           <label for="category3rd_description">分类描述（可选）</label>
           <form:textarea path="description" id="category3rd_description"/>
           <label for="category3rd_parent">所属二级分类</label>
-          <select id="category3rd_parent" name="categoryParent">
+          <select id="category3rd_parent" name="parent">
             <c:forEach items="${categoryList}" var="category2nd">
               <option value="${category2nd.id}">${category2nd.name}</option>
             </c:forEach>

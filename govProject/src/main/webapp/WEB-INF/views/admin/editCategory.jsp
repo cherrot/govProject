@@ -29,8 +29,8 @@
           <label for="category_description">分类描述（可选）</label>
           <form:textarea path="description" id="category_description"/>
           <label for="category_parent">所属分类群组</label>
-          <select id="category_parent" name="categoryParent">
-            <c:forEach items="${categoryParents}" var="categoryParent">
+          <select id="category_parent" name="parent">
+            <c:forEach items="${categoryParents}" var="parent">
               <option value="${categoryParent.id}">${categoryParent.name}</option>
             </c:forEach>
           </select>
