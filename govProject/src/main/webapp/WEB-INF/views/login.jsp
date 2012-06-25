@@ -27,8 +27,7 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      <%@include file="jspf/sidebar.jspf" %>
-
+      
       <div style="text-align:center;">
     <p>${errorMsg}</p>
     <table align="center">
@@ -69,7 +68,7 @@
     </td>
     <td width="200px" align="left" vlign="top"><%@include file="jspf/sidebar.jspf" %></td>
     </tr></table>
-    
+
       <%@include file="jspf/footer.jspf" %>
       </div>
   </body>

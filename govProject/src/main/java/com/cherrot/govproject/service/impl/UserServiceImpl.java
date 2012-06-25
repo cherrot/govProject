@@ -15,6 +15,7 @@ import com.cherrot.govproject.service.UserService;
 import static com.cherrot.govproject.util.Constants.USER_NORMAL;
 import static com.cherrot.govproject.util.Constants.USER_WENLIAN;
 import static com.cherrot.govproject.util.Constants.USER_XUANCHUANBU;
+import static com.cherrot.govproject.util.Constants.USER_PENDING;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -161,6 +162,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
         StringBuilder stringBuilder = new StringBuilder();
+        if ( (userLevel & USER_PENDING) != 0) stringBuilder.append("待审核用户 ");
         if ( (userLevel & USER_XUANCHUANBU) != 0 ) stringBuilder.append("宣传部管理员 ");
         if ( (userLevel & USER_WENLIAN) != 0 ) stringBuilder.append("文联工作人员 ");
         if ( (userLevel & USER_NORMAL) != 0 ) stringBuilder.append("普通用户 ");
@@ -169,10 +171,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean isAdministrator(User user) {
-        if ( (user.getUserLevel() & USER_XUANCHUANBU) != 0 ) {
+        if ((user.getUserLevel() & USER_XUANCHUANBU) != 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }

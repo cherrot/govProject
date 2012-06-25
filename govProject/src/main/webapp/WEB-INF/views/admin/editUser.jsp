@@ -17,10 +17,22 @@
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <div>
-      <%--XXX 这里不规定form的action，以便使此form可以映射到/user/edit和/admin/user/edit两个路径--%>
-      <form:form modelAttribute="user">
-        <form:input path="displayName" placeholder="显示昵称" required="required"/><br/>
+      <form:form modelAttribute="user" onsubmit="return InputCheck(this)">
+        <form:errors path="*"/>
+        <label for="user_login">登陆邮箱：</label>
+        <form:input type="email" id="user_login" path="login" placeholder="登陆邮箱" required="required"/><br/>
+        <label for="user_displayName">显示昵称：</label>
+        <form:input id="user_displayName" path="displayName" placeholder="显示昵称" required="required"/><br/>
+        <label for="user_url">个人主页（可选）：</label>
         <form:input type="url" path="url" placeholder="个人主页"/><br/>
+        <label for="user_pass">修改密码（不改请留空）：</label>
+        <form:password path="pass"/><br/>
+
+        <c:if test="${!empty roleMap}">
+          <label for="user_level">用户等级：</label>
+          <form:select id="user_level" items="${roleMap}" path="userLevel"/><br/>
+        </c:if>
+
         <form:hidden path="id" value="${user.id}"/>
         <input type="submit"/>
       </form:form>

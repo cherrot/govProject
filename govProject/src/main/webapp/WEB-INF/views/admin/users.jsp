@@ -25,8 +25,8 @@
             <th>查看详细资料</th>
             <th>查看用户文章</th>
             <th>查看用户评论</th>
-            <th>编辑用户</th>
-            <th>删除用户</th>
+            <th>用户级别</th>
+            <th>操作</th>
           </tr>
         </thead>
         <tbody>
@@ -35,11 +35,14 @@
               <td>${user.login}</td>
               <td>${user.displayName}</td>
               <td>${user.registerDate}</td>
-              <td><a href="<c:url value="/admin/user?id=${user.id}" />">详细资料</a></td>
-              <td><a href="<c:url value="/admin/post/list?userId=${user.id}"/>" title="查看${user.displayName}的全部文章">共${postCountList[status.index]}篇文章</a></td>
-              <td><a href="<c:url value="/admin/comment/list?userId=${user.id}"/>" title="查看${user.displayName}的全部评论">共${commentCountList[status.index]}条评论</a></td>
-              <td><a href="<c:url value="/admin/user/edit?id=${user.id}" />">编辑</a></td>
-              <td><a href="<c:url value="/admin/user/delete?id=${user.id}" />">删除</a></td>
+              <td><a href="<c:url value="/user/${user.id}" />" target="_blank">详细资料</a></td>
+              <td><a href="<c:url value="/user/${user.id}/posts"/>" title="查看${user.displayName}的全部文章" target="_blank">共${postCountList[status.index]}篇文章</a></td>
+              <td><a href="<c:url value="/user/${user.id}/comments"/>" title="查看${user.displayName}的全部评论" target="_blank">共${commentCountList[status.index]}条评论</a></td>
+              <td>${roleList4UserList[status.index]}</td>
+              <td>
+                <a href="<c:url value="/admin/user/${user.id}" />">编辑</a>&nbsp;
+                <a href="<c:url value="/admin/user/${user.id}/delete" />">删除</a>
+              </td>
             </tr>
           </c:forEach>
         </tbody>

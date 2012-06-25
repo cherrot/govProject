@@ -81,9 +81,9 @@ public class AdminTagController {
     }
 
     @RequestMapping("/{tagId}/delete")
-    public String doDeleteTag(@PathVariable("tagId")Integer categoryId) {
+    public String doDeleteTag(@PathVariable("tagId")Integer tagId) {
         try {
-            tagService.destroy(categoryId);
+            tagService.destroy(tagId);
         } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
