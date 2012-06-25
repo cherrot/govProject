@@ -6,8 +6,11 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.service.CategoryService;
+import com.cherrot.govproject.util.Constants;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.inject.Inject;
 import javax.persistence.PersistenceException;
 import javax.validation.Valid;
@@ -59,14 +62,17 @@ public class AdminCategoryController {
         , @RequestParam("parent")Integer categoryParentId) {
 
         //不允许编辑顶级分类！
-        if (categoryService.isTopLevelCategory(category)) {
+//        if (categoryService.isTopLevelCategory(category)) { //该方法是通过 categoryParent判断的
+        if (category.getId() != null && category.getId()<Constants.TOP_LEVEL_CATEGORY_COUNT) {
             throw new ResourceNotFoundException();
         }
+
         ModelAndView mav = new ModelAndView("redirect:/admin/category");
         Category parent = null;
         try {
             parent = categoryService.find(categoryParentId);
         } catch (PersistenceException e) {
+            Logger.getLogger(AdminCategoryController.class.getSimpleName()).log(Level.WARNING, e.getMessage(), e);
             throw new ResourceNotFoundException();
         }
         category.setCategoryParent(parent);
