@@ -47,9 +47,9 @@
         <form:form modelAttribute="category">
           <form:errors path="*"/><br/>
           <label for="category2nd_name">分类名：</label>
-          <form:input path="name" id="category2nd_name" placeholder="请输入文章分类的名字"/><br/>
+          <form:input path="name" id="category2nd_name" placeholder="请输入文章分类的名字" required="required"/><br/>
           <label for="category2nd_slug">分类短链接</label>
-          <form:input path="slug" id="category2nd_slug" placeholder="可以和分类名相同"/><br/>
+          <form:input path="slug" id="category2nd_slug" placeholder="可以和分类名相同" required="required"/><br/>
           <label for="category2nd_description">分类描述（可选）</label>
           <form:textarea path="description" id="category2nd_description"/>
           <label for="category2nd_parent">所属分类群组</label>
@@ -66,9 +66,9 @@
         <form:form modelAttribute="category">
           <form:errors path="*"/><br/>
           <label for="category3rd_name">分类名：</label>
-          <form:input path="name" id="category3rd_name" placeholder="请输入文章分类的名字"/><br/>
+          <form:input path="name" id="category3rd_name" placeholder="请输入文章分类的名字" required="required"/><br/>
           <label for="category3rd_slug">分类短链接</label>
-          <form:input path="slug" id="category3rd_slug" placeholder="可以和分类名相同"/><br/>
+          <form:input path="slug" id="category3rd_slug" placeholder="可以和分类名相同" required="required"/><br/>
           <label for="category3rd_description">分类描述（可选）</label>
           <form:textarea path="description" id="category3rd_description"/>
           <label for="category3rd_parent">所属二级分类</label>

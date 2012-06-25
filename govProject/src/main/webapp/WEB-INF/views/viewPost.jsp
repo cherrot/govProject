@@ -18,14 +18,14 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      
+
       <table align="center">
-          <tr>      
+          <tr>
               <td width="700px">
     <!--Start MainContent-->
-    <table style="table-layout:fixed;   
-    empty-cells:show;    
-    border-collapse: collapse;margin:0 auto; border:1px solid #cad9ea;  
+    <table style="table-layout:fixed;
+    empty-cells:show;
+    border-collapse: collapse;margin:0 auto; border:1px solid #cad9ea;
     color:#666;padding: 6px 6px 6px 12px;width: 700px">
         <tr><td style="padding: 6px 6px 6px 12px;">
     <h1 class="postTitle"><a href="<c:url value="/post/${post.slug}" />" title="${post.title}" >${post.title}</a></h1>
@@ -79,10 +79,10 @@
         <form:input id="new_comment_author" path="author" placeholder="请输入您的姓名" required="required" />
         <form:errors path="author" /><br/>
         <label for="new_comment_email">您的邮箱</label>
-        <form:input id="new_comment_email" path="authorEmail" placeholder="请输入您的Email（如QQ邮箱）" required="required"/>
+        <form:input type="email" id="new_comment_email" path="authorEmail" placeholder="请输入您的Email（如QQ邮箱）" required="required"/>
         <form:errors path="authorEmail" /><br/>
         <label for="new_comment_url">您的个人主页</label>
-        <form:input id="new_comment_url" path="authorUrl" placeholder="您的人人主页、QQ空间、百度空间等（可不填）"/>
+        <form:input type="url" id="new_comment_url" path="authorUrl" placeholder="您的人人主页、QQ空间、百度空间等（可不填）"/>
         <form:errors path="authorUrl" /><br/>
         <label for="new_comment_content">您的评论</label>
         <form:textarea id="new_comment_content" path="content" placeholder="写点什么吧：" required="required"/>
@@ -98,6 +98,6 @@
       </tr></table>
     <!--End MainContent-->
       <table align="center"><tr><td><%@include file="jspf/footer.jspf" %></td></tr></table>
-      
+
   </body>
 </html>

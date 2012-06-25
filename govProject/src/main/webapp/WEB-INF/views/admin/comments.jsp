@@ -39,12 +39,12 @@
           <td>
             <c:choose>
               <c:when test="${comment.approved}">
-                <a href=""
+                <a href="<c:url value="/admin/comment/${comment.id}/edit?approved=false"/>">驳回</a>
               </c:when>
               <c:otherwise>
+                <a href="<c:url value="/admin/comment/${comment.id}/edit?approved=true"/>">批准</a>
               </c:otherwise>
             </c:choose>
-
             <a href="<c:url value="/admin/comment/${comment.id}/edit"/>">编辑</a>&nbsp;
             <a href="<c:url value="/admin/comment/${comment.id}/delete"/>">删除</a>
           </td>

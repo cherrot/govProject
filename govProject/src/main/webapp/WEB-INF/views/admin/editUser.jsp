@@ -19,8 +19,8 @@
     <div>
       <%--XXX 这里不规定form的action，以便使此form可以映射到/user/edit和/admin/user/edit两个路径--%>
       <form:form modelAttribute="user">
-        <form:input path="displayName" placeholder="显示昵称"/><br/>
-        <form:input path="url" placeholder="个人主页"/><br/>
+        <form:input path="displayName" placeholder="显示昵称" required="required"/><br/>
+        <form:input type="url" path="url" placeholder="个人主页"/><br/>
         <form:hidden path="id" value="${user.id}"/>
         <input type="submit"/>
       </form:form>

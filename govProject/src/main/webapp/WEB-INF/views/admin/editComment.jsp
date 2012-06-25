@@ -22,18 +22,16 @@
         <h2>编辑评论</h2>
         <form:form modelAttribute="comment">
           <form:errors path="*"/><br/>
-          <label for="category_name">分类名：</label>
-          <form:input path="name" id="category_name" placeholder="请输入文章分类的名字"/><br/>
-          <label for="category_slug">分类短链接</label>
-          <form:input path="slug" id="category_slug" placeholder="可以和分类名相同"/><br/>
-          <label for="category_description">分类描述（可选）</label>
-          <form:textarea path="description" id="category_description"/>
-          <label for="category_parent">所属分类群组</label>
-          <select id="category_parent" name="categoryParent">
-            <c:forEach items="${categoryParents}" var="categoryParent">
-              <option value="${categoryParent.id}">${categoryParent.name}</option>
-            </c:forEach>
-          </select>
+          <label for="comment_approved">批准：</label>
+          <form:checkbox path="approved" id="comment_approved"/><br/>
+          <label for="comment_author">评论人姓名：</label>
+          <form:input path="author" id="comment_author" placeholder="评论人显示的名字" required="required"/><br/>
+          <label for="comment_email">评论人邮箱：</label>
+          <form:input type="email" path="authorEmail" id="comment_email" required="required"/><br/>
+          <label for="comment_url">评论人网址（可选）：</label>
+          <form:input type="url" path="authorUrl" id="comment_url"/><br/>
+          <label for="comment_content">评论内容</label>
+          <form:textarea path="content" id="comment_content" required="required"/>
           <form:hidden path="id"/>
           <input type="submit" value="提交"/>
         </form:form>
