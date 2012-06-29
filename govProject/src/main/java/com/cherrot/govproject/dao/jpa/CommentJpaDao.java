@@ -42,7 +42,6 @@ public class CommentJpaDao implements CommentDao {
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
-
     @Override
     @Transactional
     public void create(Comment comment) {
@@ -61,61 +60,61 @@ public class CommentJpaDao implements CommentDao {
             user = em.getReference(User.class, user.getId());
             comment.setUser(user);
         }
-            Post post = comment.getPost();
-            if (post != null) {
-                post = em.getReference(Post.class, post.getId());
-                comment.setPost(post);
-            }
-            Comment commentParent = comment.getCommentParent();
-            if (commentParent != null) {
-                commentParent = em.getReference(Comment.class, commentParent.getId());
-                comment.setCommentParent(commentParent);
-            }
-            List<Commentmeta> attachedCommentmetaList = new ArrayList<Commentmeta>();
-            for (Commentmeta commentmetaListCommentmetaToAttach : comment.getCommentmetaList()) {
-                commentmetaListCommentmetaToAttach = em.getReference(Commentmeta.class, commentmetaListCommentmetaToAttach.getId());
-                attachedCommentmetaList.add(commentmetaListCommentmetaToAttach);
-            }
-            comment.setCommentmetaList(attachedCommentmetaList);
-            List<Comment> attachedCommentList = new ArrayList<Comment>();
-            for (Comment commentListCommentToAttach : comment.getCommentList()) {
-                commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
-                attachedCommentList.add(commentListCommentToAttach);
-            }
-            comment.setCommentList(attachedCommentList);
-            em.persist(comment);
+        Post post = comment.getPost();
+        if (post != null) {
+            post = em.getReference(Post.class, post.getId());
+            comment.setPost(post);
+        }
+        Comment commentParent = comment.getCommentParent();
+        if (commentParent != null) {
+            commentParent = em.getReference(Comment.class, commentParent.getId());
+            comment.setCommentParent(commentParent);
+        }
+        List<Commentmeta> attachedCommentmetaList = new ArrayList<Commentmeta>();
+        for (Commentmeta commentmetaListCommentmetaToAttach : comment.getCommentmetaList()) {
+            commentmetaListCommentmetaToAttach = em.getReference(Commentmeta.class, commentmetaListCommentmetaToAttach.getId());
+            attachedCommentmetaList.add(commentmetaListCommentmetaToAttach);
+        }
+        comment.setCommentmetaList(attachedCommentmetaList);
+        List<Comment> attachedCommentList = new ArrayList<Comment>();
+        for (Comment commentListCommentToAttach : comment.getCommentList()) {
+            commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
+            attachedCommentList.add(commentListCommentToAttach);
+        }
+        comment.setCommentList(attachedCommentList);
+        em.persist(comment);
         if (user != null) {
             user.getCommentList().add(comment);
             user = em.merge(user);
         }
-            if (post != null) {
-                post.getCommentList().add(comment);
-                //设置count字段
-                post.setCommentCount(post.getCommentCount()+1);
-                post = em.merge(post);
+        if (post != null) {
+            post.getCommentList().add(comment);
+            //设置count字段
+            post.setCommentCount(post.getCommentCount() + 1);
+            post = em.merge(post);
+        }
+        if (commentParent != null) {
+            commentParent.getCommentList().add(comment);
+            commentParent = em.merge(commentParent);
+        }
+        for (Commentmeta commentmetaListCommentmeta : comment.getCommentmetaList()) {
+            Comment oldCommentOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getComment();
+            commentmetaListCommentmeta.setComment(comment);
+            commentmetaListCommentmeta = em.merge(commentmetaListCommentmeta);
+            if (oldCommentOfCommentmetaListCommentmeta != null) {
+                oldCommentOfCommentmetaListCommentmeta.getCommentmetaList().remove(commentmetaListCommentmeta);
+                oldCommentOfCommentmetaListCommentmeta = em.merge(oldCommentOfCommentmetaListCommentmeta);
             }
-            if (commentParent != null) {
-                commentParent.getCommentList().add(comment);
-                commentParent = em.merge(commentParent);
+        }
+        for (Comment commentListComment : comment.getCommentList()) {
+            Comment oldCommentParentOfCommentListComment = commentListComment.getCommentParent();
+            commentListComment.setCommentParent(comment);
+            commentListComment = em.merge(commentListComment);
+            if (oldCommentParentOfCommentListComment != null) {
+                oldCommentParentOfCommentListComment.getCommentList().remove(commentListComment);
+                oldCommentParentOfCommentListComment = em.merge(oldCommentParentOfCommentListComment);
             }
-            for (Commentmeta commentmetaListCommentmeta : comment.getCommentmetaList()) {
-                Comment oldCommentOfCommentmetaListCommentmeta = commentmetaListCommentmeta.getComment();
-                commentmetaListCommentmeta.setComment(comment);
-                commentmetaListCommentmeta = em.merge(commentmetaListCommentmeta);
-                if (oldCommentOfCommentmetaListCommentmeta != null) {
-                    oldCommentOfCommentmetaListCommentmeta.getCommentmetaList().remove(commentmetaListCommentmeta);
-                    oldCommentOfCommentmetaListCommentmeta = em.merge(oldCommentOfCommentmetaListCommentmeta);
-                }
-            }
-            for (Comment commentListComment : comment.getCommentList()) {
-                Comment oldCommentParentOfCommentListComment = commentListComment.getCommentParent();
-                commentListComment.setCommentParent(comment);
-                commentListComment = em.merge(commentListComment);
-                if (oldCommentParentOfCommentListComment != null) {
-                    oldCommentParentOfCommentListComment.getCommentList().remove(commentListComment);
-                    oldCommentParentOfCommentListComment = em.merge(oldCommentParentOfCommentListComment);
-                }
-            }
+        }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -207,13 +206,13 @@ public class CommentJpaDao implements CommentDao {
             if (postOld != null && !postOld.equals(postNew)) {
                 postOld.getCommentList().remove(comment);
                 //设置count字段
-                postOld.setCommentCount(postOld.getCommentCount()-1);
+                postOld.setCommentCount(postOld.getCommentCount() - 1);
                 postOld = em.merge(postOld);
             }
             if (postNew != null && !postNew.equals(postOld)) {
                 postNew.getCommentList().add(comment);
                 //设置count字段
-                postNew.setCommentCount(postNew.getCommentCount()+1);
+                postNew.setCommentCount(postNew.getCommentCount() + 1);
                 postNew = em.merge(postNew);
             }
             if (commentParentOld != null && !commentParentOld.equals(commentParentNew)) {
@@ -253,8 +252,7 @@ public class CommentJpaDao implements CommentDao {
                 }
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = comment.getId();
@@ -278,47 +276,47 @@ public class CommentJpaDao implements CommentDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Comment comment;
-            try {
-                comment = em.getReference(Comment.class, id);
-                comment.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The comment with id " + id + " no longer exists.", enfe);
+        Comment comment;
+        try {
+            comment = em.getReference(Comment.class, id);
+            comment.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The comment with id " + id + " no longer exists.", enfe);
+        }
+        List<String> illegalOrphanMessages = null;
+        List<Commentmeta> commentmetaListOrphanCheck = comment.getCommentmetaList();
+        for (Commentmeta commentmetaListOrphanCheckCommentmeta : commentmetaListOrphanCheck) {
+            if (illegalOrphanMessages == null) {
+                illegalOrphanMessages = new ArrayList<String>();
             }
-            List<String> illegalOrphanMessages = null;
-            List<Commentmeta> commentmetaListOrphanCheck = comment.getCommentmetaList();
-            for (Commentmeta commentmetaListOrphanCheckCommentmeta : commentmetaListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Comment (" + comment + ") cannot be destroyed since the Commentmeta " + commentmetaListOrphanCheckCommentmeta + " in its commentmetaList field has a non-nullable comment field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            User user = comment.getUser();
-            if (user != null) {
-                user.getCommentList().remove(comment);
-                user = em.merge(user);
-            }
-            Post post = comment.getPost();
-            if (post != null) {
-                post.getCommentList().remove(comment);
-                //设置count字段
-                post.setCommentCount(post.getCommentCount()-1);
-                post = em.merge(post);
-            }
-            Comment commentParent = comment.getCommentParent();
-            if (commentParent != null) {
-                commentParent.getCommentList().remove(comment);
-                commentParent = em.merge(commentParent);
-            }
-            List<Comment> commentList = comment.getCommentList();
-            for (Comment commentListComment : commentList) {
-                commentListComment.setCommentParent(null);
-                commentListComment = em.merge(commentListComment);
-            }
-            em.remove(comment);
+            illegalOrphanMessages.add("This Comment (" + comment + ") cannot be destroyed since the Commentmeta " + commentmetaListOrphanCheckCommentmeta + " in its commentmetaList field has a non-nullable comment field.");
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
+        User user = comment.getUser();
+        if (user != null) {
+            user.getCommentList().remove(comment);
+            user = em.merge(user);
+        }
+        Post post = comment.getPost();
+        if (post != null) {
+            post.getCommentList().remove(comment);
+            //设置count字段
+            post.setCommentCount(post.getCommentCount() - 1);
+            post = em.merge(post);
+        }
+        Comment commentParent = comment.getCommentParent();
+        if (commentParent != null) {
+            commentParent.getCommentList().remove(comment);
+            commentParent = em.merge(commentParent);
+        }
+        List<Comment> commentList = comment.getCommentList();
+        for (Comment commentListComment : commentList) {
+            commentListComment.setCommentParent(null);
+            commentListComment = em.merge(commentListComment);
+        }
+        em.remove(comment);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -341,14 +339,14 @@ public class CommentJpaDao implements CommentDao {
     private List<Comment> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Comment.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Comment.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -359,7 +357,7 @@ public class CommentJpaDao implements CommentDao {
     public Comment find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Comment.class, id);
+        return em.find(Comment.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -370,11 +368,11 @@ public class CommentJpaDao implements CommentDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Comment> rt = cq.from(Comment.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Comment> rt = cq.from(Comment.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();
@@ -415,7 +413,7 @@ public class CommentJpaDao implements CommentDao {
 
     @Override
     public int getCountByUser(User user) {
-        return ( (Long) em.createNamedQuery("Comment.getCountByUser").setParameter("user", user).getSingleResult() ).intValue();
+        return ((Long) em.createNamedQuery("Comment.getCountByUser").setParameter("user", user).getSingleResult()).intValue();
     }
 
     @Override

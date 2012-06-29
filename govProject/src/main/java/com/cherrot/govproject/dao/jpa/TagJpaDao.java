@@ -34,7 +34,6 @@ public class TagJpaDao implements TagDao {
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
-
     @PersistenceContext
     private EntityManager em;
 
@@ -48,17 +47,17 @@ public class TagJpaDao implements TagDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            List<Post> attachedPostList = new ArrayList<Post>();
-            for (Post postListPostToAttach : tag.getPostList()) {
-                postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
-                attachedPostList.add(postListPostToAttach);
-            }
-            tag.setPostList(attachedPostList);
-            em.persist(tag);
-            for (Post postListPost : tag.getPostList()) {
-                postListPost.getTagList().add(tag);
-                postListPost = em.merge(postListPost);
-            }
+        List<Post> attachedPostList = new ArrayList<Post>();
+        for (Post postListPostToAttach : tag.getPostList()) {
+            postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
+            attachedPostList.add(postListPostToAttach);
+        }
+        tag.setPostList(attachedPostList);
+        em.persist(tag);
+        for (Post postListPost : tag.getPostList()) {
+            postListPost.getTagList().add(tag);
+            postListPost = em.merge(postListPost);
+        }
 //            em.getTransaction().commit();
 //        } finally {
 //            if (em != null) {
@@ -112,10 +111,10 @@ public class TagJpaDao implements TagDao {
             }
             throw ex;
         } /*finally {
-            if (em != null) {
-                em.close();
-            }
-        }*/
+         if (em != null) {
+         em.close();
+         }
+         }*/
     }
 
     @Override
@@ -125,19 +124,19 @@ public class TagJpaDao implements TagDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Tag tag;
-            try {
-                tag = em.getReference(Tag.class, id);
-                tag.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The tag with id " + id + " no longer exists.", enfe);
-            }
-            List<Post> postList = tag.getPostList();
-            for (Post postListPost : postList) {
-                postListPost.getTagList().remove(tag);
-                postListPost = em.merge(postListPost);
-            }
-            em.remove(tag);
+        Tag tag;
+        try {
+            tag = em.getReference(Tag.class, id);
+            tag.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The tag with id " + id + " no longer exists.", enfe);
+        }
+        List<Post> postList = tag.getPostList();
+        for (Post postListPost : postList) {
+            postListPost.getTagList().remove(tag);
+            postListPost = em.merge(postListPost);
+        }
+        em.remove(tag);
 //            em.getTransaction().commit();
 //        } finally {
 //            if (em != null) {
@@ -159,14 +158,14 @@ public class TagJpaDao implements TagDao {
     private List<Tag> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Tag.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Tag.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        } finally {
 //            em.close();
 //        }
@@ -176,7 +175,7 @@ public class TagJpaDao implements TagDao {
     public Tag find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Tag.class, id);
+        return em.find(Tag.class, id);
 //        } finally {
 //            em.close();
 //        }
@@ -186,11 +185,11 @@ public class TagJpaDao implements TagDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Tag> rt = cq.from(Tag.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ((Long) q.getSingleResult()).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Tag> rt = cq.from(Tag.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        } finally {
 //            em.close();
 //        }
@@ -210,5 +209,4 @@ public class TagJpaDao implements TagDao {
     public Tag findByName(String name) {
         return em.createNamedQuery("Tag.findByName", Tag.class).setParameter("name", name).getSingleResult();
     }
-
 }

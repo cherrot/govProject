@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "SiteLog.findByLogDate", query = "SELECT s FROM SiteLog s WHERE s.logDate = :logDate"),
     @NamedQuery(name = "SiteLog.findByLogOperation", query = "SELECT s FROM SiteLog s WHERE s.logOperation = :logOperation")})
 public class SiteLog implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -64,8 +65,7 @@ public class SiteLog implements Serializable {
 //    public SiteLog(Integer id) {
 //        this.id = id;
 //    }
-
-    public SiteLog(/*Integer id,*/ Date logDate, String logOperation) {
+    public SiteLog(/*Integer id,*/Date logDate, String logOperation) {
 //        this.id = id;
         this.logDate = logDate;
         this.logOperation = logOperation;
@@ -112,6 +112,7 @@ public class SiteLog implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -131,5 +132,4 @@ public class SiteLog implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.SiteLog[ id=" + id + " ]";
     }
-
 }

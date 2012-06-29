@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class SiteLogServiceImpl implements SiteLogService{
+public class SiteLogServiceImpl implements SiteLogService {
 
     @Inject
     private SiteLogDao siteLogDao;
@@ -84,7 +84,7 @@ public class SiteLogServiceImpl implements SiteLogService{
 
     @Override
     public List<SiteLog> list(int pageNum, int pageSize) {
-        return siteLogDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return siteLogDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
@@ -95,5 +95,4 @@ public class SiteLogServiceImpl implements SiteLogService{
             edit(model);
         }
     }
-
 }

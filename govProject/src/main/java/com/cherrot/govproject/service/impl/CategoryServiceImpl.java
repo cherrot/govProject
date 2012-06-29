@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service manages Category and TermTaxonomy.
+ *
  * @author cherrot
  */
 @Service
@@ -43,9 +44,8 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories = new ArrayList<Category>();
         for (String categoryString : categoryStrings) {
             try {
-               category = categoryDao.findByName(categoryString);
-            }
-            catch (NoResultException  e) {
+                category = categoryDao.findByName(categoryString);
+            } catch (NoResultException e) {
                 category = new Category();
                 category.setName(categoryString);
                 category.setSlug(categoryString);
@@ -61,14 +61,11 @@ public class CategoryServiceImpl implements CategoryService {
     public void edit(Category model) {
         try {
             categoryDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -79,20 +76,28 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Category find(Integer id, boolean withPosts, boolean withTerms) {
         Category term = find(id);
-        if (withPosts) term.getPostList().isEmpty();
-        if (withTerms) term.getCategoryList().isEmpty();
+        if (withPosts) {
+            term.getPostList().isEmpty();
+        }
+        if (withTerms) {
+            term.getCategoryList().isEmpty();
+        }
         return term;
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Category findBySlug(String slug, boolean withPosts, boolean withChildCategories) {
         Category category = categoryDao.findBySlug(slug);
-        if (withPosts) category.getPostList().isEmpty();
-        if (withChildCategories) category.getCategoryList().isEmpty();
+        if (withPosts) {
+            category.getPostList().isEmpty();
+        }
+        if (withChildCategories) {
+            category.getCategoryList().isEmpty();
+        }
         return category;
     }
 
@@ -112,11 +117,9 @@ public class CategoryServiceImpl implements CategoryService {
                 }
             }
             categoryDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(CategoryServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -133,11 +136,11 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<Category> list(int pageNum, int pageSize) {
-        return categoryDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return categoryDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Category> listTopLevelCategories(boolean withChildCategories) {
         List<Category> categorys = categoryDao.findEntitiesHavingNullParent();
         processDependency(categorys, false, withChildCategories);
@@ -145,7 +148,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Category> listSecondLevelCategories(boolean withPosts, boolean withChildCategories) {
         List<Category> categorys = categoryDao.findEntitiesHavingTopLevelParent();
         processDependency(categorys, withPosts, withChildCategories);
@@ -155,8 +158,12 @@ public class CategoryServiceImpl implements CategoryService {
     private void processDependency(List<Category> terms, boolean withPosts, boolean withChildCategories) {
         if (withPosts || withChildCategories) {
             for (Category term : terms) {
-                if (withPosts) term.getPostList().isEmpty();
-                if (withChildCategories) term.getCategoryList().isEmpty();
+                if (withPosts) {
+                    term.getPostList().isEmpty();
+                }
+                if (withChildCategories) {
+                    term.getCategoryList().isEmpty();
+                }
             }
         }
     }

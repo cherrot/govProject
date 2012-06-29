@@ -45,8 +45,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Category.findAllHavingTopLevelParent", query = "SELECT c FROM Category c WHERE c.categoryParent IN (SELECT c FROM Category c WHERE c.categoryParent IS NULL)")
 })
 public class Category implements Serializable {
-    private static final long serialVersionUID = 1L;
 
+    private static final long serialVersionUID = 1L;
 //    private void processSlug(String slug) {
 //        slug = slug.replaceAll("(\\.|\\s)+", "-");
 //        try {
@@ -55,7 +55,6 @@ public class Category implements Serializable {
 //        catch (UnsupportedEncodingException ex) {
 //        }
 //    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -63,14 +62,15 @@ public class Category implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     /**
-     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     * @deprecated
+     * 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
      */
     @Deprecated
     @Basic(optional = false)
     @NotNull
     @Column(name = "postCount", nullable = false)
     private int count;
-    @Basic(optional=false)
+    @Basic(optional = false)
     @NotNull
     @Size(max = 100)
     @Column(name = "name", length = 100)
@@ -89,15 +89,16 @@ public class Category implements Serializable {
     @ManyToOne
     private Category categoryParent;
     /**
-     * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
-     * If you choose to map the relationship in both directions, then one
-     * direction must be defined as the owner and the other must use
-     * the mappedBy attribute to define its mapping.
-     * This also avoids having to duplicate the JoinTable information in both places.
-     * Post.java为主控端， Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
+     * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？
+     * （异常栈定位到Spring的Hibernate3而不是Hibernate4） If you choose to map the
+     * relationship in both directions, then one direction must be defined as
+     * the owner and the other must use the mappedBy attribute to define its
+     * mapping. This also avoids having to duplicate the JoinTable information
+     * in both places. Post.java为主控端，
+     * Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
 //    @OrderColumn(name="termOrder")
-    @ManyToMany(cascade={CascadeType.REFRESH}, mappedBy = "categoryList")
+    @ManyToMany(cascade = {CascadeType.REFRESH}, mappedBy = "categoryList")
     private List<Post> postList;
 
     public Category() {
@@ -108,8 +109,7 @@ public class Category implements Serializable {
 //    public Category(Integer id) {
 //        this.id = id;
 //    }
-
-    public Category(/*Integer id,*/ int count, String name, String slug) {
+    public Category(/*Integer id,*/int count, String name, String slug) {
 //        this.id = id;
         this.count = count;
         this.name = name;
@@ -124,7 +124,6 @@ public class Category implements Serializable {
 //        categoryList = new ArrayList<Category>();
 //        postList = new ArrayList<Post>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -134,7 +133,8 @@ public class Category implements Serializable {
     }
 
     /**
-     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     * @deprecated
+     * 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
      */
     @Deprecated
     public int getCount() {
@@ -158,8 +158,8 @@ public class Category implements Serializable {
     }
 
     /**
-     * Set the "slug" (i.e. the RESTful URL) of this term
-     * 该记录的URI短链接。
+     * Set the "slug" (i.e. the RESTful URL) of this term 该记录的URI短链接。
+     *
      * @param slug
      */
     public void setSlug(String slug) {
@@ -212,6 +212,7 @@ public class Category implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -231,5 +232,4 @@ public class Category implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Term[ id=" + id + " ]";
     }
-
 }

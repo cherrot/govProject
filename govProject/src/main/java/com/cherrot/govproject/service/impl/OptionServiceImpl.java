@@ -16,17 +16,15 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
 /**
  *
  * @author cherrot
  */
 @Service
-public class OptionServiceImpl implements OptionService{
+public class OptionServiceImpl implements OptionService {
 
     @Inject
     private OptionDao optionDao;
-
 
     @Override
     @Transactional
@@ -45,11 +43,9 @@ public class OptionServiceImpl implements OptionService{
     public void destroy(Integer id) {
         try {
             optionDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -68,7 +64,7 @@ public class OptionServiceImpl implements OptionService{
     @Override
 //    @Transactional(readOnly=true)
     public List<Option> list(int pageNum, int pageSize) {
-        return optionDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return optionDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
@@ -76,14 +72,11 @@ public class OptionServiceImpl implements OptionService{
     public void edit(Option model) {
         try {
             optionDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(OptionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -96,5 +89,4 @@ public class OptionServiceImpl implements OptionService{
             edit(model);
         }
     }
-
 }

@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Option.findByOptionKey", query = "SELECT o FROM Option o WHERE o.optionKey = :optionKey"),
     @NamedQuery(name = "Option.findByOptionValue", query = "SELECT o FROM Option o WHERE o.optionValue = :optionValue")})
 public class Option implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,8 +56,7 @@ public class Option implements Serializable {
 //    public Option(Integer id) {
 //        this.id = id;
 //    }
-
-    public Option(/*Integer id,*/ String optionKey) {
+    public Option(/*Integer id,*/String optionKey) {
 //        this.id = id;
         this.optionKey = optionKey;
     }
@@ -94,6 +94,7 @@ public class Option implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -113,5 +114,4 @@ public class Option implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Option[ id=" + id + " ]";
     }
-
 }

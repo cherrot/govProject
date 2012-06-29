@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface LinkDao extends Serializable, BaseDao<Link, Integer> {
-
 //    void create(Link link);
 //
 //    void destroy(Integer id) throws NonexistentEntityException;
@@ -28,5 +27,4 @@ public interface LinkDao extends Serializable, BaseDao<Link, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getLinkCount();
-
 }

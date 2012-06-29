@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface PostmetaDao extends Serializable, BaseDao<Postmeta, Integer> {
-
 //    void create(Postmeta postmeta);
 //
 //    void destroy(Integer id) throws NonexistentEntityException;
@@ -28,5 +27,4 @@ public interface PostmetaDao extends Serializable, BaseDao<Postmeta, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getPostmetaCount();
-
 }

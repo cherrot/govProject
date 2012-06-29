@@ -46,16 +46,16 @@ public class UsermetaJpaDao implements UsermetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            User user = usermeta.getUser();
-            if (user != null) {
-                user = em.getReference(User.class, user.getId());
-                usermeta.setUser(user);
-            }
-            em.persist(usermeta);
-            if (user != null) {
-                user.getUsermetaList().add(usermeta);
-                user = em.merge(user);
-            }
+        User user = usermeta.getUser();
+        if (user != null) {
+            user = em.getReference(User.class, user.getId());
+            usermeta.setUser(user);
+        }
+        em.persist(usermeta);
+        if (user != null) {
+            user.getUsermetaList().add(usermeta);
+            user = em.merge(user);
+        }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -89,8 +89,7 @@ public class UsermetaJpaDao implements UsermetaDao {
                 userNew = em.merge(userNew);
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = usermeta.getId();
@@ -114,19 +113,19 @@ public class UsermetaJpaDao implements UsermetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Usermeta usermeta;
-            try {
-                usermeta = em.getReference(Usermeta.class, id);
-                usermeta.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The usermeta with id " + id + " no longer exists.", enfe);
-            }
-            User user = usermeta.getUser();
-            if (user != null) {
-                user.getUsermetaList().remove(usermeta);
-                user = em.merge(user);
-            }
-            em.remove(usermeta);
+        Usermeta usermeta;
+        try {
+            usermeta = em.getReference(Usermeta.class, id);
+            usermeta.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The usermeta with id " + id + " no longer exists.", enfe);
+        }
+        User user = usermeta.getUser();
+        if (user != null) {
+            user.getUsermetaList().remove(usermeta);
+            user = em.merge(user);
+        }
+        em.remove(usermeta);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -149,14 +148,14 @@ public class UsermetaJpaDao implements UsermetaDao {
     private List<Usermeta> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Usermeta.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Usermeta.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -167,7 +166,7 @@ public class UsermetaJpaDao implements UsermetaDao {
     public Usermeta find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Usermeta.class, id);
+        return em.find(Usermeta.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -175,7 +174,7 @@ public class UsermetaJpaDao implements UsermetaDao {
     }
 
     @Override
-    public  Usermeta getReference(Integer id) {
+    public Usermeta getReference(Integer id) {
         return em.getReference(Usermeta.class, id);
     }
 
@@ -183,15 +182,14 @@ public class UsermetaJpaDao implements UsermetaDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Usermeta> rt = cq.from(Usermeta.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Usermeta> rt = cq.from(Usermeta.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();
 //        }
     }
-
 }

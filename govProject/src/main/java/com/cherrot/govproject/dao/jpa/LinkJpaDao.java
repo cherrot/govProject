@@ -38,7 +38,6 @@ public class LinkJpaDao implements LinkDao {
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
-
     @Override
     @Transactional
     public void create(Link link) {
@@ -46,18 +45,18 @@ public class LinkJpaDao implements LinkDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            LinkCategory linkCategory = link.getLinkCategory();
-            if (linkCategory != null) {
-                linkCategory = em.getReference(LinkCategory.class, linkCategory.getId());
-                link.setLinkCategory(linkCategory);
-            }
-            em.persist(link);
-            if (linkCategory != null) {
-                linkCategory.getLinkList().add(link);
-                //设置count字段
-                linkCategory.setCount(linkCategory.getCount()+1);
-                linkCategory = em.merge(linkCategory);
-            }
+        LinkCategory linkCategory = link.getLinkCategory();
+        if (linkCategory != null) {
+            linkCategory = em.getReference(LinkCategory.class, linkCategory.getId());
+            link.setLinkCategory(linkCategory);
+        }
+        em.persist(link);
+        if (linkCategory != null) {
+            linkCategory.getLinkList().add(link);
+            //设置count字段
+            linkCategory.setCount(linkCategory.getCount() + 1);
+            linkCategory = em.merge(linkCategory);
+        }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -85,18 +84,17 @@ public class LinkJpaDao implements LinkDao {
             if (linkCategoryOld != null && !linkCategoryOld.equals(linkCategoryNew)) {
                 linkCategoryOld.getLinkList().remove(link);
                 //设置count字段
-                linkCategoryOld.setCount(linkCategoryOld.getCount()-1);
+                linkCategoryOld.setCount(linkCategoryOld.getCount() - 1);
                 linkCategoryOld = em.merge(linkCategoryOld);
             }
             if (linkCategoryNew != null && !linkCategoryNew.equals(linkCategoryOld)) {
                 linkCategoryNew.getLinkList().add(link);
                 //设置count字段
-                linkCategoryNew.setCount(linkCategoryNew.getCount()+1);
+                linkCategoryNew.setCount(linkCategoryNew.getCount() + 1);
                 linkCategoryNew = em.merge(linkCategoryNew);
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = link.getId();
@@ -120,21 +118,21 @@ public class LinkJpaDao implements LinkDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Link link;
-            try {
-                link = em.getReference(Link.class, id);
-                link.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The link with id " + id + " no longer exists.", enfe);
-            }
-            LinkCategory linkCategory = link.getLinkCategory();
-            if (linkCategory != null) {
-                linkCategory.getLinkList().remove(link);
-                //设置count字段
-                linkCategory.setCount(linkCategory.getCount()-1);
-                linkCategory = em.merge(linkCategory);
-            }
-            em.remove(link);
+        Link link;
+        try {
+            link = em.getReference(Link.class, id);
+            link.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The link with id " + id + " no longer exists.", enfe);
+        }
+        LinkCategory linkCategory = link.getLinkCategory();
+        if (linkCategory != null) {
+            linkCategory.getLinkList().remove(link);
+            //设置count字段
+            linkCategory.setCount(linkCategory.getCount() - 1);
+            linkCategory = em.merge(linkCategory);
+        }
+        em.remove(link);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -157,14 +155,14 @@ public class LinkJpaDao implements LinkDao {
     private List<Link> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Link.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Link.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -175,7 +173,7 @@ public class LinkJpaDao implements LinkDao {
     public Link find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Link.class, id);
+        return em.find(Link.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -186,11 +184,11 @@ public class LinkJpaDao implements LinkDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Link> rt = cq.from(Link.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Link> rt = cq.from(Link.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();
@@ -201,5 +199,4 @@ public class LinkJpaDao implements LinkDao {
     public Link getReference(Integer id) {
         return em.getReference(Link.class, id);
     }
-
 }

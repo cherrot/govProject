@@ -14,14 +14,14 @@ import org.springframework.stereotype.Service;
  * @author LaiWenGen
  */
 @Service
-public class VideoConverterService{
+public class VideoConverterService {
 
     public int videoConvert(final String absoluteFilename) {
-        Thread videoConvertThread = new Thread(){
+        Thread videoConvertThread = new Thread() {
             @Override
             public void run() {
                 try {
-                    String cmd = "ffmpeg -i " +  absoluteFilename + " -s 459x370 " + absoluteFilename + ".flv";
+                    String cmd = "ffmpeg -i " + absoluteFilename + " -s 459x370 " + absoluteFilename + ".flv";
                     Process exec = Runtime.getRuntime().exec(cmd);
                     Logger.getLogger(this.getClass().getSimpleName()).log(Level.INFO, "{0}.flv 创建成功", absoluteFilename);
                     try {
@@ -37,5 +37,4 @@ public class VideoConverterService{
         videoConvertThread.start();
         return 0;
     }
-
 }

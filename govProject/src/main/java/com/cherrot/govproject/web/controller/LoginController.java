@@ -45,14 +45,17 @@ public class LoginController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
     public List<Category> getSecondLevelCategoryList() {
         return categoryService.listSecondLevelCategories(false, false);
     }
+
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -65,57 +68,58 @@ public class LoginController {
         return new User(null, null, 0, new Date(), null);
     }
 
-    @RequestMapping(value={"/login","/register"}, method= RequestMethod.GET)
+    @RequestMapping(value = {"/login", "/register"}, method = RequestMethod.GET)
     public String login() {
         return "/login";
     }
 
     /**
      * Clear user's session after logout.
-     * @see BaseController#setSessionUser(javax.servlet.http.HttpSession, com.cherrot.govproject.model.User)
+     *
+     * @see BaseController#setSessionUser(javax.servlet.http.HttpSession,
+     * com.cherrot.govproject.model.User)
      * @param session
      * @return
      */
     @RequestMapping("/logout")
     public String logout(HttpSession session) {
-		session.removeAttribute(USER_CONTEXT);
+        session.removeAttribute(USER_CONTEXT);
         session.invalidate();//总是忘记他！
-		return "redirect:/";
-	}
+        return "redirect:/";
+    }
 
     /**
      * 用户登陆
+     *
      * @param request
      * @param user
      * @return
      */
-	@RequestMapping(value="/login", method= RequestMethod.POST)
-	public ModelAndView doLogin(HttpServletRequest request,
-        @RequestParam("username")String username, @RequestParam("password")String password) {
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
+    public ModelAndView doLogin(HttpServletRequest request,
+        @RequestParam("username") String username, @RequestParam("password") String password) {
 
         // see Spring3 doc: 16.5 Resolving views -- The forward: prefix
-		ModelAndView mav = new ModelAndView("/login");
+        ModelAndView mav = new ModelAndView("/login");
 
         User user = userService.validateUser(username, password);
-		if ( user != null) {
-			BaseController.setSessionUser(request.getSession(),user);
+        if (user != null) {
+            BaseController.setSessionUser(request.getSession(), user);
             //toUrl is used to save the previous URL the user is visiting before doLogin.
-			String toUrl = (String)request.getSession().getAttribute(LOGIN_TO_URL);
-			request.getSession().removeAttribute(LOGIN_TO_URL);
-			if(toUrl == null || toUrl.isEmpty()){
-				toUrl = "/";
-			}
-			mav.setViewName("redirect:"+toUrl);
-		} else { //用户验证失败
+            String toUrl = (String) request.getSession().getAttribute(LOGIN_TO_URL);
+            request.getSession().removeAttribute(LOGIN_TO_URL);
+            if (toUrl == null || toUrl.isEmpty()) {
+                toUrl = "/";
+            }
+            mav.setViewName("redirect:" + toUrl);
+        } else { //用户验证失败
             mav.addObject(ERROR_MSG_KEY, "用户名或密码错误");
-		}
-		return mav;
-	}
+        }
+        return mav;
+    }
 
-    @RequestMapping(value="/register", method= RequestMethod.POST)
-    public String doRegister(HttpServletRequest request
-        , @Valid @ModelAttribute("newUser")User user, BindingResult bindingResult
-        , @RequestParam("birthday")Date birthday, @RequestParam("gender")String gender) {
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    public String doRegister(HttpServletRequest request, @Valid @ModelAttribute("newUser") User user, BindingResult bindingResult, @RequestParam("birthday") Date birthday, @RequestParam("gender") String gender) {
 
         if (bindingResult.hasErrors()) {
             return "/login";

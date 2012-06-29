@@ -35,6 +35,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  * XXX 返回Post集合和COUNT()的方法都应过滤掉子Post
+ *
  * @author sai
  */
 @Entity
@@ -56,11 +57,11 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime"),
     @NamedQuery(name = "Post.findAllDesc", query = "SELECT p FROM Post p ORDER BY p.id DESC"),
     //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
-    @NamedQuery(name = "Post.findByCategoryDescOrder", query="SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByCategorySlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByCategoryDescOrder", query = "SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByCategorySlugDescOrder", query = "SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p WHERE :tag MEMBER OF p.tagList ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByTagSlugDescOrder", query="SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByUser",query="SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL"),
+    @NamedQuery(name = "Post.findByTagSlugDescOrder", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByUser", query = "SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL"),
     @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByMimeDesc", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.getCount", query = "SELECT COUNT(p) FROM Post p WHERE p.postParent IS NULL"),
@@ -70,14 +71,17 @@ import javax.xml.bind.annotation.XmlTransient;
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.
- * @See http://openjpa.apache.org/builds/1.1.0/docs/jpa_langref.html#jpa_langref_in
+ *
+ * @See
+ * http://openjpa.apache.org/builds/1.1.0/docs/jpa_langref.html#jpa_langref_in
  */
 public class Post implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     public enum PostStatus {
-        DRAFT("草稿"), PUBLISHED("发布"), PENDING("待审核");
 
+        DRAFT("草稿"), PUBLISHED("发布"), PENDING("待审核");
         private String description;
 
         private PostStatus(String description) {
@@ -90,8 +94,8 @@ public class Post implements Serializable {
     }
 
     public enum PostType {
-        POST("文章"), ATTACHMENT("附件");
 
+        POST("文章"), ATTACHMENT("附件");
         private String description;
 
         private PostType(String description) {
@@ -102,7 +106,6 @@ public class Post implements Serializable {
             return description;
         }
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -182,14 +185,18 @@ public class Post implements Serializable {
 //    @OrderBy("commentDate")
     private List<Comment> commentList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name="category_relationships",
-            inverseJoinColumns=@JoinColumn(name="category_id"),
-            joinColumns=@JoinColumn(name="post_id"))
+    @JoinTable(name = "category_relationships",
+    inverseJoinColumns =
+    @JoinColumn(name = "category_id"),
+    joinColumns =
+    @JoinColumn(name = "post_id"))
     private List<Category> categoryList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name="tag_relationships",
-            inverseJoinColumns=@JoinColumn(name="tag_id"),
-            joinColumns=@JoinColumn(name="post_id"))
+    @JoinTable(name = "tag_relationships",
+    inverseJoinColumns =
+    @JoinColumn(name = "tag_id"),
+    joinColumns =
+    @JoinColumn(name = "post_id"))
     private List<Tag> tagList;
 
     public Post() {
@@ -204,8 +211,7 @@ public class Post implements Serializable {
 //    public Post(Integer id) {
 //        this.id = id;
 //    }
-
-    public Post(/*Integer id,*/ Date createDate, Date modifyDate, boolean commentStatus, int commentCount, PostStatus status, PostType type, String slug, String title, String content) {
+    public Post(/*Integer id,*/Date createDate, Date modifyDate, boolean commentStatus, int commentCount, PostStatus status, PostType type, String slug, String title, String content) {
 //        this.id = id;
         this.createDate = createDate;
         this.modifyDate = modifyDate;
@@ -229,7 +235,6 @@ public class Post implements Serializable {
 //        categoryList = new ArrayList<Category>();
 //        tagList = new ArrayList<Tag>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -329,6 +334,7 @@ public class Post implements Serializable {
     /**
      * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
      * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
+     *
      * @return 文章摘要 或 附件文件的下载URI
      */
     public String getExcerpt() {
@@ -338,6 +344,7 @@ public class Post implements Serializable {
     /**
      * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
      * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
+     *
      * @param excerpt 文章摘要或附件URI
      */
     public void setExcerpt(String excerpt) {
@@ -417,6 +424,7 @@ public class Post implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -436,5 +444,4 @@ public class Post implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Post[ id=" + id + " ]";
     }
-
 }

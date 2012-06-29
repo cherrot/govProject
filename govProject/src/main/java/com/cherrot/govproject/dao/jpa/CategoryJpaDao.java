@@ -77,9 +77,8 @@ public class CategoryJpaDao implements CategoryDao {
             categoryParent = em.merge(categoryParent);
         }
         /**
-         * 设置一对多关系映射的维护端（多方）。
-         * 疑问：如果oldCategoryParentOfCategoryListCategory 和 category是同一引用会不会出问题？
-         * 答案：不会，这是在create方法中，category之前不存在的
+         * 设置一对多关系映射的维护端（多方）。 疑问：如果oldCategoryParentOfCategoryListCategory 和
+         * category是同一引用会不会出问题？ 答案：不会，这是在create方法中，category之前不存在的
          */
         for (Category categoryListCategory : category.getCategoryList()) {
             Category oldCategoryParentOfCategoryListCategory = categoryListCategory.getCategoryParent();

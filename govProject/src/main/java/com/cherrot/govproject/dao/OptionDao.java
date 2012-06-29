@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface OptionDao extends Serializable, BaseDao<Option, Integer> {
-
 //    void create(Option option);
 //
 //    void destroy(Integer id) throws NonexistentEntityException;
@@ -28,5 +27,4 @@ public interface OptionDao extends Serializable, BaseDao<Option, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getOptionCount();
-
 }

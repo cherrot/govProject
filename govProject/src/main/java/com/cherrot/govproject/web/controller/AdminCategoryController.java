@@ -35,7 +35,7 @@ public class AdminCategoryController {
     private CategoryService categoryService;
 
     @ModelAttribute("category")
-    public Category get2ndCategory(@RequestParam(value="id", required=false)Integer categoryId) {
+    public Category get2ndCategory(@RequestParam(value = "id", required = false) Integer categoryId) {
         Category category = null;
         if (categoryId != null) {
             try {
@@ -49,19 +49,17 @@ public class AdminCategoryController {
         return category;
     }
 
-    @RequestMapping(value="", method= RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView viewCategories() {
         return processCategoryLists();
     }
 
-    @RequestMapping(value={"","/*"}, method= RequestMethod.POST)
-    public ModelAndView doEditCategory(@Valid @ModelAttribute("category")Category category
-        , BindingResult result
-        , @RequestParam("parent")Integer categoryParentId) {
+    @RequestMapping(value = {"", "/*"}, method = RequestMethod.POST)
+    public ModelAndView doEditCategory(@Valid @ModelAttribute("category") Category category, BindingResult result, @RequestParam("parent") Integer categoryParentId) {
 
         //不允许编辑顶级分类！
 //        if (categoryService.isTopLevelCategory(category)) { //该方法是通过 categoryParent判断的
-        if (category.getId() != null && category.getId()<Constants.TOP_LEVEL_CATEGORY_COUNT) {
+        if (category.getId() != null && category.getId() < Constants.TOP_LEVEL_CATEGORY_COUNT) {
             throw new ResourceNotFoundException();
         }
 
@@ -74,7 +72,7 @@ public class AdminCategoryController {
             throw new ResourceNotFoundException();
         }
         category.setCategoryParent(parent);
-        if (result.hasErrors() ) {
+        if (result.hasErrors()) {
             //此页面也可处理新建目录的请求。
             mav.setViewName("/admin/editCategory");
             //调用该方法须确保category的categoryParent属性已被设置
@@ -85,8 +83,8 @@ public class AdminCategoryController {
         return mav;
     }
 
-    @RequestMapping(value="/{categoryId}", method= RequestMethod.GET)
-    public ModelAndView editCategory(@PathVariable("categoryId")Integer categoryId) {
+    @RequestMapping(value = "/{categoryId}", method = RequestMethod.GET)
+    public ModelAndView editCategory(@PathVariable("categoryId") Integer categoryId) {
         ModelAndView mav = new ModelAndView("admin/editCategory");
         try {
             Category category = categoryService.find(categoryId);
@@ -103,7 +101,7 @@ public class AdminCategoryController {
     }
 
     @RequestMapping("/{categoryId}/delete")
-    public String doDeleteCategory(@PathVariable("categoryId")Integer categoryId) {
+    public String doDeleteCategory(@PathVariable("categoryId") Integer categoryId) {
 
         try {
             Category category = categoryService.find(categoryId, false, false);
@@ -123,7 +121,7 @@ public class AdminCategoryController {
         List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("categoryList", secondCategorys);
         List<Category> topCategorys = categoryService.listTopLevelCategories(true);
-        topCategorys.remove(topCategorys.size()-1);//XXX 去掉多媒体分组（该分组必须由系统管理）
+        topCategorys.remove(topCategorys.size() - 1);//XXX 去掉多媒体分组（该分组必须由系统管理）
         mav.addObject("categoryGroups", topCategorys);
         return mav;
     }
@@ -132,7 +130,7 @@ public class AdminCategoryController {
         List<Category> categoryParents = null;
         if (categoryService.isSecondLevelCategory(category)) {
             categoryParents = categoryService.listTopLevelCategories(false);
-            categoryParents.remove(categoryParents.size()-1);//XXX 去掉多媒体分组（该分组必须由系统管理）
+            categoryParents.remove(categoryParents.size() - 1);//XXX 去掉多媒体分组（该分组必须由系统管理）
         } else {
             categoryParents = categoryService.listSecondLevelCategories(false, false);
         }

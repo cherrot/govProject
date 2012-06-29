@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 添加 修改 删除文章时记得处理 目录或标签的setCount()设置正确的文章数目. 还有LinkJpaDao、 CommentJpaDao
+ *
  * @author cherrot
  */
 @Repository
@@ -69,107 +70,107 @@ public class PostJpaDao implements PostDao {
         /**
          * 设置多对一关系映射，确保引用在数据库中存在
          */
-            User user = post.getUser();
-            if (user != null) {
-                user = em.getReference(User.class, user.getId());
-                post.setUser(user);
-            }
-            Post postParent = post.getPostParent();
-            if (postParent != null) {
-                postParent = em.getReference(Post.class, postParent.getId());
-                post.setPostParent(postParent);
-            }
+        User user = post.getUser();
+        if (user != null) {
+            user = em.getReference(User.class, user.getId());
+            post.setUser(user);
+        }
+        Post postParent = post.getPostParent();
+        if (postParent != null) {
+            postParent = em.getReference(Post.class, postParent.getId());
+            post.setPostParent(postParent);
+        }
         /**
          * 设置一对多关系映射，确保一对多的每个引用都在数据库中存在
          */
-            List<Postmeta> attachedPostmetaList = new ArrayList<Postmeta>();
-            for (Postmeta postmetaListPostmetaToAttach : post.getPostmetaList()) {
-                postmetaListPostmetaToAttach = em.getReference(Postmeta.class, postmetaListPostmetaToAttach.getId());
-                attachedPostmetaList.add(postmetaListPostmetaToAttach);
-            }
-            post.setPostmetaList(attachedPostmetaList);
-            List<Post> attachedPostList = new ArrayList<Post>();
-            for (Post postListPostToAttach : post.getPostList()) {
-                postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
-                attachedPostList.add(postListPostToAttach);
-            }
-            post.setPostList(attachedPostList);
-            List<Category> attachedCategoryList = new ArrayList<Category>();
-            for (Category categoryListCategoryToAttach : post.getCategoryList()) {
-                categoryListCategoryToAttach = em.getReference(Category.class, categoryListCategoryToAttach.getId());
-                attachedCategoryList.add(categoryListCategoryToAttach);
-            }
-            post.setCategoryList(attachedCategoryList);
-            List<Tag> attachedTagList = new ArrayList<Tag>();
-            for (Tag tagListTagToAttach : post.getTagList()) {
-                tagListTagToAttach = em.getReference(Tag.class, tagListTagToAttach.getId());
-                attachedTagList.add(tagListTagToAttach);
-            }
-            post.setTagList(attachedTagList);
-            List<Comment> attachedCommentList = new ArrayList<Comment>();
-            for (Comment commentListCommentToAttach : post.getCommentList()) {
-                commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
-                attachedCommentList.add(commentListCommentToAttach);
-            }
-            post.setCommentList(attachedCommentList);
+        List<Postmeta> attachedPostmetaList = new ArrayList<Postmeta>();
+        for (Postmeta postmetaListPostmetaToAttach : post.getPostmetaList()) {
+            postmetaListPostmetaToAttach = em.getReference(Postmeta.class, postmetaListPostmetaToAttach.getId());
+            attachedPostmetaList.add(postmetaListPostmetaToAttach);
+        }
+        post.setPostmetaList(attachedPostmetaList);
+        List<Post> attachedPostList = new ArrayList<Post>();
+        for (Post postListPostToAttach : post.getPostList()) {
+            postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
+            attachedPostList.add(postListPostToAttach);
+        }
+        post.setPostList(attachedPostList);
+        List<Category> attachedCategoryList = new ArrayList<Category>();
+        for (Category categoryListCategoryToAttach : post.getCategoryList()) {
+            categoryListCategoryToAttach = em.getReference(Category.class, categoryListCategoryToAttach.getId());
+            attachedCategoryList.add(categoryListCategoryToAttach);
+        }
+        post.setCategoryList(attachedCategoryList);
+        List<Tag> attachedTagList = new ArrayList<Tag>();
+        for (Tag tagListTagToAttach : post.getTagList()) {
+            tagListTagToAttach = em.getReference(Tag.class, tagListTagToAttach.getId());
+            attachedTagList.add(tagListTagToAttach);
+        }
+        post.setTagList(attachedTagList);
+        List<Comment> attachedCommentList = new ArrayList<Comment>();
+        for (Comment commentListCommentToAttach : post.getCommentList()) {
+            commentListCommentToAttach = em.getReference(Comment.class, commentListCommentToAttach.getId());
+            attachedCommentList.add(commentListCommentToAttach);
+        }
+        post.setCommentList(attachedCommentList);
         /**
          * 关系确保无误后，持久化该实体
          */
-            em.persist(post);
+        em.persist(post);
 
         /**
          * 设置多对一关系映射的被维护端（一方）
          */
-            if (user != null) {
-                user.getPostList().add(post);
-                user = em.merge(user);
-            }
-            if (postParent != null) {
-                postParent.getPostList().add(post);
-                postParent = em.merge(postParent);
-            }
+        if (user != null) {
+            user.getPostList().add(post);
+            user = em.merge(user);
+        }
+        if (postParent != null) {
+            postParent.getPostList().add(post);
+            postParent = em.merge(postParent);
+        }
         /**
          * 设置一对多关系映射的维护端（多方）。 和 多对多关系
          */
-            for (Postmeta postmetaListPostmeta : post.getPostmetaList()) {
-                Post oldPostOfPostmetaListPostmeta = postmetaListPostmeta.getPost();
-                postmetaListPostmeta.setPost(post);
-                postmetaListPostmeta = em.merge(postmetaListPostmeta);
-                if (oldPostOfPostmetaListPostmeta != null) {
-                    oldPostOfPostmetaListPostmeta.getPostmetaList().remove(postmetaListPostmeta);
-                    oldPostOfPostmetaListPostmeta = em.merge(oldPostOfPostmetaListPostmeta);
-                }
+        for (Postmeta postmetaListPostmeta : post.getPostmetaList()) {
+            Post oldPostOfPostmetaListPostmeta = postmetaListPostmeta.getPost();
+            postmetaListPostmeta.setPost(post);
+            postmetaListPostmeta = em.merge(postmetaListPostmeta);
+            if (oldPostOfPostmetaListPostmeta != null) {
+                oldPostOfPostmetaListPostmeta.getPostmetaList().remove(postmetaListPostmeta);
+                oldPostOfPostmetaListPostmeta = em.merge(oldPostOfPostmetaListPostmeta);
             }
-            for (Post postListPost : post.getPostList()) {
-                Post oldPostParentOfPostListPost = postListPost.getPostParent();
-                postListPost.setPostParent(post);
-                postListPost = em.merge(postListPost);
-                if (oldPostParentOfPostListPost != null) {
-                    oldPostParentOfPostListPost.getPostList().remove(postListPost);
-                    oldPostParentOfPostListPost = em.merge(oldPostParentOfPostListPost);
-                }
+        }
+        for (Post postListPost : post.getPostList()) {
+            Post oldPostParentOfPostListPost = postListPost.getPostParent();
+            postListPost.setPostParent(post);
+            postListPost = em.merge(postListPost);
+            if (oldPostParentOfPostListPost != null) {
+                oldPostParentOfPostListPost.getPostList().remove(postListPost);
+                oldPostParentOfPostListPost = em.merge(oldPostParentOfPostListPost);
             }
-            for (Category categoryListCategory : post.getCategoryList()) {
-                categoryListCategory.getPostList().add(post);
-                //设置count字段
-                categoryListCategory.setCount(categoryListCategory.getCount()+1);
-                categoryListCategory = em.merge(categoryListCategory);
+        }
+        for (Category categoryListCategory : post.getCategoryList()) {
+            categoryListCategory.getPostList().add(post);
+            //设置count字段
+            categoryListCategory.setCount(categoryListCategory.getCount() + 1);
+            categoryListCategory = em.merge(categoryListCategory);
+        }
+        for (Tag tagListTag : post.getTagList()) {
+            tagListTag.getPostList().add(post);
+            //设置count字段
+            tagListTag.setCount(tagListTag.getCount() + 1);
+            tagListTag = em.merge(tagListTag);
+        }
+        for (Comment commentListComment : post.getCommentList()) {
+            Post oldPostOfCommentListComment = commentListComment.getPost();
+            commentListComment.setPost(post);
+            commentListComment = em.merge(commentListComment);
+            if (oldPostOfCommentListComment != null) {
+                oldPostOfCommentListComment.getCommentList().remove(commentListComment);
+                oldPostOfCommentListComment = em.merge(oldPostOfCommentListComment);
             }
-            for (Tag tagListTag : post.getTagList()) {
-                tagListTag.getPostList().add(post);
-                //设置count字段
-                tagListTag.setCount(tagListTag.getCount()+1);
-                tagListTag = em.merge(tagListTag);
-            }
-            for (Comment commentListComment : post.getCommentList()) {
-                Post oldPostOfCommentListComment = commentListComment.getPost();
-                commentListComment.setPost(post);
-                commentListComment = em.merge(commentListComment);
-                if (oldPostOfCommentListComment != null) {
-                    oldPostOfCommentListComment.getCommentList().remove(commentListComment);
-                    oldPostOfCommentListComment = em.merge(oldPostOfCommentListComment);
-                }
-            }
+        }
 //            em.getTransaction().commit();
 //        } finally {
 //            if (em != null) {
@@ -352,7 +353,7 @@ public class PostJpaDao implements PostDao {
                 if (!categoryListNew.contains(categoryListOldCategory)) {
                     categoryListOldCategory.getPostList().remove(post);
                     //设置count字段
-                    categoryListOldCategory.setCount(categoryListOldCategory.getCount()-1);
+                    categoryListOldCategory.setCount(categoryListOldCategory.getCount() - 1);
                     categoryListOldCategory = em.merge(categoryListOldCategory);
                 }
             }
@@ -360,7 +361,7 @@ public class PostJpaDao implements PostDao {
                 if (!categoryListOld.contains(categoryListNewCategory)) {
                     categoryListNewCategory.getPostList().add(post);
                     //设置count字段
-                    categoryListNewCategory.setCount(categoryListNewCategory.getCount()+1);
+                    categoryListNewCategory.setCount(categoryListNewCategory.getCount() + 1);
                     categoryListNewCategory = em.merge(categoryListNewCategory);
                 }
             }
@@ -368,7 +369,7 @@ public class PostJpaDao implements PostDao {
                 if (!tagListNew.contains(tagListOldTag)) {
                     tagListOldTag.getPostList().remove(post);
                     //设置count字段
-                    tagListOldTag.setCount(tagListOldTag.getCount()-1);
+                    tagListOldTag.setCount(tagListOldTag.getCount() - 1);
                     tagListOldTag = em.merge(tagListOldTag);
                 }
             }
@@ -376,7 +377,7 @@ public class PostJpaDao implements PostDao {
                 if (!tagListOld.contains(tagListNewTag)) {
                     tagListNewTag.getPostList().add(post);
                     //设置count字段
-                    tagListNewTag.setCount(tagListNewTag.getCount()+1);
+                    tagListNewTag.setCount(tagListNewTag.getCount() + 1);
                     tagListNewTag = em.merge(tagListNewTag);
                 }
             }
@@ -402,10 +403,10 @@ public class PostJpaDao implements PostDao {
             }
             throw ex;
         } /*finally {
-            if (em != null) {
-                em.close();
-            }
-        }*/
+         if (em != null) {
+         em.close();
+         }
+         }*/
     }
 
     @Override
@@ -415,61 +416,61 @@ public class PostJpaDao implements PostDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post post;
-            try {
-                post = em.getReference(Post.class, id);
-                post.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The post with id " + id + " no longer exists.", enfe);
+        Post post;
+        try {
+            post = em.getReference(Post.class, id);
+            post.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The post with id " + id + " no longer exists.", enfe);
+        }
+        List<String> illegalOrphanMessages = null;
+        List<Postmeta> postmetaListOrphanCheck = post.getPostmetaList();
+        for (Postmeta postmetaListOrphanCheckPostmeta : postmetaListOrphanCheck) {
+            if (illegalOrphanMessages == null) {
+                illegalOrphanMessages = new ArrayList<String>();
             }
-            List<String> illegalOrphanMessages = null;
-            List<Postmeta> postmetaListOrphanCheck = post.getPostmetaList();
-            for (Postmeta postmetaListOrphanCheckPostmeta : postmetaListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Postmeta " + postmetaListOrphanCheckPostmeta + " in its postmetaList field has a non-nullable post field.");
+            illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Postmeta " + postmetaListOrphanCheckPostmeta + " in its postmetaList field has a non-nullable post field.");
+        }
+        List<Comment> commentListOrphanCheck = post.getCommentList();
+        for (Comment commentListOrphanCheckComment : commentListOrphanCheck) {
+            if (illegalOrphanMessages == null) {
+                illegalOrphanMessages = new ArrayList<String>();
             }
-            List<Comment> commentListOrphanCheck = post.getCommentList();
-            for (Comment commentListOrphanCheckComment : commentListOrphanCheck) {
-                if (illegalOrphanMessages == null) {
-                    illegalOrphanMessages = new ArrayList<String>();
-                }
-                illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Comment " + commentListOrphanCheckComment + " in its commentList field has a non-nullable post field.");
-            }
-            if (illegalOrphanMessages != null) {
-                throw new IllegalOrphanException(illegalOrphanMessages);
-            }
-            User user = post.getUser();
-            if (user != null) {
-                user.getPostList().remove(post);
-                user = em.merge(user);
-            }
-            Post postParent = post.getPostParent();
-            if (postParent != null) {
-                postParent.getPostList().remove(post);
-                postParent = em.merge(postParent);
-            }
-            List<Post> postList = post.getPostList();
-            for (Post postListPost : postList) {
-                postListPost.setPostParent(null);
-                postListPost = em.merge(postListPost);
-            }
-            List<Category> categoryList = post.getCategoryList();
-            for (Category categoryListCategory : categoryList) {
-                categoryListCategory.getPostList().remove(post);
-                //设置count字段
-                categoryListCategory.setCount(categoryListCategory.getCount()-1);
-                categoryListCategory = em.merge(categoryListCategory);
-            }
-            List<Tag> tagList = post.getTagList();
-            for (Tag tagListTag : tagList) {
-                tagListTag.getPostList().remove(post);
-                //设置count字段
-                tagListTag.setCount(tagListTag.getCount()-1);
-                tagListTag = em.merge(tagListTag);
-            }
-            em.remove(post);
+            illegalOrphanMessages.add("This Post (" + post + ") cannot be destroyed since the Comment " + commentListOrphanCheckComment + " in its commentList field has a non-nullable post field.");
+        }
+        if (illegalOrphanMessages != null) {
+            throw new IllegalOrphanException(illegalOrphanMessages);
+        }
+        User user = post.getUser();
+        if (user != null) {
+            user.getPostList().remove(post);
+            user = em.merge(user);
+        }
+        Post postParent = post.getPostParent();
+        if (postParent != null) {
+            postParent.getPostList().remove(post);
+            postParent = em.merge(postParent);
+        }
+        List<Post> postList = post.getPostList();
+        for (Post postListPost : postList) {
+            postListPost.setPostParent(null);
+            postListPost = em.merge(postListPost);
+        }
+        List<Category> categoryList = post.getCategoryList();
+        for (Category categoryListCategory : categoryList) {
+            categoryListCategory.getPostList().remove(post);
+            //设置count字段
+            categoryListCategory.setCount(categoryListCategory.getCount() - 1);
+            categoryListCategory = em.merge(categoryListCategory);
+        }
+        List<Tag> tagList = post.getTagList();
+        for (Tag tagListTag : tagList) {
+            tagListTag.getPostList().remove(post);
+            //设置count字段
+            tagListTag.setCount(tagListTag.getCount() - 1);
+            tagListTag = em.merge(tagListTag);
+        }
+        em.remove(post);
 //            em.getTransaction().commit();
 //        } finally {
 //            if (em != null) {
@@ -493,18 +494,18 @@ public class PostJpaDao implements PostDao {
 //            cq.select(cq.from(Post.class));
 //            Query q = em.createQuery(cq);
         Query q = em.createNamedQuery("Post.findAll", Post.class);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
     }
 
     @Override
     public Post find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Post.class, id);
+        return em.find(Post.class, id);
 //        } finally {
 //            em.close();
 //        }
@@ -517,7 +518,7 @@ public class PostJpaDao implements PostDao {
 //            cq.select(em.getCriteriaBuilder().count(rt));
 //            Query q = em.createQuery(cq);
         Query q = em.createNamedQuery("Post.getCount");
-            return ((Long) q.getSingleResult()).intValue();
+        return ((Long) q.getSingleResult()).intValue();
     }
 
     @Override
@@ -592,20 +593,20 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public int getCountByUser(User user) {
-        return ( (Long) em.createNamedQuery("Post.getCountByUser")
-            .setParameter("user", user).getSingleResult() ).intValue();
+        return ((Long) em.createNamedQuery("Post.getCountByUser")
+            .setParameter("user", user).getSingleResult()).intValue();
     }
 
     @Override
     public int getCountByCategory(Category category) {
-        return ( (Long) em.createNamedQuery("Post.getCountByUser")
-            .setParameter("category", category).getSingleResult() ).intValue();
+        return ((Long) em.createNamedQuery("Post.getCountByUser")
+            .setParameter("category", category).getSingleResult()).intValue();
     }
 
     @Override
     public int getCountByTag(Tag tag) {
-        return ( (Long) em.createNamedQuery("Post.getCountByUser")
-            .setParameter("tag", tag).getSingleResult() ).intValue();
+        return ((Long) em.createNamedQuery("Post.getCountByUser")
+            .setParameter("tag", tag).getSingleResult()).intValue();
     }
 
     @Override

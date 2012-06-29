@@ -45,13 +45,14 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Comment.findByAuthorEmail", query = "SELECT c FROM Comment c WHERE c.authorEmail = :authorEmail"),
     @NamedQuery(name = "Comment.findByAuthorUrl", query = "SELECT c FROM Comment c WHERE c.authorUrl = :authorUrl"),
     @NamedQuery(name = "Comment.findByAuthorIp", query = "SELECT c FROM Comment c WHERE c.authorIp = :authorIp"),
-    @NamedQuery(name = "Comment.findByUser",query = "SELECT c FROM Comment c WHERE c.user = :user"),
+    @NamedQuery(name = "Comment.findByUser", query = "SELECT c FROM Comment c WHERE c.user = :user"),
     @NamedQuery(name = "Comment.findByUserDesc", query = "SELECT c FROM Comment c WHERE c.user = :user ORDER BY c.id DESC"),
     @NamedQuery(name = "Comment.findByApprovedDesc", query = "SELECT c FROM Comment c WHERE c.approved = :approved ORDER BY c.id DESC"),
     @NamedQuery(name = "Comment.getCountByUser", query = "SELECT COUNT(c) FROM Comment c WHERE c.user = :user"),
     @NamedQuery(name = "Comment.getCountByApproved", query = "SELECT COUNT(c) FROM Comment c WHERE c.approved = :approved")
 })
 public class Comment implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -68,8 +69,8 @@ public class Comment implements Serializable {
     @NotNull
     @Column(name = "approved", nullable = false)
     private boolean approved;
-    @ManyToOne(optional=true)
-    @JoinColumn(name = "user_id", referencedColumnName="id", nullable=true)
+    @ManyToOne(optional = true)
+    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = true)
     private User user;
     @Basic(optional = false)
     @NotNull
@@ -78,7 +79,7 @@ public class Comment implements Serializable {
     private String author;
     @Basic(optional = false)
     //if the field contains email address consider using this annotation to enforce field validation
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "电子邮件无效")
     @NotNull
     @Size(min = 1, max = 45)
     @Column(name = "authorEmail", nullable = false, length = 45)
@@ -119,8 +120,7 @@ public class Comment implements Serializable {
 //    public Comment(Integer id) {
 //        this.id = id;
 //    }
-
-    public Comment(/*Integer id,*/ Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
+    public Comment(/*Integer id,*/Date commentDate, boolean approved, String author, String authorEmail, String authorUrl, String authorIp, String content) {
 //        this.id = id;
         this.commentDate = commentDate;
         this.approved = approved;
@@ -139,7 +139,6 @@ public class Comment implements Serializable {
 //        commentmetaList = new ArrayList<Commentmeta>();
 //        commentList = new ArrayList<Comment>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -255,6 +254,7 @@ public class Comment implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -274,5 +274,4 @@ public class Comment implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Comment[ id=" + id + " ]";
     }
-
 }

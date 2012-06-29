@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "User.findByDisplayName", query = "SELECT u FROM User u WHERE u.displayName = :displayName"),
     @NamedQuery(name = "User.findByUrl", query = "SELECT u FROM User u WHERE u.url = :url")})
 public class User implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,7 +53,7 @@ public class User implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     //if the field contains email address consider using this annotation to enforce field validation
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="电子邮件无效")
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "电子邮件无效")
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 32)
@@ -93,7 +94,7 @@ public class User implements Serializable {
     private List<Post> postList;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Usermeta> usermetaList;
-    @OneToMany(cascade= CascadeType.ALL, mappedBy= "user")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user")
     private List<Comment> commentList;
 
     public User() {
@@ -104,8 +105,7 @@ public class User implements Serializable {
 //    public User(Integer id) {
 //        this.id = id;
 //    }
-
-    public User(/*Integer id,*/ String login, String pass, int userLevel, Date registerDate, String displayName/*, String email*/) {
+    public User(/*Integer id,*/String login, String pass, int userLevel, Date registerDate, String displayName/*, String email*/) {
 //        this.id = id;
         this.login = login;
         this.pass = pass;
@@ -124,7 +124,6 @@ public class User implements Serializable {
 //        commentList = new ArrayList<Comment>();
 //        usermetaList = new ArrayList<Usermeta>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -230,6 +229,7 @@ public class User implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -249,5 +249,4 @@ public class User implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.User[ id=" + id + " ]";
     }
-
 }

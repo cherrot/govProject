@@ -15,6 +15,7 @@ import java.util.List;
 public interface UserDao extends Serializable, BaseDao<User, Integer> {
 
     User findByLogin(String loginName);
+
     List<User> findEntitiesByUserLevel(int userLevel);
 //    void create(User user);
 //
@@ -31,5 +32,4 @@ public interface UserDao extends Serializable, BaseDao<User, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getUserCount();
-
 }

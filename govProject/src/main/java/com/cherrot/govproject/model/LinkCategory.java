@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "LinkCategory.findByName", query = "SELECT l FROM LinkCategory l WHERE l.name = :name"),
     @NamedQuery(name = "LinkCategory.findByDescription", query = "SELECT l FROM LinkCategory l WHERE l.description = :description")})
 public class LinkCategory implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -73,7 +74,6 @@ public class LinkCategory implements Serializable {
 //    private void processLists() {
 //        linkList = new ArrayList<Link>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -125,6 +125,7 @@ public class LinkCategory implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -144,5 +145,4 @@ public class LinkCategory implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.LinkCategory[ id=" + id + " ]";
     }
-
 }

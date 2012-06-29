@@ -38,6 +38,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 /**
  * 管理员修改文章的控制器。 因为管理员可以修改文章的一切属性，比如文章的作者，因此需要单独一个控制器负责
  * 管理员新建文章等同于其他用户新建文章，故本控制器不做处理
+ *
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
@@ -54,7 +55,7 @@ public class AdminPostController {
     private UserService userService;
 
     @ModelAttribute("post")
-    public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
+    public Post getPost(@RequestParam(value = "id", required = false) Integer postId) {
         Post post = null;
         if (postId != null) {
             try {
@@ -72,26 +73,21 @@ public class AdminPostController {
     }
 
     @RequestMapping("/page/{pageNum}")
-    public ModelAndView viewPosts(@PathVariable("pageNum")int pageNum) {
+    public ModelAndView viewPosts(@PathVariable("pageNum") int pageNum) {
         return processPostList(pageNum);
     }
 
     /**
      * 注入的Post对象，用户提交文章时表单中未包含的post字段（比如post.id）会丢失，因此应显式添加
+     *
      * @param request 用于返回用户请求前的页面(编辑文章页)
      * @param post 提交的post
      * @param bindingResult 数据验证结果
      * @param redirectAttr 用于添加Flash Attributes用于redirect后的控制器/页面使用
      * @return
      */
-    @RequestMapping(value="/{postId}", method= RequestMethod.POST)
-    public String doEditPost(HttpServletRequest request
-        ,@Valid @ModelAttribute("post")Post post
-        ,BindingResult bindingResult
-        ,RedirectAttributes redirectAttr
-        ,@RequestParam("postTags")String postTags
-        ,@RequestParam("postCategories")Integer[] categoryIds
-        ,@RequestParam("postAuthor")Integer postAuthorId) {
+    @RequestMapping(value = "/{postId}", method = RequestMethod.POST)
+    public String doEditPost(HttpServletRequest request, @Valid @ModelAttribute("post") Post post, BindingResult bindingResult, RedirectAttributes redirectAttr, @RequestParam("postTags") String postTags, @RequestParam("postCategories") Integer[] categoryIds, @RequestParam("postAuthor") Integer postAuthorId) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
@@ -120,8 +116,8 @@ public class AdminPostController {
         return "redirect:/admin/post/" + post.getId();
     }
 
-    @RequestMapping(value="/{postId}", method= RequestMethod.GET)
-    public ModelAndView editPost(@PathVariable("postId")Integer postId) {
+    @RequestMapping(value = "/{postId}", method = RequestMethod.GET)
+    public ModelAndView editPost(@PathVariable("postId") Integer postId) {
 
         Post post = null;
         try {
@@ -136,6 +132,7 @@ public class AdminPostController {
 
     /**
      * 注入editPost页面所必需的对象，比如以Map注入枚举类型PostStatus
+     *
      * @param post 可以是持久化Post对象或新建Post对象，不能为null。
      * @return 注入必需Model的ModelAndView
      */

@@ -46,7 +46,7 @@ public class AdminUserController {
     private PostService postService;
 
     @ModelAttribute("user")
-    public User getUser(@RequestParam(value="id", required=false)Integer userId) {
+    public User getUser(@RequestParam(value = "id", required = false) Integer userId) {
         User user = null;
         if (userId != null) {
             try {
@@ -66,12 +66,12 @@ public class AdminUserController {
     }
 
     @RequestMapping("/page/{pageNum}")
-    public ModelAndView viewUserList(@PathVariable("pageNum")int pageNum) {
+    public ModelAndView viewUserList(@PathVariable("pageNum") int pageNum) {
         return processUserList(pageNum);
     }
 
-    @RequestMapping(value="/{userId}", method= RequestMethod.GET)
-    public ModelAndView editUser(@PathVariable("userId")Integer userId) {
+    @RequestMapping(value = "/{userId}", method = RequestMethod.GET)
+    public ModelAndView editUser(@PathVariable("userId") Integer userId) {
         ModelAndView mav = new ModelAndView("admin/editUser");
         try {
             User user = userService.find(userId);
@@ -88,12 +88,11 @@ public class AdminUserController {
         return mav;
     }
 
-    @RequestMapping(value="/*", method= RequestMethod.POST)
-    public ModelAndView doEditTag(@Valid @ModelAttribute("tag")User user
-        , BindingResult result) {
+    @RequestMapping(value = "/*", method = RequestMethod.POST)
+    public ModelAndView doEditTag(@Valid @ModelAttribute("tag") User user, BindingResult result) {
 
         ModelAndView mav = new ModelAndView("redirect:/admin/user");
-        if (result.hasErrors() ) {
+        if (result.hasErrors()) {
             mav.setViewName("/admin/editUser");
         } else {
             userService.save(user);
@@ -119,14 +118,14 @@ public class AdminUserController {
         List<Integer> postCountList = new ArrayList<Integer>();
         List<Integer> commentCountList = new ArrayList<Integer>();
         for (User user : userList) {
-            roleList.add( userService.getDescriptionOfUserLevel(user.getUserLevel()) );
-            postCountList.add( postService.getCountByUser(user) );
-            commentCountList.add( commentService.getCountByUser(user) );
+            roleList.add(userService.getDescriptionOfUserLevel(user.getUserLevel()));
+            postCountList.add(postService.getCountByUser(user));
+            commentCountList.add(commentService.getCountByUser(user));
         }
         mav.addObject("roleList4UserList", roleList);
         mav.addObject("postCountList", postCountList);
         mav.addObject("commentCountList", commentCountList);
-        int pageCount = userService.getCount()/DEFAULT_PAGE_SIZE +1;
+        int pageCount = userService.getCount() / DEFAULT_PAGE_SIZE + 1;
         mav.addObject("pageNum", pageNum);
         mav.addObject("pageCount", pageCount);
 

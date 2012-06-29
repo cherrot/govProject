@@ -48,8 +48,7 @@ public class FileUploadController {
      * @throws IOException
      */
     @RequestMapping("/post/uploadvideo")
-    public void doUploadVideo(@RequestParam("qqfile") MultipartFile file
-        , HttpServletResponse response) throws IOException {
+    public void doUploadVideo(@RequestParam("qqfile") MultipartFile file, HttpServletResponse response) throws IOException {
 
         if (!file.isEmpty()) {
             Date today = new Date();
@@ -74,8 +73,7 @@ public class FileUploadController {
     }
 
     @RequestMapping(value = "/post/uploadimage"/*, produces="application/json"*/)
-    public void doUploadImage(@RequestParam("imageFile") MultipartFile imageFile
-        , HttpServletResponse response) throws IOException {
+    public void doUploadImage(@RequestParam("imageFile") MultipartFile imageFile, HttpServletResponse response) throws IOException {
 
         if (!imageFile.isEmpty()) {
             String title = "";   //图片标题

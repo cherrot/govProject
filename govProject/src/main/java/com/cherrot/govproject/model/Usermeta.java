@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Usermeta.findByMetaKey", query = "SELECT u FROM Usermeta u WHERE u.metaKey = :metaKey"),
     @NamedQuery(name = "Usermeta.findByMetaValue", query = "SELECT u FROM Usermeta u WHERE u.metaValue = :metaValue")})
 public class Usermeta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +59,7 @@ public class Usermeta implements Serializable {
 //    public Usermeta(Integer id) {
 //        this.id = id;
 //    }
-
-    public Usermeta(/*Integer id,*/ String metaKey) {
+    public Usermeta(/*Integer id,*/String metaKey) {
 //        this.id = id;
         this.metaKey = metaKey;
     }
@@ -105,6 +105,7 @@ public class Usermeta implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -124,5 +125,4 @@ public class Usermeta implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Usermeta[ id=" + id + " ]";
     }
-
 }

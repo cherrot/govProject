@@ -30,9 +30,13 @@ public interface CommentDao extends Serializable, BaseDao<Comment, Integer> {
 //    int getCommentCount();
 //
 //    EntityManager getEntityManager();
-      List<Comment> findEntitiesByUser(User user, int maxResults, int firstResult);
-      List<Comment> findEntitiesByUserDesc(User user, int maxResults, int firsResult);
-      List<Comment> findEntitiesByApprovedDesc(boolean approved, int maxResults, int firstResult);
-      int getCountByUser(User user);
-      int getCountByApproved(boolean approved);
+    List<Comment> findEntitiesByUser(User user, int maxResults, int firstResult);
+
+    List<Comment> findEntitiesByUserDesc(User user, int maxResults, int firsResult);
+
+    List<Comment> findEntitiesByApprovedDesc(boolean approved, int maxResults, int firstResult);
+
+    int getCountByUser(User user);
+
+    int getCountByApproved(boolean approved);
 }

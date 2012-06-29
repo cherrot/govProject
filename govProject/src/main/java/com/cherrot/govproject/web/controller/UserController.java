@@ -55,6 +55,7 @@ public class UserController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
@@ -64,6 +65,7 @@ public class UserController {
 
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -72,7 +74,7 @@ public class UserController {
     }
 
     @ModelAttribute("user")
-    public User getUser(@RequestParam(value="id", required=false)Integer userId, HttpSession session) {
+    public User getUser(@RequestParam(value = "id", required = false) Integer userId, HttpSession session) {
         User user = null;
         if (userId != null) {
             try {
@@ -81,9 +83,9 @@ public class UserController {
                 throw new ResourceNotFoundException();
             }
         }/* else {
-            //可能为null
-            user = BaseController.getSessionUser(session);
-        }*/
+         //可能为null
+         user = BaseController.getSessionUser(session);
+         }*/
         return user;
     }
 
@@ -92,7 +94,7 @@ public class UserController {
 
         ModelAndView mav = new ModelAndView("viewUser");
         User user = BaseController.getSessionUser(request.getSession());
-        if ( user != null) {
+        if (user != null) {
             mav.addObject("user", user);
             processComments(mav, user, 1);
             processPosts(mav, user, 1);
@@ -106,7 +108,7 @@ public class UserController {
     }
 
     @RequestMapping("/{userId}")
-    public ModelAndView viewUser(@PathVariable("userId")Integer userId) {
+    public ModelAndView viewUser(@PathVariable("userId") Integer userId) {
 
         ModelAndView mav = new ModelAndView("viewUser");
         try {
@@ -120,7 +122,7 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value="/edit", method=RequestMethod.GET)
+    @RequestMapping(value = "/edit", method = RequestMethod.GET)
     public ModelAndView editUser(HttpServletRequest request) {
 
         ModelAndView mav = new ModelAndView("admin/editUser");
@@ -135,10 +137,8 @@ public class UserController {
         return mav;
     }
 
-    @RequestMapping(value="/edit", method= RequestMethod.POST)
-    public String doEditUser(@Valid @ModelAttribute("user")User user
-        , final BindingResult result
-        , HttpServletRequest request) {
+    @RequestMapping(value = "/edit", method = RequestMethod.POST)
+    public String doEditUser(@Valid @ModelAttribute("user") User user, final BindingResult result, HttpServletRequest request) {
 
         if (result.hasErrors()) {
             return "admin/editUser";
@@ -156,58 +156,56 @@ public class UserController {
     }
 
     @RequestMapping("/{userId}/posts")
-    public ModelAndView listPostsByUser(@PathVariable("userId")Integer userId) {
+    public ModelAndView listPostsByUser(@PathVariable("userId") Integer userId) {
 
         ModelAndView mav = new ModelAndView("listPostsByUser");
         try {
             User user = userService.find(userId);
             mav.addObject("user", user);
             processPosts(mav, user, 1);
-        } catch(PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
         return mav;
     }
 
     @RequestMapping("/{userId}/posts/page/{pageNum}")
-    public ModelAndView listPostsByUser(@PathVariable("userId")Integer userId
-        , @PathVariable("pageNum")Integer pageNum) {
+    public ModelAndView listPostsByUser(@PathVariable("userId") Integer userId, @PathVariable("pageNum") Integer pageNum) {
 
         ModelAndView mav = new ModelAndView("listPostsByUser");
         try {
             User user = userService.find(userId);
             mav.addObject("user", user);
             processPosts(mav, user, pageNum);
-        } catch(PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
         return mav;
     }
 
     @RequestMapping("/{userId}/comments")
-    public ModelAndView listComments(@PathVariable("userId")Integer userId) {
+    public ModelAndView listComments(@PathVariable("userId") Integer userId) {
 
         ModelAndView mav = new ModelAndView("listCommentsByUser");
         try {
             User user = userService.find(userId);
             mav.addObject("user", user);
             processComments(mav, user, 1);
-        } catch(PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
         return mav;
     }
 
     @RequestMapping("/{userId}/comments/page/{pageNum}")
-    public ModelAndView listComments(@PathVariable("userId")Integer userId
-        , @PathVariable("pageNum")int pageNum) {
+    public ModelAndView listComments(@PathVariable("userId") Integer userId, @PathVariable("pageNum") int pageNum) {
 
         ModelAndView mav = new ModelAndView("listCommentsByUser");
         try {
             User user = userService.find(userId);
             mav.addObject("user", user);
             processComments(mav, user, pageNum);
-        } catch(PersistenceException e) {
+        } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
         return mav;
@@ -218,7 +216,7 @@ public class UserController {
         mav.addObject("postList", userPosts);
         mav.addObject("pageNum", pageNum);
         int postCount = postService.getCountByUser(user);
-        int pageCount = postCount/DEFAULT_PAGE_SIZE +1;
+        int pageCount = postCount / DEFAULT_PAGE_SIZE + 1;
         mav.addObject("pageCount", pageCount);
     }
 

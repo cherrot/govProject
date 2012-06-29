@@ -11,5 +11,4 @@ import com.cherrot.govproject.model.Option;
  * @author cherrot
  */
 public interface OptionService extends BaseService<Option, Integer> {
-
 }

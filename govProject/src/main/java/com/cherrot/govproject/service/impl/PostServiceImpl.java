@@ -52,7 +52,7 @@ public class PostServiceImpl implements PostService {
         List<Tag> tags = tagService.createTagsByName(tagStrings);
         post.setTagList(tags);
         postDao.create(post);
-        siteLogService.create(post.getUser(), "创建了文章（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+        siteLogService.create(post.getUser(), "创建了文章（ID:" + post.getId() + "）。标题：" + post.getTitle());
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService {
     public void create(Post post) {
         //TODO: 需要扫描文章内容，将链接在本网站的图片和视频作为子post添加
         postDao.create(post);
-        siteLogService.create(post.getUser(), "文章已创建（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+        siteLogService.create(post.getUser(), "文章已创建（ID:" + post.getId() + "）。标题：" + post.getTitle());
     }
 
     @Override
@@ -73,13 +73,11 @@ public class PostServiceImpl implements PostService {
     public void destroy(Integer id) {
         try {
             Post post = postDao.find(id);
-            siteLogService.create(post.getUser(), "文章已删除（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+            siteLogService.create(post.getUser(), "文章已删除（ID:" + post.getId() + "）。标题：" + post.getTitle());
             postDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -96,11 +94,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> list(int pageNum, int pageSize) {
-        return postDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     /**
      * PENDING: 此方法只适用于post是普通文章（而不是子文章）的情况！
+     *
      * @param post
      */
     @Override
@@ -108,24 +107,21 @@ public class PostServiceImpl implements PostService {
     public void edit(Post post) {
         try {
             postDao.edit(post);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch (NonexistentEntityException ex) {
-            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
-            Logger.getLogger(PostServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        siteLogService.create(post.getUser(), "文章已更新（ID:" + post.getId() + "）。标题：" + post.getTitle() );
+        siteLogService.create(post.getUser(), "文章已更新（ID:" + post.getId() + "）。标题：" + post.getTitle());
     }
 
     @Override
     @Transactional
     public void addCategory(Post post, Category term) {
 //        term.getPostList().add(post);
-            post.getCategoryList().add(term);
+        post.getCategoryList().add(term);
         try {
             postDao.edit(post);
         } catch (IllegalOrphanException ex) {
@@ -155,7 +151,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void removeCategory(Post post, Category term) {
-            post.getCategoryList().remove(term);
+        post.getCategoryList().remove(term);
         try {
             postDao.edit(post);
         } catch (IllegalOrphanException ex) {
@@ -185,7 +181,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void addTag(Post post, Tag tag) {
-            post.getTagList().add(tag);
+        post.getTagList().add(tag);
         try {
             postDao.edit(post);
         } catch (IllegalOrphanException ex) {
@@ -215,7 +211,7 @@ public class PostServiceImpl implements PostService {
     @Override
     @Transactional
     public void removeTag(Post post, Tag tag) {
-            post.getTagList().remove(tag);
+        post.getTagList().remove(tag);
         try {
             postDao.edit(post);
         } catch (IllegalOrphanException ex) {
@@ -243,7 +239,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
         Post post = find(id);
         processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
@@ -251,7 +247,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
         Post post = postDao.findBySlug(slug);
         processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
@@ -260,44 +256,44 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> listByUser(User user, int pageNum, int pageSize) {
-        List<Post> posts = postDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
+        List<Post> posts = postDao.findEntitiesByUser(user, pageSize, (pageNum - 1) * pageSize);
         return posts;
     }
 
     @Override
     public List<Post> listNewestPostsByUser(User user, int pageNum, int pageSize) {
-        return postDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByUserDesc(user, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Post> listNewestPostsByCategory(Category category, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategoryDesc(category, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByCategoryDesc(category, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Post> listNewestPostsByCategorySlug(String categorySlug, int pageNum, int pageSize) {
-        return postDao.findEntitiesByCategorySlugDesc(categorySlug, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByCategorySlugDesc(categorySlug, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Post> listNewestPostsByTag(Tag tag, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTagDesc(tag, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByTagDesc(tag, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Post> listNewestPostsByTagSlug(String tagSlug, int pageNum, int pageSize) {
-        return postDao.findEntitiesByTagSlugDesc(tagSlug, pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByTagSlugDesc(tagSlug, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Post> listNewestImagePosts(int pageNum, int pageSize) {
-        return postDao.findEntitiesByMimeDesc("image/%", pageSize, (pageNum-1)*pageSize);
+        return postDao.findEntitiesByMimeDesc("image/%", pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
-        List<Post> posts =  postDao.findEntitiesDesc(pageSize, (pageNum-1)*pageSize);
+        List<Post> posts = postDao.findEntitiesDesc(pageSize, (pageNum - 1) * pageSize);
         processDependency(posts, withComments, withPostmetas, withCategories, withTags, withChildPosts);
         return posts;
     }
@@ -343,22 +339,42 @@ public class PostServiceImpl implements PostService {
         postParent.setContent(content);
     }
 
-    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts){
-        if (withComments) post.getCommentList().isEmpty();
-        if (withPostmetas) post.getPostmetaList().isEmpty();
-        if (withCategories) post.getCategoryList().isEmpty();
-        if (withTags) post.getTagList().isEmpty();
-        if (withChildPosts) post.getPostList().isEmpty();
+    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+        if (withComments) {
+            post.getCommentList().isEmpty();
+        }
+        if (withPostmetas) {
+            post.getPostmetaList().isEmpty();
+        }
+        if (withCategories) {
+            post.getCategoryList().isEmpty();
+        }
+        if (withTags) {
+            post.getTagList().isEmpty();
+        }
+        if (withChildPosts) {
+            post.getPostList().isEmpty();
+        }
     }
 
-    private void processDependency(List<Post> posts, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts){
+    private void processDependency(List<Post> posts, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
         if (withComments || withPostmetas || withCategories || withTags || withChildPosts) {
             for (Post post : posts) {
-                if (withComments) post.getCommentList().isEmpty();
-                if (withPostmetas) post.getPostmetaList().isEmpty();
-                if (withCategories) post.getCategoryList().isEmpty();
-                if (withTags) post.getTagList().isEmpty();
-                if (withChildPosts) post.getPostList().isEmpty();
+                if (withComments) {
+                    post.getCommentList().isEmpty();
+                }
+                if (withPostmetas) {
+                    post.getPostmetaList().isEmpty();
+                }
+                if (withCategories) {
+                    post.getCategoryList().isEmpty();
+                }
+                if (withTags) {
+                    post.getTagList().isEmpty();
+                }
+                if (withChildPosts) {
+                    post.getPostList().isEmpty();
+                }
             }
         }
     }

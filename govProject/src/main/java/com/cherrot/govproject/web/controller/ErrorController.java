@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/errors")
 public class ErrorController {
+
     @Inject
     private CategoryService categoryService;
     @Inject
@@ -29,6 +30,7 @@ public class ErrorController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
@@ -38,6 +40,7 @@ public class ErrorController {
 
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -46,7 +49,7 @@ public class ErrorController {
     }
 
     @RequestMapping("/{errorCode}")
-    public String handleError(@PathVariable("errorCode")Integer errorCode) {
+    public String handleError(@PathVariable("errorCode") Integer errorCode) {
         return "/errors/" + errorCode;
     }
 }

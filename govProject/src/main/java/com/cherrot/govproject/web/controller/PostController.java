@@ -45,12 +45,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 本类中使用三种方式处理 @ModelAttribute 注解，一种是通过@ModelAttribute
- * 注解的方法得到新的实例用于数据绑定和验证（处理Comment）
+ * 本类中使用三种方式处理
+ *
+ * @ModelAttribute 注解，一种是通过@ModelAttribute 注解的方法得到新的实例用于数据绑定和验证（处理Comment）
  * 第二种是在编辑文章时用到的，在GET请求中注入post完成数据绑定。
- * 第三中是在新建文章时用到的，如果用户是新建文章，则不注入post对象，此时Spring会使用默认构造器注入。
- * 什么，为什么使用两种方法？ Just for fun ;) !
- * TODO: Add http type converters which could convert String values and Integer Values to posts.
+ * 第三中是在新建文章时用到的，如果用户是新建文章，则不注入post对象，此时Spring会使用默认构造器注入。 什么，为什么使用两种方法？ Just for
+ * fun ;) ! TODO: Add http type converters which could convert String values and
+ * Integer Values to posts.
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
 @Controller
@@ -72,6 +73,7 @@ public class PostController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
@@ -81,6 +83,7 @@ public class PostController {
 
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -89,8 +92,8 @@ public class PostController {
     }
 
     /**
-     * 返回一个新的Comment对象
-     * 本方法直接使用默认构造器返回一个Comment对象，因此完全可以省略
+     * 返回一个新的Comment对象 本方法直接使用默认构造器返回一个Comment对象，因此完全可以省略
+     *
      * @return
      */
     @ModelAttribute("newComment")
@@ -102,7 +105,7 @@ public class PostController {
      * 要在Web控制器解决模型的不完整问题！
      */
     @ModelAttribute("post")
-    public Post getPost(@RequestParam(value="id", required=false)Integer postId) {
+    public Post getPost(@RequestParam(value = "id", required = false) Integer postId) {
         Post post = null;
         if (postId != null) {
             //适用于用户提交（POST）文章时从数据库获取文章对象
@@ -118,14 +121,15 @@ public class PostController {
 
     /**
      * 捕获URI为 /post?postId=xxx的请求，显示文章
+     *
      * @param postId post的主键
      * @return
      */
-    @RequestMapping(params="postId")
-    public String viewPost(@RequestParam("postId")int postId) {
+    @RequestMapping(params = "postId")
+    public String viewPost(@RequestParam("postId") int postId) {
         try {
             Post post = postService.find(postId, false, false, false, false, false);
-            return "redirect:/post/"+post.getSlug();
+            return "redirect:/post/" + post.getSlug();
         } catch (Exception ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
@@ -134,13 +138,12 @@ public class PostController {
 
     /**
      * 捕获URI类似 /post/my-new-artical 形式的文章。
+     *
      * @param postSlug 文章短链接（slug字段）
      * @return
      */
-    @RequestMapping(value="/{postSlug}", method= RequestMethod.GET)
-    public ModelAndView viewPost(@PathVariable("postSlug")String postSlug
-        ,@CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId
-        ,HttpServletResponse response) {
+    @RequestMapping(value = "/{postSlug}", method = RequestMethod.GET)
+    public ModelAndView viewPost(@PathVariable("postSlug") String postSlug, @CookieValue(value = "pendingCommentsId", required = false) String pendingCommentsId, HttpServletResponse response) {
 
         ModelAndView mav = new ModelAndView("viewPost");
         try {
@@ -156,7 +159,7 @@ public class PostController {
                     strBuilder.append(comment.getId()).append(",");
                 }
                 //去掉末尾的逗号
-                pendingCommentsId = strBuilder.length()>1 ? strBuilder.substring(0, strBuilder.length()-1) : null;
+                pendingCommentsId = strBuilder.length() > 1 ? strBuilder.substring(0, strBuilder.length() - 1) : null;
                 Cookie cookie = new Cookie("pendingCommentsId", pendingCommentsId);
                 if (pendingCommentsId == null) {
                     //删除cookie
@@ -172,27 +175,24 @@ public class PostController {
     }
 
     /**
-     * 添加评论
-     * 关于在redirectView中添加临时属性请参考：
-     * @see Spring3.1文档480页 Supported method argument types、489页 Specifying redirect and flash attributes 、503页 Using flash attributes
+     * 添加评论 关于在redirectView中添加临时属性请参考：
+     *
+     * @see Spring3.1文档480页 Supported method argument types、489页 Specifying
+     * redirect and flash attributes 、503页 Using flash attributes
      * @see http://blog.goyello.com/2011/12/16/enhancements-spring-mvc31/
-     * @see https://github.com/SpringSource/spring-mvc-showcase/wiki/@MVC-Flash-Attribute-Support 注意@RedirectAttributes已不存在
+     * @see https://github.com/SpringSource/spring-mvc-showcase/wiki/
+     * @MVC-Flash-Attribute-Support 注意@RedirectAttributes已不存在
      * redirect后保留comment对象和bindingResult：
-     * @see http://stackoverflow.com/questions/2543797/spring-redirect-after-post-even-with-validation-errors
+     * @see
+     * http://stackoverflow.com/questions/2543797/spring-redirect-after-post-even-with-validation-errors
      * @param request 用于获取请求者IP
      * @param postId 文章id
      * @param comment 评论
      * @param bindingResult 评论字段合法性验证结果
      * @return
      */
-    @RequestMapping(value={"/{postSlug}"}, method= RequestMethod.POST)
-    public String doCreateComment(HttpServletRequest request
-        , @RequestParam("postId")final int postId
-        , @Valid @ModelAttribute("newComment")final Comment comment
-        , final BindingResult bindingResult
-        , RedirectAttributes redirectAttr
-        , @CookieValue(value="pendingCommentsId", required=false)String pendingCommentsId
-        , HttpServletResponse response) {
+    @RequestMapping(value = {"/{postSlug}"}, method = RequestMethod.POST)
+    public String doCreateComment(HttpServletRequest request, @RequestParam("postId") final int postId, @Valid @ModelAttribute("newComment") final Comment comment, final BindingResult bindingResult, RedirectAttributes redirectAttr, @CookieValue(value = "pendingCommentsId", required = false) String pendingCommentsId, HttpServletResponse response) {
 
         /**
          * 通过FlashAttribute传递临时属性到redirect后的控制器方法中。
@@ -200,11 +200,11 @@ public class PostController {
         if (bindingResult.hasErrors()) {
             System.err.println();
             redirectAttr.addFlashAttribute("newComment", comment);
-            redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.newComment",bindingResult);
+            redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.newComment", bindingResult);
             //返回Post前的页面
             //return "redirect:" + request.getRequestURI();//当前页面URI--会导致重复的contextPath
             String referer = request.getHeader("Referer");
-            return "redirect:"+ referer;
+            return "redirect:" + referer;
         }
 
         Post post = null;
@@ -229,28 +229,28 @@ public class PostController {
         Cookie pendingCommentsCookie = new Cookie("pendingCommentsId", pendingCommentsId);
         response.addCookie(pendingCommentsCookie);
         String referer = request.getHeader("Referer");
-        return "redirect:"+ referer;
+        return "redirect:" + referer;
     }
 
     /**
      * 进入编辑文章页面
+     *
      * @param postSlug
      * @return
      */
-    @RequestMapping(value="/{postSlug}/edit", method= RequestMethod.GET)
-    public ModelAndView editPost(@PathVariable("postSlug")final String postSlug
-        ,HttpSession session) {
+    @RequestMapping(value = "/{postSlug}/edit", method = RequestMethod.GET)
+    public ModelAndView editPost(@PathVariable("postSlug") final String postSlug, HttpSession session) {
 
         ModelAndView mav = null;
         try {
             Post post = postService.findBySlug(postSlug, false, true, true, true, false);
             User user = BaseController.getSessionUser(session);
-            if ( (user ==null) || ( !post.getUser().equals(user)) ) {
+            if ((user == null) || (!post.getUser().equals(user))) {
                 //无权修改
                 throw new ForbiddenException();
             }
             mav = processModels4EditPost(post);
-        } catch(PersistenceException ex) {
+        } catch (PersistenceException ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
             throw new ResourceNotFoundException();
         }
@@ -258,13 +258,13 @@ public class PostController {
     }
 
     /**
-     * 新建文章。
-     * 如果是新建文章，Spring会自动使用默认构造器进行数据绑定，因此没有显式实例化post对象到ModelAndView中
+     * 新建文章。 如果是新建文章，Spring会自动使用默认构造器进行数据绑定，因此没有显式实例化post对象到ModelAndView中
+     *
      * @param postId
      * @return
      */
-    @RequestMapping(value = "/create", method= RequestMethod.GET)
-    public ModelAndView createPost(@ModelAttribute("post")Post post, HttpSession session) {
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    public ModelAndView createPost(@ModelAttribute("post") Post post, HttpSession session) {
         User user = BaseController.getSessionUser(session);
         if (user == null || !userService.canEditPost(user)) {
             throw new ForbiddenException();
@@ -276,26 +276,22 @@ public class PostController {
     /**
      * TODO: 保存文章时同时搜索文章中的图片和视频 并保存成子文章
      * 注入的Post对象，用户提交文章时表单中未包含的post字段（比如post.id）会丢失，因此应显式添加
+     *
      * @param request 用于返回用户请求前的页面(编辑文章页)
      * @param post 提交的post
      * @param bindingResult 数据验证结果
      * @param redirectAttr 用于添加Flash Attributes用于redirect后的控制器/页面使用
      * @return
      */
-    @RequestMapping(value={"/*/edit", "/create"}, method= RequestMethod.POST)
-    public String doEditPost(HttpServletRequest request
-        ,@Valid @ModelAttribute("post")Post post
-        ,BindingResult bindingResult
-        ,RedirectAttributes redirectAttr
-        ,@RequestParam("postTags")String postTags
-        ,@RequestParam("postCategories")Integer[] categoryIds) {
+    @RequestMapping(value = {"/*/edit", "/create"}, method = RequestMethod.POST)
+    public String doEditPost(HttpServletRequest request, @Valid @ModelAttribute("post") Post post, BindingResult bindingResult, RedirectAttributes redirectAttr, @RequestParam("postTags") String postTags, @RequestParam("postCategories") Integer[] categoryIds) {
 
         if (bindingResult.hasErrors()) {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
             //如果用户编辑的不是普通文章（而是普通文章的子文章），返回403错误
-            if ( !postService.isNormalPost(post)) {
+            if (!postService.isNormalPost(post)) {
                 throw new ForbiddenException();
             }
             //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
@@ -323,13 +319,13 @@ public class PostController {
     }
 
     @RequestMapping("/{postSlug}/delete")
-    public String doDeletePost(@PathVariable("postSlug")String postSlug, HttpServletRequest request) {
+    public String doDeletePost(@PathVariable("postSlug") String postSlug, HttpServletRequest request) {
         Post post = null;
         try {
             post = postService.findBySlug(postSlug, false, false, false, false, false);
             //只有文章的作者或网站管理员可以删除该文章
             User author = BaseController.getSessionUser(request.getSession());
-            if (author==null || !userService.isAdministrator(author) || ( post.getUser()!=null && !post.getUser().equals(author) )) {
+            if (author == null || !userService.isAdministrator(author) || (post.getUser() != null && !post.getUser().equals(author))) {
                 throw new ForbiddenException();
             }
             //删除文章
@@ -341,13 +337,14 @@ public class PostController {
         //返回之前页面。若用户之前在浏览此文章，则返回用户文章页
         String referer = request.getHeader("Referer");
         if (referer.endsWith(postSlug)) {
-            referer = "user/"+post.getUser().getId()+"/posts";
+            referer = "user/" + post.getUser().getId() + "/posts";
         }
-        return "redirect:"+ referer;
+        return "redirect:" + referer;
     }
 
     /**
      * 注入editPost页面所必需的对象，比如以Map注入枚举类型PostStatus
+     *
      * @param post 可以是持久化Post对象或新建Post对象，不能为null。
      * @return 注入必需Model的ModelAndView
      */
@@ -364,7 +361,7 @@ public class PostController {
         List<Category> categories = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("postCategories", categories);
 
-        if ( post.getId() != null ) {//不是新建文章
+        if (post.getId() != null) {//不是新建文章
             //覆盖@ModelAttribute注入的"post"对象
             mav.addObject("post", post);
             //设置已选文章分类
@@ -384,9 +381,9 @@ public class PostController {
     private List<Comment> processPendingCommentsString(String pendingCommentsId) {
         List<Comment> comments = new ArrayList<Comment>();
         String[] commentIdStrings = pendingCommentsId.split(",");
-        for (int i=0; i<commentIdStrings.length; i++) {
+        for (int i = 0; i < commentIdStrings.length; i++) {
             Comment comment = commentService.find(Integer.parseInt(commentIdStrings[i]));
-            if ( !comment.getApproved() ) {
+            if (!comment.getApproved()) {
                 comments.add(comment);
             }
         }

@@ -33,7 +33,7 @@ public class AdminCommentController {
     private CommentService commentService;
 
     @ModelAttribute("comment")
-    public Comment getComment(@RequestParam(value="id", required=false)Integer categoryId) {
+    public Comment getComment(@RequestParam(value = "id", required = false) Integer categoryId) {
         Comment comment = null;
         if (categoryId != null) {
             try {
@@ -46,7 +46,7 @@ public class AdminCommentController {
     }
 
     @RequestMapping("")
-    public ModelAndView viewComments(@RequestParam(value="pending", required=false)Boolean onlyPending) {
+    public ModelAndView viewComments(@RequestParam(value = "pending", required = false) Boolean onlyPending) {
         if (onlyPending == null) {
             return processCommentList(1, false);
         } else {
@@ -55,8 +55,7 @@ public class AdminCommentController {
     }
 
     @RequestMapping("/page/{pageNum}")
-    public ModelAndView viewComments(@PathVariable("pageNum")int pageNum
-        , @RequestParam(value="pending", required=false)Boolean onlyPending) {
+    public ModelAndView viewComments(@PathVariable("pageNum") int pageNum, @RequestParam(value = "pending", required = false) Boolean onlyPending) {
 
         if (onlyPending == null) {
             return processCommentList(pageNum, false);
@@ -65,9 +64,8 @@ public class AdminCommentController {
         }
     }
 
-    @RequestMapping(value="/*", method= RequestMethod.POST)
-    public String doEditComment(@Valid @ModelAttribute("comment")Comment comment
-        , BindingResult result) {
+    @RequestMapping(value = "/*", method = RequestMethod.POST)
+    public String doEditComment(@Valid @ModelAttribute("comment") Comment comment, BindingResult result) {
 
         String returnString = "redirect:/admin/comment";
         if (result.hasErrors()) {
@@ -78,8 +76,8 @@ public class AdminCommentController {
         return returnString;
     }
 
-    @RequestMapping(value="/{commentId}", method= RequestMethod.GET)
-    public ModelAndView editComment(@PathVariable("commentId")Integer commentId) {
+    @RequestMapping(value = "/{commentId}", method = RequestMethod.GET)
+    public ModelAndView editComment(@PathVariable("commentId") Integer commentId) {
         ModelAndView mav = new ModelAndView("admin/editComment");
         try {
             Comment comment = commentService.find(commentId);
@@ -90,9 +88,8 @@ public class AdminCommentController {
         return mav;
     }
 
-    @RequestMapping(value="/{commentId}/edit", params="approved", method= RequestMethod.GET)
-    public String doApproveComment(@PathVariable("commentId")Integer commentId
-        , @RequestParam("approved")Boolean approved) {
+    @RequestMapping(value = "/{commentId}/edit", params = "approved", method = RequestMethod.GET)
+    public String doApproveComment(@PathVariable("commentId") Integer commentId, @RequestParam("approved") Boolean approved) {
 
         try {
             Comment comment = commentService.find(commentId);
@@ -105,7 +102,7 @@ public class AdminCommentController {
     }
 
     @RequestMapping("/{commentId}/delete")
-    public String doDeleteComment(@PathVariable("commentId")Integer commentId) {
+    public String doDeleteComment(@PathVariable("commentId") Integer commentId) {
         try {
             commentService.destroy(commentId);
         } catch (PersistenceException e) {
@@ -124,7 +121,7 @@ public class AdminCommentController {
         }
         mav.addObject("commentList", comments);
         mav.addObject("pageNum", pageNum);
-        int pageCount = commentService.getCountOfPendingComments()/DEFAULT_PAGE_SIZE +1;
+        int pageCount = commentService.getCountOfPendingComments() / DEFAULT_PAGE_SIZE + 1;
         mav.addObject("pageCount", pageCount);
         return mav;
     }

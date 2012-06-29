@@ -28,5 +28,4 @@ public interface CommentmetaDao extends Serializable, BaseDao<Commentmeta, Integ
 //    int getCommentmetaCount();
 //
 //    EntityManager getEntityManager();
-
 }

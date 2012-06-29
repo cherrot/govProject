@@ -38,7 +38,6 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //    public EntityManager getEntityManager() {
 //        return emf.createEntityManager();
 //    }
-
     @Override
     @Transactional
     public void create(Commentmeta commentmeta) {
@@ -46,16 +45,16 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Comment comment = commentmeta.getComment();
-            if (comment != null) {
-                comment = em.getReference(Comment.class, comment.getId());
-                commentmeta.setComment(comment);
-            }
-            em.persist(commentmeta);
-            if (comment != null) {
-                comment.getCommentmetaList().add(commentmeta);
-                comment = em.merge(comment);
-            }
+        Comment comment = commentmeta.getComment();
+        if (comment != null) {
+            comment = em.getReference(Comment.class, comment.getId());
+            commentmeta.setComment(comment);
+        }
+        em.persist(commentmeta);
+        if (comment != null) {
+            comment.getCommentmetaList().add(commentmeta);
+            comment = em.merge(comment);
+        }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -89,8 +88,7 @@ public class CommentmetaJpaDao implements CommentmetaDao {
                 commentNew = em.merge(commentNew);
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = commentmeta.getId();
@@ -114,19 +112,19 @@ public class CommentmetaJpaDao implements CommentmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Commentmeta commentmeta;
-            try {
-                commentmeta = em.getReference(Commentmeta.class, id);
-                commentmeta.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.", enfe);
-            }
-            Comment comment = commentmeta.getComment();
-            if (comment != null) {
-                comment.getCommentmetaList().remove(commentmeta);
-                comment = em.merge(comment);
-            }
-            em.remove(commentmeta);
+        Commentmeta commentmeta;
+        try {
+            commentmeta = em.getReference(Commentmeta.class, id);
+            commentmeta.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The commentmeta with id " + id + " no longer exists.", enfe);
+        }
+        Comment comment = commentmeta.getComment();
+        if (comment != null) {
+            comment.getCommentmetaList().remove(commentmeta);
+            comment = em.merge(comment);
+        }
+        em.remove(commentmeta);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -149,14 +147,14 @@ public class CommentmetaJpaDao implements CommentmetaDao {
     private List<Commentmeta> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Commentmeta.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Commentmeta.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -167,7 +165,7 @@ public class CommentmetaJpaDao implements CommentmetaDao {
     public Commentmeta find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Commentmeta.class, id);
+        return em.find(Commentmeta.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -178,11 +176,11 @@ public class CommentmetaJpaDao implements CommentmetaDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Commentmeta> rt = cq.from(Commentmeta.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Commentmeta> rt = cq.from(Commentmeta.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();

@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * This service manages Category and TermTaxonomy.
+ *
  * @author cherrot
  */
 @Service
@@ -43,9 +44,8 @@ public class TagServiceImpl implements TagService {
         List<Tag> tags = new ArrayList<Tag>();
         for (String tagString : tagStrings) {
             try {
-               tag = tagDao.findByName(tagString);
-            }
-            catch (NoResultException  e) {
+                tag = tagDao.findByName(tagString);
+            } catch (NoResultException e) {
                 tag = new Tag();
                 tag.setName(tagString);
                 tag.setSlug(tagString);
@@ -62,14 +62,11 @@ public class TagServiceImpl implements TagService {
 
         try {
             tagDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -81,10 +78,12 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Tag find(Integer id, boolean withPosts) {
         Tag tag = find(id);
-        if (withPosts) tag.getPostList().isEmpty();
+        if (withPosts) {
+            tag.getPostList().isEmpty();
+        }
         return tag;
     }
 
@@ -93,11 +92,9 @@ public class TagServiceImpl implements TagService {
     public void destroy(Integer id) {
         try {
             tagDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(TagServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -116,14 +113,18 @@ public class TagServiceImpl implements TagService {
     @Override
 //    @Transactional(readOnly=true)
     public List<Tag> list(int pageNum, int pageSize) {
-        return tagDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return tagDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     private void processDependency(List<Category> terms, boolean withPosts, boolean withTerms) {
         if (withPosts || withTerms) {
             for (Category term : terms) {
-                if (withPosts) term.getPostList().isEmpty();
-                if (withTerms) term.getCategoryList().isEmpty();
+                if (withPosts) {
+                    term.getPostList().isEmpty();
+                }
+                if (withTerms) {
+                    term.getCategoryList().isEmpty();
+                }
             }
         }
     }
@@ -141,5 +142,4 @@ public class TagServiceImpl implements TagService {
     public Tag findBySlug(String slug, boolean withPosts) {
         return tagDao.findBySlug(slug);
     }
-
 }

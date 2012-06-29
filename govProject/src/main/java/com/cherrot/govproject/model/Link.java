@@ -37,11 +37,12 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Link.findByTarget", query = "SELECT l FROM Link l WHERE l.target = :target"),
     @NamedQuery(name = "Link.findByDescription", query = "SELECT l FROM Link l WHERE l.description = :description")})
 public class Link implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     public enum LinkTarget {
-        _blank("新页面打开"), _self("当前框架打开"), _parent("父框架中打开"), _top("当前窗口打开");
 
+        _blank("新页面打开"), _self("当前框架打开"), _parent("父框架中打开"), _top("当前窗口打开");
         private String description;
 
         private LinkTarget(String description) {
@@ -52,7 +53,6 @@ public class Link implements Serializable {
             return description;
         }
     }
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -89,8 +89,7 @@ public class Link implements Serializable {
 //    public Link(Integer id) {
 //        this.id = id;
 //    }
-
-    public Link(/*Integer id,*/ String url, String name, LinkTarget target) {
+    public Link(/*Integer id,*/String url, String name, LinkTarget target) {
 //        this.id = id;
         this.url = url;
         this.name = name;
@@ -154,6 +153,7 @@ public class Link implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -173,5 +173,4 @@ public class Link implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Link[ id=" + id + " ]";
     }
-
 }

@@ -26,7 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
+
     @Inject
     private CommentDao commentDao;
     @Inject
@@ -59,11 +60,15 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public Comment find(Integer id, boolean withCommentmetas, boolean withChildComments) {
         Comment comment = find(id);
-        if (withCommentmetas) comment.getCommentmetaList().isEmpty();
-        if (withChildComments) comment.getCommentList().isEmpty();
+        if (withCommentmetas) {
+            comment.getCommentmetaList().isEmpty();
+        }
+        if (withChildComments) {
+            comment.getCommentList().isEmpty();
+        }
         return comment;
     }
 
@@ -74,11 +79,9 @@ public class CommentServiceImpl implements CommentService{
 //        siteLogService.create(comment.getUser(), comment.getAuthor()+"的评论被删除了");
         try {
             commentDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -89,7 +92,7 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<Comment> list(boolean withCommentmetas, boolean withChildComments) {
         List<Comment> comments = commentDao.findEntities();
         processDependency(comments, withCommentmetas, withChildComments);
@@ -97,9 +100,9 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
-    public List<Comment> list(int pageNum, int pageSize,boolean withCommentmeta, boolean withChildComments) {
-        List<Comment> comments = commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public List<Comment> list(int pageNum, int pageSize, boolean withCommentmeta, boolean withChildComments) {
+        List<Comment> comments = commentDao.findEntities(pageSize, (pageNum - 1) * pageSize);
         processDependency(comments, withCommentmeta, withChildComments);
         return comments;
     }
@@ -109,14 +112,11 @@ public class CommentServiceImpl implements CommentService{
     public void edit(Comment model) {
         try {
             commentDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(CommentServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -124,8 +124,12 @@ public class CommentServiceImpl implements CommentService{
     private void processDependency(List<Comment> comments, boolean withCommentmetas, boolean withChildComments) {
         if (withCommentmetas || withChildComments) {
             for (Comment comment : comments) {
-                if (withCommentmetas) comment.getCommentmetaList().isEmpty();
-                if (withChildComments) comment.getCommentList().isEmpty();
+                if (withCommentmetas) {
+                    comment.getCommentmetaList().isEmpty();
+                }
+                if (withChildComments) {
+                    comment.getCommentList().isEmpty();
+                }
             }
         }
     }
@@ -139,7 +143,7 @@ public class CommentServiceImpl implements CommentService{
     @Override
 //    @Transactional(readOnly=true)
     public List<Comment> list(int pageNum, int pageSize) {
-        return commentDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return commentDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
@@ -153,17 +157,17 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public List<Comment> listByUser(User user, int pageNum, int pageSize) {
-        return commentDao.findEntitiesByUser(user, pageSize, (pageNum-1)*pageSize);
+        return commentDao.findEntitiesByUser(user, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Comment> listNewestCommentsByUser(User user, int pageNum, int pageSize) {
-        return commentDao.findEntitiesByUserDesc(user, pageSize, (pageNum-1)*pageSize);
+        return commentDao.findEntitiesByUserDesc(user, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
     public List<Comment> listPendingComments(int pageNum, int pageSize) {
-        return commentDao.findEntitiesByApprovedDesc(false, pageSize, (pageNum-1)*pageSize);
+        return commentDao.findEntitiesByApprovedDesc(false, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override

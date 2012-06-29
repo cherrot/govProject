@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface UsermetaDao extends Serializable, BaseDao<Usermeta, Integer> {
-
 //    void create(Usermeta usermeta);
 //
 //    void destroy(Integer id) throws NonexistentEntityException;
@@ -28,5 +27,4 @@ public interface UsermetaDao extends Serializable, BaseDao<Usermeta, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getUsermetaCount();
-
 }

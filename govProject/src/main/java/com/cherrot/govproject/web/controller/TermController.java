@@ -42,6 +42,7 @@ public class TermController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
@@ -51,6 +52,7 @@ public class TermController {
 
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -59,7 +61,7 @@ public class TermController {
     }
 
     @RequestMapping("/category/{categorySlug}")
-    public ModelAndView listPostsByCategoryPage1(@PathVariable("categorySlug")String slug) {
+    public ModelAndView listPostsByCategoryPage1(@PathVariable("categorySlug") String slug) {
 
         ModelAndView mav = new ModelAndView("/listPostsByTerm");
         try {
@@ -73,8 +75,7 @@ public class TermController {
     }
 
     @RequestMapping("/category/{categorySlug}/page/{pageNum}")
-    public ModelAndView listPostsByCategory(@PathVariable("categorySlug")String slug
-        , @PathVariable("pageNum")int pageNum) {
+    public ModelAndView listPostsByCategory(@PathVariable("categorySlug") String slug, @PathVariable("pageNum") int pageNum) {
 
         ModelAndView mav = new ModelAndView("/listPostsByTerm");
         try {
@@ -88,7 +89,7 @@ public class TermController {
     }
 
     @RequestMapping("/tag/{tagSlug}")
-    public ModelAndView listPostsByTagPage1(@PathVariable("tagSlug")String slug) {
+    public ModelAndView listPostsByTagPage1(@PathVariable("tagSlug") String slug) {
 
         ModelAndView mav = new ModelAndView("/listPostsByTerm");
         try {
@@ -102,8 +103,7 @@ public class TermController {
     }
 
     @RequestMapping("/tag/{tagSlug}/page/{pageNum}")
-    public ModelAndView listPostsByTag(@PathVariable("tagSlug")String slug
-        , @PathVariable("pageNum")int pageNum) {
+    public ModelAndView listPostsByTag(@PathVariable("tagSlug") String slug, @PathVariable("pageNum") int pageNum) {
 
         ModelAndView mav = new ModelAndView("/listPostsByTerm");
         try {

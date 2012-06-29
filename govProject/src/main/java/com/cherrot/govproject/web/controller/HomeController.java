@@ -31,6 +31,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 /**
  * 关于forward: 和 redirect: ，见Spring3.1文档P474
+ *
  * @author cherrot
  */
 @Controller
@@ -45,6 +46,7 @@ public class HomeController {
 
     /**
      * 顶部导航栏的文章分类
+     *
      * @return
      */
     @ModelAttribute("categories")
@@ -53,8 +55,10 @@ public class HomeController {
         initData();
         return categoryService.listSecondLevelCategories(false, false);
     }
+
     /**
      * 友情链接分类和分类下的友情链接
+     *
      * @return
      */
     @ModelAttribute("linkCategories")
@@ -77,14 +81,18 @@ public class HomeController {
         }
         return mav;
     }
-
     /**
      * TODO 以下内容仅用于生成测试数据！
      */
-    @Inject private CommentService commentService;
-    @Inject private UserService userService;
-    @Inject private OptionService optionService;
-    @Inject private TagService tagService;
+    @Inject
+    private CommentService commentService;
+    @Inject
+    private UserService userService;
+    @Inject
+    private OptionService optionService;
+    @Inject
+    private TagService tagService;
+
     private void initData() {
         try {
             userService.findByLoginName("f@f.f", false, false, false, false);

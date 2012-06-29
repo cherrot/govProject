@@ -46,16 +46,16 @@ public class PostmetaJpaDao implements PostmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Post post = postmeta.getPost();
-            if (post != null) {
-                post = em.getReference(Post.class, post.getId());
-                postmeta.setPost(post);
-            }
-            em.persist(postmeta);
-            if (post != null) {
-                post.getPostmetaList().add(postmeta);
-                post = em.merge(post);
-            }
+        Post post = postmeta.getPost();
+        if (post != null) {
+            post = em.getReference(Post.class, post.getId());
+            postmeta.setPost(post);
+        }
+        em.persist(postmeta);
+        if (post != null) {
+            post.getPostmetaList().add(postmeta);
+            post = em.merge(post);
+        }
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -89,8 +89,7 @@ public class PostmetaJpaDao implements PostmetaDao {
                 postNew = em.merge(postNew);
             }
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = postmeta.getId();
@@ -114,19 +113,19 @@ public class PostmetaJpaDao implements PostmetaDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Postmeta postmeta;
-            try {
-                postmeta = em.getReference(Postmeta.class, id);
-                postmeta.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The postmeta with id " + id + " no longer exists.", enfe);
-            }
-            Post post = postmeta.getPost();
-            if (post != null) {
-                post.getPostmetaList().remove(postmeta);
-                post = em.merge(post);
-            }
-            em.remove(postmeta);
+        Postmeta postmeta;
+        try {
+            postmeta = em.getReference(Postmeta.class, id);
+            postmeta.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The postmeta with id " + id + " no longer exists.", enfe);
+        }
+        Post post = postmeta.getPost();
+        if (post != null) {
+            post.getPostmetaList().remove(postmeta);
+            post = em.merge(post);
+        }
+        em.remove(postmeta);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -149,14 +148,14 @@ public class PostmetaJpaDao implements PostmetaDao {
     private List<Postmeta> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Postmeta.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Postmeta.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -167,7 +166,7 @@ public class PostmetaJpaDao implements PostmetaDao {
     public Postmeta find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Postmeta.class, id);
+        return em.find(Postmeta.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -178,11 +177,11 @@ public class PostmetaJpaDao implements PostmetaDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Postmeta> rt = cq.from(Postmeta.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Postmeta> rt = cq.from(Postmeta.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();
@@ -193,5 +192,4 @@ public class PostmetaJpaDao implements PostmetaDao {
     public Postmeta getReference(Integer id) {
         return em.getReference(Postmeta.class, id);
     }
-
 }

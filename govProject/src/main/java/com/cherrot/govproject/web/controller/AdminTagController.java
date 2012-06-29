@@ -33,7 +33,7 @@ public class AdminTagController {
     private TagService tagService;
 
     @ModelAttribute("tag")
-    public Tag getTag(@RequestParam(value="id", required=false)Integer tagId) {
+    public Tag getTag(@RequestParam(value = "id", required = false) Integer tagId) {
         Tag tag = null;
         if (tagId != null) {
             try {
@@ -45,22 +45,21 @@ public class AdminTagController {
         return tag;
     }
 
-    @RequestMapping(value="", method= RequestMethod.GET)
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public ModelAndView viewTags() {
         return processTagLists(1);
     }
 
-    @RequestMapping(value="/page/${pageNum}", method= RequestMethod.GET)
-    public ModelAndView viewTags(@PathVariable("pageNum")int pageNum) {
+    @RequestMapping(value = "/page/${pageNum}", method = RequestMethod.GET)
+    public ModelAndView viewTags(@PathVariable("pageNum") int pageNum) {
         return processTagLists(pageNum);
     }
 
-    @RequestMapping(value="/*", method= RequestMethod.POST)
-    public ModelAndView doEditTag(@Valid @ModelAttribute("tag")Tag tag
-        , BindingResult result) {
+    @RequestMapping(value = "/*", method = RequestMethod.POST)
+    public ModelAndView doEditTag(@Valid @ModelAttribute("tag") Tag tag, BindingResult result) {
 
         ModelAndView mav = new ModelAndView("redirect:/admin/tag");
-        if (result.hasErrors() ) {
+        if (result.hasErrors()) {
             mav.setViewName("/admin/editTag");
         } else {
             tagService.edit(tag);
@@ -68,8 +67,8 @@ public class AdminTagController {
         return mav;
     }
 
-    @RequestMapping(value="/{tagId}", method= RequestMethod.GET)
-    public ModelAndView editTag(@PathVariable("tagId")Integer tagId) {
+    @RequestMapping(value = "/{tagId}", method = RequestMethod.GET)
+    public ModelAndView editTag(@PathVariable("tagId") Integer tagId) {
         ModelAndView mav = new ModelAndView("admin/editTag");
         try {
             Tag tag = tagService.find(tagId);
@@ -81,7 +80,7 @@ public class AdminTagController {
     }
 
     @RequestMapping("/{tagId}/delete")
-    public String doDeleteTag(@PathVariable("tagId")Integer tagId) {
+    public String doDeleteTag(@PathVariable("tagId") Integer tagId) {
         try {
             tagService.destroy(tagId);
         } catch (PersistenceException e) {
@@ -95,7 +94,7 @@ public class AdminTagController {
         List<Tag> tags = tagService.list(pageNum, DEFAULT_PAGE_SIZE);
         mav.addObject("tagList", tags);
         mav.addObject("pageNum", pageNum);
-        int pageCount = tagService.getCount()/DEFAULT_PAGE_SIZE +1;
+        int pageCount = tagService.getCount() / DEFAULT_PAGE_SIZE + 1;
         mav.addObject("pageCount", pageCount);
         return mav;
     }

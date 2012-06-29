@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Commentmeta.findByMetaKey", query = "SELECT c FROM Commentmeta c WHERE c.metaKey = :metaKey"),
     @NamedQuery(name = "Commentmeta.findByMetaValue", query = "SELECT c FROM Commentmeta c WHERE c.metaValue = :metaValue")})
 public class Commentmeta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +59,7 @@ public class Commentmeta implements Serializable {
 //    public Commentmeta(Integer id) {
 //        this.id = id;
 //    }
-
-    public Commentmeta(/*Integer id,*/ String metaKey) {
+    public Commentmeta(/*Integer id,*/String metaKey) {
 //        this.id = id;
         this.metaKey = metaKey;
     }
@@ -105,6 +105,7 @@ public class Commentmeta implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -124,5 +125,4 @@ public class Commentmeta implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Commentmeta[ id=" + id + " ]";
     }
-
 }

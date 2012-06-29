@@ -11,11 +11,10 @@ package com.cherrot.govproject.util;
 public class Constants {
 
     /**
-     * Default number of items per page.
-     * This value may be changed at runtime (not a final value)
+     * Default number of items per page. This value may be changed at runtime
+     * (not a final value)
      */
     public static int DEFAULT_PAGE_SIZE = 15;
-
     /**
      * Session Attributes
      */
@@ -24,9 +23,7 @@ public class Constants {
     public static final String SUCCESS_MSG_KEY = "successMsg";
     public static final String LOGIN_TO_URL = "toUrl";
     public static final String FILTERED_REQUEST = "@@session_context_filtered_request";
-
     public static final int TOP_LEVEL_CATEGORY_COUNT = 7;
-
     /**
      * User Level:待审核用户
      */

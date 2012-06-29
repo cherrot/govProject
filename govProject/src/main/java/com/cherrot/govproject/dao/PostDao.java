@@ -18,23 +18,34 @@ import java.util.List;
 public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 
     Post findBySlug(String slug);
+
     List<Post> findEntitiesDesc(int maxResults, int firstResult);
+
     List<Post> findEntitiesByCategoryDesc(Category category, int maxResults, int firstResult);
+
     List<Post> findEntitiesByCategorySlugDesc(String categorySlug, int maxResults, int firstResult);
+
     List<Post> findEntitiesByTagDesc(Tag tag, int maxResults, int firstResult);
+
     List<Post> findEntitiesByTagSlugDesc(String tagSlug, int maxResults, int firstResult);
+
     List<Post> findEntitiesByUser(User user, int maxResults, int firstResult);
+
     List<Post> findEntitiesByUserDesc(User user, int maxResults, int firstResult);
+
     /**
      * mime支持模糊查询。可以使用JPQL的模糊字符串。(如"image/%")
+     *
      * @param mime
      * @return
      */
     List<Post> findEntitiesByMimeDesc(String mime, int maxResults, int firstResult);
-    int getCountByUser(User user);
-    int getCountByCategory(Category category);
-    int getCountByTag(Tag tag);
 
+    int getCountByUser(User user);
+
+    int getCountByCategory(Category category);
+
+    int getCountByTag(Tag tag);
 //    void create(Post post);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;
@@ -50,5 +61,4 @@ public interface PostDao extends Serializable, BaseDao<Post, Integer> {
 //    EntityManager getEntityManager();
 //
 //    int getPostCount();
-
 }

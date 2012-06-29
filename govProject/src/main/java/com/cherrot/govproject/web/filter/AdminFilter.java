@@ -20,39 +20,38 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 只有宣传部人员才能使用管理功能
- * 本过滤器映射到所有 /admin 开始的URI
+ * 只有宣传部人员才能使用管理功能 本过滤器映射到所有 /admin 开始的URI
+ *
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
-public class AdminFilter implements Filter{
+public class AdminFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response
-        , FilterChain chain) throws IOException, ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         //避免重复拦截
         if (request != null && request.getAttribute(FILTERED_REQUEST) != null) {
             chain.doFilter(request, response);
         } else {
             request.setAttribute(FILTERED_REQUEST, true);
-            HttpServletRequest httpRequest = (HttpServletRequest)request;
+            HttpServletRequest httpRequest = (HttpServletRequest) request;
             User sessionUser = getSessionUser(httpRequest.getSession());
 
-            if (sessionUser ==null) {
+            if (sessionUser == null) {
                 String toUrl = httpRequest.getRequestURI();
                 httpRequest.setAttribute(LOGIN_TO_URL, toUrl);
                 request.getRequestDispatcher("/login").forward(request, response);
                 return;
-            } else if ((sessionUser.getUserLevel() &USER_XUANCHUANBU) ==0) {
-                HttpServletResponse res = (HttpServletResponse)response;
+            } else if ((sessionUser.getUserLevel() & USER_XUANCHUANBU) == 0) {
+                HttpServletResponse res = (HttpServletResponse) response;
                 res.sendRedirect("/");
                 return;
             }
-            
+
             chain.doFilter(request, response);
         }
     }
@@ -60,5 +59,4 @@ public class AdminFilter implements Filter{
     @Override
     public void destroy() {
     }
-
 }

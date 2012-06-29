@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface SiteLogDao extends Serializable, BaseDao<SiteLog, Integer> {
-
 //    @Transactional
 //    void create(SiteLog siteLog);
 //
@@ -31,5 +30,4 @@ public interface SiteLogDao extends Serializable, BaseDao<SiteLog, Integer> {
 //    int getCount();
 //
 //    void save(SiteLog model);
-
 }

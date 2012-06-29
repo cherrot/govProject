@@ -12,7 +12,6 @@ import java.io.Serializable;
  * @author cherrot
  */
 public interface LinkCategoryDao extends Serializable, BaseDao<LinkCategory, Integer> {
-
 //    @Transactional
 //    void create(LinkCategory linkCategory);
 //
@@ -31,5 +30,4 @@ public interface LinkCategoryDao extends Serializable, BaseDao<LinkCategory, Int
 //    int getCount();
 //
 //    void save(LinkCategory model);
-
 }

@@ -40,8 +40,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Tag.findByDescription", query = "SELECT t FROM Tag t WHERE t.description = :description")
 })
 public class Tag implements Serializable {
-    private static final long serialVersionUID = 1L;
 
+    private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
@@ -49,14 +49,15 @@ public class Tag implements Serializable {
     @Column(name = "id", nullable = false)
     private Integer id;
     /**
-     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     * @deprecated
+     * 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
      */
     @Deprecated
     @Basic(optional = false)
     @NotNull
     @Column(name = "postCount", nullable = false)
     private int count;
-    @Basic(optional=false)
+    @Basic(optional = false)
     @NotNull
     @Size(max = 100)
     @Column(name = "name", length = 100)
@@ -70,16 +71,17 @@ public class Tag implements Serializable {
     @Column(name = "description", length = 255)
     private String description;
     /**
-     * PENDING: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？ （异常栈定位到Spring的Hibernate3而不是Hibernate4）
+     * PENDING: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？
+     * （异常栈定位到Spring的Hibernate3而不是Hibernate4）
      *
      * If you choose to map the relationship in both directions, then one
-     * direction must be defined as the owner and the other must use
-     * the mappedBy attribute to define its mapping.
-     * This also avoids having to duplicate the JoinTable information in both places.
-     * Post.java为主控端， Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
+     * direction must be defined as the owner and the other must use the
+     * mappedBy attribute to define its mapping. This also avoids having to
+     * duplicate the JoinTable information in both places. Post.java为主控端，
+     * Category.java为被控端。因此将mappedBy定义在Term.java。这样，修改删除post会自动修改删除关系。
      */
 //    @OrderColumn(name="termOrder")
-    @ManyToMany(cascade={CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "tagList")
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH}, mappedBy = "tagList")
     private List<Post> postList;
 
     public Tag() {
@@ -100,7 +102,6 @@ public class Tag implements Serializable {
 //    private void processLists() {
 //        postList = new ArrayList<Post>();
 //    }
-
     public Integer getId() {
         return id;
     }
@@ -110,7 +111,8 @@ public class Tag implements Serializable {
     }
 
     /**
-     * @deprecated 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
+     * @deprecated
+     * 已经在DAO中实现了对count的一致性操作，但不推荐使用该字段。推荐使用PostService中定义的getCount方法。
      */
     @Deprecated
     public int getCount() {
@@ -178,5 +180,4 @@ public class Tag implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Tag[ id=" + id + " ]";
     }
-
 }

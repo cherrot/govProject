@@ -45,7 +45,7 @@ public class OptionJpaDao implements OptionDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            em.persist(option);
+        em.persist(option);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -64,8 +64,7 @@ public class OptionJpaDao implements OptionDao {
 //            em.getTransaction().begin();
             option = em.merge(option);
 //            em.getTransaction().commit();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             String msg = ex.getLocalizedMessage();
             if (msg == null || msg.length() == 0) {
                 Integer id = option.getId();
@@ -89,14 +88,14 @@ public class OptionJpaDao implements OptionDao {
 //        try {
 //            em = getEntityManager();
 //            em.getTransaction().begin();
-            Option option;
-            try {
-                option = em.getReference(Option.class, id);
-                option.getId();
-            } catch (EntityNotFoundException enfe) {
-                throw new NonexistentEntityException("The option with id " + id + " no longer exists.", enfe);
-            }
-            em.remove(option);
+        Option option;
+        try {
+            option = em.getReference(Option.class, id);
+            option.getId();
+        } catch (EntityNotFoundException enfe) {
+            throw new NonexistentEntityException("The option with id " + id + " no longer exists.", enfe);
+        }
+        em.remove(option);
 //            em.getTransaction().commit();
 //        }
 //        finally {
@@ -119,14 +118,14 @@ public class OptionJpaDao implements OptionDao {
     private List<Option> findEntities(boolean all, int maxResults, int firstResult) {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            cq.select(cq.from(Option.class));
-            Query q = em.createQuery(cq);
-            if (!all) {
-                q.setMaxResults(maxResults);
-                q.setFirstResult(firstResult);
-            }
-            return q.getResultList();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        cq.select(cq.from(Option.class));
+        Query q = em.createQuery(cq);
+        if (!all) {
+            q.setMaxResults(maxResults);
+            q.setFirstResult(firstResult);
+        }
+        return q.getResultList();
 //        }
 //        finally {
 //            em.close();
@@ -137,7 +136,7 @@ public class OptionJpaDao implements OptionDao {
     public Option find(Integer id) {
 //        EntityManager em = getEntityManager();
 //        try {
-            return em.find(Option.class, id);
+        return em.find(Option.class, id);
 //        }
 //        finally {
 //            em.close();
@@ -148,11 +147,11 @@ public class OptionJpaDao implements OptionDao {
     public int getCount() {
 //        EntityManager em = getEntityManager();
 //        try {
-            CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
-            Root<Option> rt = cq.from(Option.class);
-            cq.select(em.getCriteriaBuilder().count(rt));
-            Query q = em.createQuery(cq);
-            return ( (Long) q.getSingleResult() ).intValue();
+        CriteriaQuery cq = em.getCriteriaBuilder().createQuery();
+        Root<Option> rt = cq.from(Option.class);
+        cq.select(em.getCriteriaBuilder().count(rt));
+        Query q = em.createQuery(cq);
+        return ((Long) q.getSingleResult()).intValue();
 //        }
 //        finally {
 //            em.close();
@@ -163,5 +162,4 @@ public class OptionJpaDao implements OptionDao {
     public Option getReference(Integer id) {
         return em.getReference(Option.class, id);
     }
-
 }

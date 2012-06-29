@@ -29,7 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Inject
     private UserDao userDao;
@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService{
         }
         user.setUsermetaList(usermetas);
         userDao.create(user);
-        siteLogService.create(user, "创建用户" + user.getLogin() + " 。ID: "+user.getId());
+        siteLogService.create(user, "创建用户" + user.getLogin() + " 。ID: " + user.getId());
     }
 
     @Override
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public User find(Integer id, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = find(id);
         processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public User findByLoginName(String loginName, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
         User user = userDao.findByLogin(loginName);
         processDependency(user, withSiteLogs, withPosts, withUsermetas, withComments);
@@ -81,14 +81,12 @@ public class UserServiceImpl implements UserService{
     @Transactional
     public void destroy(Integer id) {
         User user = userDao.find(id);
-        siteLogService.create(user, "用户 " + user.getLogin()+" 被删除。ID: "+user.getId());
+        siteLogService.create(user, "用户 " + user.getLogin() + " 被删除。ID: " + user.getId());
         try {
             userDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
     }
@@ -105,7 +103,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public List<User> list(int pageNum, int pageSize) {
-        return userDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return userDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
@@ -113,33 +111,38 @@ public class UserServiceImpl implements UserService{
     public void edit(User model) {
         try {
             userDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (NonexistentEntityException ex) {
+            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
+        } catch (Exception ex) {
             Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
         }
-        catch (NonexistentEntityException ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        catch (Exception ex) {
-            Logger.getLogger(UserServiceImpl.class.getName()).log(Level.SEVERE, ex.getMessage(), ex);
-        }
-        siteLogService.create(model, "用户 " + model.getLogin() +" (ID:" + model.getId() + ") 更新了个人资料");
+        siteLogService.create(model, "用户 " + model.getLogin() + " (ID:" + model.getId() + ") 更新了个人资料");
     }
 
     private void processDependency(User user, boolean withSiteLogs, boolean withPosts, boolean withUsermetas, boolean withComments) {
-        if (withSiteLogs) user.getSiteLogList().isEmpty();
-        if (withPosts) user.getPostList().isEmpty();
-        if (withUsermetas) user.getUsermetaList().isEmpty();
-        if (withComments) user.getCommentList().isEmpty();
+        if (withSiteLogs) {
+            user.getSiteLogList().isEmpty();
+        }
+        if (withPosts) {
+            user.getPostList().isEmpty();
+        }
+        if (withUsermetas) {
+            user.getUsermetaList().isEmpty();
+        }
+        if (withComments) {
+            user.getCommentList().isEmpty();
+        }
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public User validateUser(String loginName, String password) {
         User user;
         try {
             user = findByLoginName(loginName, false, false, true, false);
-            if ( !user.getPass().equals(password)) {
+            if (!user.getPass().equals(password)) {
                 user = null;
             }
         } catch (Exception e) {
@@ -162,10 +165,18 @@ public class UserServiceImpl implements UserService{
     @Override
     public String getDescriptionOfUserLevel(int userLevel) {
         StringBuilder stringBuilder = new StringBuilder();
-        if ( (userLevel & USER_PENDING) != 0) stringBuilder.append("待审核用户 ");
-        if ( (userLevel & USER_XUANCHUANBU) != 0 ) stringBuilder.append("宣传部管理员 ");
-        if ( (userLevel & USER_WENLIAN) != 0 ) stringBuilder.append("文联工作人员 ");
-        if ( (userLevel & USER_NORMAL) != 0 ) stringBuilder.append("普通用户 ");
+        if ((userLevel & USER_PENDING) != 0) {
+            stringBuilder.append("待审核用户 ");
+        }
+        if ((userLevel & USER_XUANCHUANBU) != 0) {
+            stringBuilder.append("宣传部管理员 ");
+        }
+        if ((userLevel & USER_WENLIAN) != 0) {
+            stringBuilder.append("文联工作人员 ");
+        }
+        if ((userLevel & USER_NORMAL) != 0) {
+            stringBuilder.append("普通用户 ");
+        }
         return stringBuilder.toString();
     }
 
@@ -180,17 +191,16 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public boolean isModerator(User user) {
-        if ( (user.getUserLevel() & USER_WENLIAN) != 0 ) {
+        if ((user.getUserLevel() & USER_WENLIAN) != 0) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
 
     @Override
     public boolean canEditPost(User user) {
-        if ( (user.getUserLevel() & (USER_WENLIAN | USER_XUANCHUANBU)) !=0 ) {
+        if ((user.getUserLevel() & (USER_WENLIAN | USER_XUANCHUANBU)) != 0) {
             return true;
         } else {
             return false;

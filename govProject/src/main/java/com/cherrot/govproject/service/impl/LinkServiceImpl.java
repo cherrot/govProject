@@ -24,7 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author cherrot
  */
 @Service
-public class LinkServiceImpl implements LinkService{
+public class LinkServiceImpl implements LinkService {
 
     @Inject
     private LinkDao linkDao;
@@ -48,11 +48,9 @@ public class LinkServiceImpl implements LinkService{
     public void destroy(Integer id) {
         try {
             linkDao.destroy(id);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -71,7 +69,7 @@ public class LinkServiceImpl implements LinkService{
     @Override
 //    @Transactional(readOnly=true)
     public List<Link> list(int pageNum, int pageSize) {
-        return linkDao.findEntities(pageSize, (pageNum-1)*pageSize);
+        return linkDao.findEntities(pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
@@ -79,33 +77,30 @@ public class LinkServiceImpl implements LinkService{
     public void edit(Link model) {
         try {
             linkDao.edit(model);
-        }
-        catch (IllegalOrphanException ex) {
+        } catch (IllegalOrphanException ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (NonexistentEntityException ex) {
+        } catch (NonexistentEntityException ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             Logger.getLogger(LinkServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public LinkCategory findLinkCategory(Integer linkCategoryId, boolean withLinks) {
         LinkCategory linkCategory = linkCategoryDao.find(linkCategoryId);
-        if(withLinks){
+        if (withLinks) {
             linkCategory.getLinkList().isEmpty();
         }
         return linkCategory;
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS, readOnly=true)
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
     public List<LinkCategory> listLinkCategories(boolean withLinks) {
         List<LinkCategory> linkCategories = linkCategoryDao.findEntities();
-        if(withLinks){
+        if (withLinks) {
             for (LinkCategory linkCategory : linkCategories) {
                 linkCategory.getLinkList().isEmpty();
             }
@@ -126,5 +121,4 @@ public class LinkServiceImpl implements LinkService{
     public void createLinkCategory(LinkCategory linkCategory) {
         linkCategoryDao.create(linkCategory);
     }
-
 }

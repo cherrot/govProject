@@ -14,11 +14,18 @@ import java.util.List;
 public interface BaseService<Model extends Serializable, PrimaryKey extends Serializable> {
 
     void create(Model model);
+
     void edit(Model model);
+
     Model find(PrimaryKey id);
+
     void destroy(PrimaryKey id);
+
     void save(Model model);
+
     int getCount();
+
     List<Model> list();
+
     List<Model> list(int pageNum, int pageSize);
 }

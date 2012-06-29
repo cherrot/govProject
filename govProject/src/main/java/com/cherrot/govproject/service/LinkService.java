@@ -13,7 +13,10 @@ import java.util.List;
  * @author cherrot
  */
 public interface LinkService extends BaseService<Link, Integer> {
-    void createLinkCategory (LinkCategory linkCategory);
+
+    void createLinkCategory(LinkCategory linkCategory);
+
     LinkCategory findLinkCategory(Integer linkCategoryId, boolean withLinks);
+
     List<LinkCategory> listLinkCategories(boolean withLinks);
 }

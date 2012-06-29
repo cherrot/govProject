@@ -33,6 +33,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Postmeta.findByMetaKey", query = "SELECT p FROM Postmeta p WHERE p.metaKey = :metaKey"),
     @NamedQuery(name = "Postmeta.findByMetaValue", query = "SELECT p FROM Postmeta p WHERE p.metaValue = :metaValue")})
 public class Postmeta implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +59,7 @@ public class Postmeta implements Serializable {
 //    public Postmeta(Integer id) {
 //        this.id = id;
 //    }
-
-    public Postmeta(/*Integer id,*/ String metaKey) {
+    public Postmeta(/*Integer id,*/String metaKey) {
 //        this.id = id;
         this.metaKey = metaKey;
     }
@@ -105,6 +105,7 @@ public class Postmeta implements Serializable {
 
     /**
      * Warning - this method won't work in the case the id fields are not set
+     *
      * @param object
      * @return
      */
@@ -124,5 +125,4 @@ public class Postmeta implements Serializable {
     public String toString() {
         return "com.cherrot.govproject.model.Postmeta[ id=" + id + " ]";
     }
-
 }
