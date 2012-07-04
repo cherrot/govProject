@@ -103,7 +103,6 @@
               </c:if>
             </c:forEach>
           </ul>
-
       <form:errors path="content"/>
       <%--<form:textarea path="content"/>--%><br/>
 

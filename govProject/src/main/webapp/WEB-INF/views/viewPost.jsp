@@ -53,8 +53,8 @@
     </p>
     </td></tr></table>
 
-    <c:if test="${sessionScope[post.user] eq sessionUser}">
-      <a href="<c:url value="/post/${post.slug}/edit"/>">编辑文章</a>
+    <c:if test="${sessionUser eq post.user}">
+      <p><a href="<c:url value="/post/${post.slug}/edit"/>">编辑文章</a></p>
     </c:if>
 
     <div id="comments" class="postComments">

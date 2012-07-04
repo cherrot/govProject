@@ -143,13 +143,21 @@ public class PostController {
      * @return
      */
     @RequestMapping(value = "/{postSlug}", method = RequestMethod.GET)
-    public ModelAndView viewPost(@PathVariable("postSlug") String postSlug, @CookieValue(value = "pendingCommentsId", required = false) String pendingCommentsId, HttpServletResponse response) {
+    public ModelAndView viewPost(@PathVariable("postSlug") String postSlug
+        , @CookieValue(value = "pendingCommentsId", required = false) String pendingCommentsId
+        , HttpServletResponse response
+        /*, HttpSession session*/) {
 
         ModelAndView mav = new ModelAndView("viewPost");
         try {
             Post post = postService.findBySlug(postSlug, true, true, true, true, false);
             mav.addObject("post", post);
             mav.addObject("tagList", post.getTagList());
+            //测试用户是否相等
+//            System.err.println("测试是否相等：" + post.getUser().equals(BaseController.getSessionUser(session)));
+//            System.err.println("测试是否相等：" + BaseController.getSessionUser(session).equals(post.getUser()));
+//            System.err.println("Session Id:" + BaseController.getSessionUser(session).getId());
+//            System.err.println("post User Id:" + post.getUser().getId());
             //读取Cookie将访问者所有未审核评论显示在页面上
             if (pendingCommentsId != null) {
                 List<Comment> pendingComments = processPendingCommentsString(pendingCommentsId);
