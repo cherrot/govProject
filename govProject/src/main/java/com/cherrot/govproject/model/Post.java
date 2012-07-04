@@ -71,7 +71,7 @@ import javax.xml.bind.annotation.XmlTransient;
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.
- *
+ * PENDING: 如果是用来指示多媒体内容的Post,那么其content为用于显示这个多媒体内容的HTML代码，其摘要(excerpt)为多媒体内容的URI
  * @See
  * http://openjpa.apache.org/builds/1.1.0/docs/jpa_langref.html#jpa_langref_in
  */

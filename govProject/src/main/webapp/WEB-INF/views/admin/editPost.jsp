@@ -13,23 +13,25 @@
     <link href="<c:url value="/resources/js/fileuploader/fileuploader.css"/>" rel="stylesheet" type="text/css">
     <title>${post.title} | 昆明文化辞典</title>
 
-    <%--    <script type="text/javascript">
-          function init() {
-            document.getElementById('file_upload_form').onsubmit=function() {
-              document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
-              document.getElementById("upload_target").onload=function() {
-                document.getElementById("upload_result").write("文件上传成功！");
-              }
-            }
+    <%--实现异步文件上传的脚本--%>
+    <%--<script type="text/javascript">
+      function init() {
+        document.getElementById('file_upload_form').onsubmit=function() {
+          document.getElementById('file_upload_form').target = 'upload_target'; //'upload_target' is the name of the iframe
+          document.getElementById("upload_target").onload=function() {
+            document.getElementById("upload_result").write("文件上传成功！");
           }
-          window.onload=init;
-        </script>--%>
-    <%--    <script type="text/javascript">
-          function callback(msg) {
-            document.getElementById("file").outerHTML = document.getElementById("file").outerHTML;
-            document.getElementById("msg").innerHTML = "<em>"+msg+"</em>";
-          }
-        </script>--%>
+        }
+      }
+      window.onload=init;
+    </script>--%>
+    <%--实现异步文件上传回调的脚本--%>
+    <%--<script type="text/javascript">
+      function callback(msg) {
+        document.getElementById("file").outerHTML = document.getElementById("file").outerHTML;
+        document.getElementById("msg").innerHTML = "<em>"+msg+"</em>";
+      }
+    </script>--%>
 
     <%--https://github.com/valums/file-uploader--%>
     <script src="<c:url value="/resources/js/fileuploader/fileuploader.js"/>" type="text/javascript"></script>
