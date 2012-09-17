@@ -14,10 +14,7 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      <table align="center">
-          <tr>
-              
-    <td width="700px">
+      <%@include file="jspf/sidebar.jspf" %>
     <!--Start MainContent-->
     <h1>${user.displayName} 的个人资料</h1>
     <c:if test="${user eq sessionUser}">
@@ -36,9 +33,7 @@
         <p><em>${usermeta.key}</em>${usermeta.value}</p>
       </c:forEach>
     </div>
-      <table>
-          <tr>
-              <td width="300px" valign="top">
+
     <div>
       <h3>用户近期文章</h3>
       <c:choose>
@@ -54,8 +49,7 @@
           用户还未发表任何文章。
         </c:otherwise>
       </c:choose>
-    </div></td>
-    <td width="300px" valign="top">
+    </div>
     <div>
       <h3>用户近期评论</h3>
         <c:choose>
@@ -72,11 +66,6 @@
           </c:otherwise>
         </c:choose>
     </div>
-        </td></tr></table>
-      </td>
-      <td width="200px" valign="top">
-      <%@include file="jspf/sidebar.jspf" %></td>
-      </tr></table>
     <!--End MainContent-->
       <%@include file="jspf/footer.jspf" %>
   </body>

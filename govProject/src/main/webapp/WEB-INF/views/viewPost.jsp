@@ -18,18 +18,10 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-
-      <table align="center">
-          <tr>
-              <td width="700px">
+      <%@include file="jspf/sidebar.jspf" %>
     <!--Start MainContent-->
-    <table style="table-layout:fixed;
-    empty-cells:show;
-    border-collapse: collapse;margin:0 auto; border:1px solid #cad9ea;
-    color:#666;padding: 6px 6px 6px 12px;width: 700px">
-        <tr><td style="padding: 6px 6px 6px 12px;">
     <h1 class="postTitle"><a href="<c:url value="/post/${post.slug}" />" title="${post.title}" >${post.title}</a></h1>
-    <h2 class="meta" style="font-size: 12px">
+    <h2 class="meta">
       由&nbsp;<a href="<c:url value="/user/${post.user.id}" />">${post.user.displayName}</a>&nbsp;发表&nbsp;
       <fmt:formatDate value="${post.createDate}" type="date" dateStyle="full"/> &nbsp;
       所属分类：
@@ -38,12 +30,10 @@
       </c:forEach>
         <a href="#comments">${post.commentCount} 条评论</a>
     </h2>
-    </td></tr>
-        <tr><td style="padding: 6px 6px 6px 12px;">
+
     <div class="postContent">
       ${post.content}
-    </div></td></tr>
-        <tr align="right"><td style="padding: 6px 6px 6px 12px;">
+    </div>
     <p>
       <c:if test="${!empty tagList}">文章标签：</c:if>
       <%--c:set value="${fn:length(tagList)}" var="tagListSize"/--%>
@@ -51,7 +41,6 @@
         <a href="<c:url value="/tag/${tag.slug}"/>">${tag.name}</a><c:if test="${!status.last}">,&nbsp;</c:if>
       </c:forEach>
     </p>
-    </td></tr></table>
 
     <c:if test="${sessionUser eq post.user}">
       <p><a href="<c:url value="/post/${post.slug}/edit"/>">编辑文章</a></p>
@@ -93,11 +82,7 @@
         <input type="submit" value="提交"/>
       </form:form>
     </div>
-      </td>
-      <td width="200px" valign="top">      <%@include file="jspf/sidebar.jspf" %></td>
-      </tr></table>
     <!--End MainContent-->
-      <table align="center"><tr><td><%@include file="jspf/footer.jspf" %></td></tr></table>
-
+      <%@include file="jspf/footer.jspf" %>
   </body>
 </html>

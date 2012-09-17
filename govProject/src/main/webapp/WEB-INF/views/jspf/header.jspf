@@ -1,50 +1,28 @@
 <%--网页的头部内容，Logo和文章分类列表--%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-<style type="text/css">
-
-#navigat{width:980px;height:30px;margin:auto;}
-#nav1{width: 100%;text-align:center;margin:0;padding:0;height:30px;}
-#nav1 ul{list-style:none;height:23px;padding-top:8px;padding-left:13px;}
-#nav1 li{float:left;border-right:1px solid #FFF;padding-left:8px;padding-right:8px; }
-#nav1 li.lastli{	border: none;}
-
-</style>
-<div class="header" style="font-size:12px">
+  <div class="header">
     <!--右对齐-->
-
     <div>
-      <table>
-          <tr>
-        <td style="text-align:left;" width="800px"><a href="<c:url value="/"/>">首页</a>
+      <ul>
+        <li><a href="<c:url value="/"/>">首页</a></li>
         <c:choose>
           <c:when test="${empty sessionUser}">
-            <a href="<c:url value="/login"/>">登录</a></td>
+            <li><a href="<c:url value="/login"/>">登录</a></li>
           </c:when>
           <c:otherwise>
-            <a href="<c:url value="/logout"/>">注销</a>
-            <a href="<c:url value="/user"/>" title="进入 ${sessionUser.displayName} 的个人中心">${sessionUser.displayName}</a></td>
+            <li><a href="<c:url value="/logout"/>">注销</a></li>
+            <li><a href="<c:url value="/user"/>" title="进入 ${sessionUser.displayName} 的个人中心">${sessionUser.displayName}</a></li>
           </c:otherwise>
         </c:choose>
-      
-            </tr>
-            <tr></tr>
-      </table>
+      </ul>
     </div>
-    <div id="headerimage"  style="text-align:center;">
+    <div id="headerimage">
       <img src="<c:url value="/resources/images/header.jpg"/>" />
     </div>
-    <div>
-   <div id="navigat">  
-      <div id="nav1">
-    <ul style="width:100%;padding:0;margin:0;list-style-type:none;">
+    <ul>
       <c:forEach items="${categories}" var="category">
-        <li style="float:left;width:180px;text-decoration:none;background-color:purple;padding:0.2em 0.6em;border-right:1px solid white;">
-            <a style="color:white;" href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
+        <li><a href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
       </c:forEach>
     </ul>
-  </div>
-  </div>
-  
-  
   </div>

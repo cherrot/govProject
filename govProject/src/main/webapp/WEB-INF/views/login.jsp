@@ -27,12 +27,9 @@
   </head>
   <body>
       <%@include file="jspf/header.jspf" %>
-      
-      <div style="text-align:center;">
+      <%@include file="jspf/sidebar.jspf" %>
+
     <p>${errorMsg}</p>
-    <table align="center">
-        <tr>
-            <td width="300px" valign="top">
     <h1>用户登录</h1>
     <div class="loginForm">
       <form action="<c:url value="/login" />" method="POST">
@@ -45,8 +42,6 @@
         </fieldset>
       </form>
     </div>
-        </td>
-        <td width="450px" vlign="top">
     <h1>新用户注册</h1>
     <div class="registerForm">
       <form:form id="registerForm" action="/register" modelAttribute="newUser" onsubmit="return InputCheck(this)">
@@ -65,11 +60,6 @@
         </fieldset>
       </form:form>
     </div>
-    </td>
-    <td width="200px" align="left" vlign="top"><%@include file="jspf/sidebar.jspf" %></td>
-    </tr></table>
-
       <%@include file="jspf/footer.jspf" %>
-      </div>
   </body>
 </html>
