@@ -159,7 +159,7 @@ public class PostController {
 //            System.err.println("Session Id:" + BaseController.getSessionUser(session).getId());
 //            System.err.println("post User Id:" + post.getUser().getId());
             //读取Cookie将访问者所有未审核评论显示在页面上
-            if (pendingCommentsId != null) {
+            if (pendingCommentsId != null) { //FIXME 如果cookie中有pendingCommentsId 可能会导致空指针
                 List<Comment> pendingComments = processPendingCommentsString(pendingCommentsId);
                 mav.addObject("pendingComments", pendingComments);
                 StringBuilder strBuilder = new StringBuilder();

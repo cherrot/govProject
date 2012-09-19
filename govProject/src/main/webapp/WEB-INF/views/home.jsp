@@ -6,42 +6,21 @@
     <%@include file="jspf/commonHead.jspf" %>
     <title>昆明文化辞典</title>
     <script src="<c:url value="resources/js/jquery/galleria/galleria-1.2.8.min.js" />"></script>
-    <script>
-        $(function(){
-          $("#tab1,#tab2,#tab3,#tab4,#tab5").tabs({
-            fx: { opacity: 'toggle', duration: 'fast'},
-            event:'mousemove'
-          });
-        });
-    </script>
-
   </head>
   <body>
     <%@include file="jspf/header.jspf" %>
     <%@include file="jspf/sidebar.jspf" %>
     <!--Start MainContent-->
-      <div id="galleria">
+      <div class="fl main-block" id="galleria">
         <c:forEach items="${imagePosts}" var="imagePost">
           <img src="<c:url value="${imagePost.excerpt}"/>" longdesc="<c:url value="/post/${imagePost.postParent.slug}"/>"/>
         </c:forEach>
           <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song1.jpg" longdesc="http://www.cherrot.com" />
           <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song1.jpg" longdesc="http://www.cherrot.com" />
       </div>
-    <script>
-      /*Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/dots/galleria.dots.js" />');
-      $('#galleria').galleria({
-        autoplay: 3000,
-        popupLinks: true
-      });*/
-      Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/classic/galleria.classic.min.js" />');
-      Galleria.run('#galleria', {
-        autoplay: 3000,
-        popupLinks: true
-      });
-    </script>
 
     <c:forEach items="${categoryGroups}" end="4" var="group" varStatus="groupStatus">
-      <div id="tab${groupStatus.count}">
+      <div id="tab${groupStatus.count}" class="fl main-block">
         <ul>
             <c:forEach items="${group.categoryList}" var="category" varStatus="status">
               <li><a href="#tab${groupStatus.count}-${status.count}">${category.name}</a></li>
@@ -59,7 +38,28 @@
       </div>
     </c:forEach>
 
-    <!--End MainContent-->
+    </div><!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>
+
+<script>
+   /*Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/dots/galleria.dots.js" />');
+   $('#galleria').galleria({
+     autoplay: 3000,
+     popupLinks: true
+   });*/
+   Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/classic/galleria.classic.min.js" />');
+   Galleria.run('#galleria', {
+     autoplay: 3000,
+     popupLinks: true
+   });
+ </script>
+<script>
+  $(function(){
+    $("#tab1,#tab2,#tab3,#tab4,#tab5").tabs({
+      fx: { opacity: 'toggle', duration: 'fast'},
+      event:'mousemove'
+    });
+  });
+</script>
   </body>
 </html>

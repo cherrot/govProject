@@ -3,26 +3,27 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
   <div class="header">
     <!--右对齐-->
-    <div>
-      <ul>
-        <li><a href="<c:url value="/"/>">首页</a></li>
+    <div class="header">
+        <a href="<c:url value="/"/>">首页</a>
         <c:choose>
           <c:when test="${empty sessionUser}">
-            <li><a href="<c:url value="/login"/>">登录</a></li>
+            <a href="<c:url value="/login"/>">登录</a>
           </c:when>
           <c:otherwise>
-            <li><a href="<c:url value="/logout"/>">注销</a></li>
-            <li><a href="<c:url value="/user"/>" title="进入 ${sessionUser.displayName} 的个人中心">${sessionUser.displayName}</a></li>
+            <a href="<c:url value="/logout"/>">注销</a>
+            <a href="<c:url value="/user"/>" title="进入 ${sessionUser.displayName} 的个人中心">${sessionUser.displayName}</a>
           </c:otherwise>
         </c:choose>
-      </ul>
     </div>
-    <div id="headerimage">
+    <div class="banner">
       <img src="<c:url value="/resources/images/header.jpg"/>" />
     </div>
-    <ul>
+    <ul class="nav-list clearfix">
+      <%-- TODO 返回数据表明是否加粗分类<a class="highlight" 或 正在浏览的分类<a class="b" --%>
       <c:forEach items="${categories}" var="category">
         <li><a href="<c:url value="/category/${category.slug}" />">${category.name}</a></li>
       </c:forEach>
     </ul>
   </div>
+      
+<div class="mainWrap clearfix">

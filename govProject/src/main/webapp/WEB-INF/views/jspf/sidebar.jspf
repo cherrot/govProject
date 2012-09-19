@@ -2,14 +2,34 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
       <div class="sidebar">
-        <c:forEach items="${linkCategories}" var="linkcategory">
-          <div class="links">
-            <h3>${linkcategory.name}</h3>
-            <ul>
-              <c:forEach items="${linkcategory.linkList}" var="link" >
-                <li><a href="${link.url}">${link.name}</a></li>
-              </c:forEach>
-            </ul>
-          </div>
-        </c:forEach>
+        <div class="search">
+          <input type="text" class="input text" value="">
+          <select class="input select" name="" id="">
+            <option value="">全部</option>
+            <option value="">视频</option>
+            <option value="">图文</option>
+          </select>
+          <a href="##" class="input btn">搜索</a>
+          <!--<input class="input btn" type="button" value="搜索">-->
+        </div>
+
+        <div class="links">
+          <h3 class="first-title">${linkCategories[0].name}</h3>
+          <ul>
+            <c:forEach items="${linkCategories[0].linkList}" var="link" >
+              <li><a href="${link.url}">${link.name}</a></li>
+            </c:forEach>
+          </ul>
+          <div class="side-bottom"></div>
+        </div>
+
+        <div class="links">
+          <h3 class="sec-title">${linkCategories[1].name}</h3>
+          <ul>
+            <c:forEach items="${linkCategories[1].linkList}" var="link" >
+              <li><a href="${link.url}">${link.name}</a></li>
+            </c:forEach>
+          </ul>
+          <div class="final-side-bottom"></div>
+        </div>
       </div>
