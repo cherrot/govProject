@@ -6,10 +6,29 @@
     <%@include file="jspf/commonHead.jspf" %>
     <title>昆明文化辞典</title>
     <script src="<c:url value="resources/js/jquery/galleria/galleria-1.2.8.min.js" />"></script>
+    <script>
+      $(function(){
+         /*Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/dots/galleria.dots.js" />');
+         $('#galleria').galleria({
+           autoplay: 3000,
+           popupLinks: true
+         });*/
+        Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/classic/galleria.classic.min.js" />');
+        Galleria.run('#galleria', {
+          autoplay: 3000,
+          popupLinks: true
+        });
+        $("#tab1,#tab2,#tab3,#tab4,#tab5").tabs({
+          fx: { opacity: 'toggle', duration: 'fast'},
+          event:'mousemove'
+        });
+      });
+    </script>
   </head>
   <body>
     <%@include file="jspf/header.jspf" %>
     <%@include file="jspf/sidebar.jspf" %>
+
     <!--Start MainContent-->
       <div class="fl main-block" id="galleria">
         <c:forEach items="${imagePosts}" var="imagePost">
@@ -38,28 +57,7 @@
       </div>
     </c:forEach>
 
-    </div><!--End MainContent-->
+    <!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>
-
-<script>
-   /*Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/dots/galleria.dots.js" />');
-   $('#galleria').galleria({
-     autoplay: 3000,
-     popupLinks: true
-   });*/
-   Galleria && Galleria.loadTheme('<c:url value="resources/js/jquery/galleria/themes/classic/galleria.classic.min.js" />');
-   Galleria.run('#galleria', {
-     autoplay: 3000,
-     popupLinks: true
-   });
- </script>
-<script>
-  $(function(){
-    $("#tab1,#tab2,#tab3,#tab4,#tab5").tabs({
-      fx: { opacity: 'toggle', duration: 'fast'},
-      event:'mousemove'
-    });
-  });
-</script>
   </body>
 </html>

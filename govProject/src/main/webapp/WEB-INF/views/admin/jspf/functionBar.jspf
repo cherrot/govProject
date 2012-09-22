@@ -1,10 +1,11 @@
 <%@page contentType="text/html" pageEncoding="UTF-8" import="com.cherrot.govproject.util.Constants"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-      <div class="functionBar">
+      <div class="functionBar clearfix">
         <c:set value="<%= Constants.USER_XUANCHUANBU%>" var="adminLevel"/>
-          <ul>
+          <ul class="nav2 clearfix">
             <c:if test="${sessionUser.userLevel >= adminLevel}">
-            <li><a href="<c:url value="/admin/user" />">用户管理</a></li>
+              <%--TODO  用户点击某菜单后改变 <li class="selected"> --%>
+            <li><a href="<c:url value="/admin/user" />"><span>用户管理</span></a></li>
             <li><a href="<c:url value="/admin/post" />">文章管理</a></li>
             <li><a href="<c:url value="/admin/comment"/>">评论管理</a></li>
             <%--<li><a href="<c:url value="/admin/media"/>">媒体库</a></li>--%>

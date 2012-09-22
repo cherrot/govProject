@@ -17,7 +17,8 @@
       <%@include file="jspf/sidebar.jspf" %>
     <!--Start MainContent-->
     <h1>查看用户${user.displayName}的评论</h1>
-    <table>
+    <%--此处没样式--%>
+    <table width="100%">
       <tr>
         <th>评论者</th>
         <th>评论时间</th>
@@ -34,12 +35,19 @@
       </c:forEach>
     </table>
 
-    <ul class="pageNav">
+    <div class="pageNav">
       页码：
       <c:forEach begin="1" end="${pageCount}" varStatus="status">
-        <li><a href="<c:url value="/user/${user.id}/comments/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+          <c:choose>
+            <c:when test="${status.count == pageNum}">
+              <span>${status.count}&nbsp;</span>
+            </c:when>
+            <c:otherwise>
+              <a href="<c:url value="/user/${user.id}/comments/page/${status.count}"/>">${status.count}</a>
+            </c:otherwise>
+          </c:choose>
       </c:forEach>
-    </ul>
+    </div>
 
     <!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>

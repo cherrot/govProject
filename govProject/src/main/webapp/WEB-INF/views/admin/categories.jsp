@@ -9,17 +9,17 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>文章分类管理 | 昆明文化辞典</title>
   </head>
   <body>
-    <%@include file="jspf/header.jspf" %>
+    <%@include file="../jspf/header.jspf" %>
     <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <div class="mainContent">
       <h1>文章分类管理</h1>
       <div>
-        <h2>当前文章分类</h2>
+        <h3>当前文章分类</h3>
         <ul>
           <c:forEach items="${categoryList}" var="category2nd">
             <li>
@@ -43,7 +43,7 @@
       </div>
 
       <div>
-        <h2>添加顶级文章分类</h2>
+        <h3>添加顶级文章分类</h3>
         <form:form modelAttribute="category">
           <form:errors path="*"/><br/>
           <label for="category2nd_name">分类名：</label>

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <link href="<c:url value="/resources/js/fileuploader/fileuploader.css"/>" rel="stylesheet" type="text/css">
     <title>${post.title} | 昆明文化辞典</title>
 
@@ -59,7 +59,7 @@
     </script>
   </head>
   <body>
-    <%@include file="jspf/header.jspf" %>
+    <%@include file="../jspf/header.jspf" %>
     <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <h3>${successMsg}</h3>

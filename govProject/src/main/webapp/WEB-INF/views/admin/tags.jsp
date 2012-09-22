@@ -9,17 +9,15 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>文章标签管理 | 昆明文化辞典</title>
   </head>
   <body>
-    <%@include file="jspf/header.jspf" %>
+    <%@include file="../jspf/header.jspf" %>
     <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
-    <div class="mainContent">
-      <h1>文章标签管理</h1>
-      <div>
-        <table>
+      <div class="formTable">
+        <table width="100%">
           <thead>
             <tr>
               <th>标签名</th>
@@ -44,13 +42,19 @@
         </table>
       </div>
 
-      <ul class="pageNav">
-        页码：
-        <c:forEach begin="1" end="${pageCount}" varStatus="status">
-          <li><a href="<c:url value="/admin/tag/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
-        </c:forEach>
-      </ul>
-    </div>
+      <div class="pageNav">
+      页码：
+      <c:forEach begin="1" end="${pageCount}" varStatus="status">
+          <c:choose>
+            <c:when test="${status.count == pageNum}">
+              <span>${status.count}&nbsp;</span>
+            </c:when>
+            <c:otherwise>
+              <a href="<c:url value="/admin/tag/page/${status.count}"/>">${status.count}</a>
+            </c:otherwise>
+          </c:choose>
+      </c:forEach>
+      </div>
     <!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>
   </body>

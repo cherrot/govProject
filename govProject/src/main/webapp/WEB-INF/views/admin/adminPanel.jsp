@@ -8,11 +8,11 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>控制面板 | 昆明文化辞典</title>
   </head>
   <body>
-      <%@include file="jspf/header.jspf" %>
+      <%@include file="../jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
     <div>

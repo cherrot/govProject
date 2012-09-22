@@ -1,4 +1,4 @@
-<%--
+<%-- TODO 管理媒体功能尚未实现
     Document   : medias
     Created on : 2012-6-11, 15:53:10
     Author     : Cherrot Luo<cherrot+dev@cherrot.com>
@@ -8,11 +8,11 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>${user.displayName} | 昆明文化辞典</title>
   </head>
   <body>
-      <%@include file="jspf/header.jspf" %>
+      <%@include file="../jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
 

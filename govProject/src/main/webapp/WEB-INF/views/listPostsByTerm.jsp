@@ -30,20 +30,29 @@
         <c:set value="标签" var="typeString"/>
       </c:otherwise>
     </c:choose>
-
-    <h1>文章${typeString}：${term.name}</h1>
-    <ol>
+<div class="list">
+    <h3>文章${typeString}：${term.name}</h3>
+    <ul>
       <c:forEach items="${postList}" var="post">
         <li><a href="<c:url value="/post/${post.slug}"/>">${post.title}</a></li>
       </c:forEach>
-    </ol>
+    </ul>
+</div>
 
-    <ul class="pageNav">
+    <div class="pageNav"> <%-- TODO 写成页面模板传参动态生成页码导航--%>
       页码：
       <c:forEach begin="1" end="${pageCount}" varStatus="status">
-        <li><a href="<c:url value="/${type}/${term.slug}/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+          <c:choose>
+            <c:when test="${status.count == pageNum}">
+              <span>${status.count}&nbsp;</span>
+            </c:when>
+            <c:otherwise>
+              <a href="<c:url value="/${type}/${term.slug}/page/${status.count}"/>" >${status.count}</a>
+            </c:otherwise>
+            <%--TODO 页码过多时使用 ... <a>末页</a>--%>
+          </c:choose>
       </c:forEach>
-    </ul>
+    </div>
 
     <!--End MainContent-->
     <%@include file="jspf/footer.jspf" %>

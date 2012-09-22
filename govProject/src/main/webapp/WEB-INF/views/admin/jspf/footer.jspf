@@ -1,4 +1,9 @@
+<%--页面底部部分--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+</div><%--MainWrap--%>
+
   <div class="footer">
-    <p align="middle">Copyright ? 2012 云南大学 地址：昆明市翠湖北路2号 邮编：650091</p>
+    <p>版权所有：中共昆明市委宣传部</p>
+    <p>技术支持：昆明信息港</p>
+      <p style="color:#999;font-size:10px;">网络支持：0871-4155248  技术支持：0871-5034596</p>
   </div>

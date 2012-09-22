@@ -9,20 +9,20 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>文章评论管理 | 昆明文化辞典</title>
   </head>
   <body>
-    <%@include file="jspf/header.jspf" %>
+    <%@include file="../jspf/header.jspf" %>
     <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
-    <h1>查看评论列表</h1>
     <c:url value="/admin/comment" var="onlyPending">
       <c:param name="pending" value="true"/>
     </c:url>
-    <a href="${onlyPending}">只显示待审核评论</a><br/>
-    <a href="<c:url value="/admin/comment"/>">显示全部评论</a>
-    <table>
+
+  <div class="formTable">
+    <a href="${onlyPending}">只显示待审核评论</a>&nbsp;&nbsp;<a href="<c:url value="/admin/comment"/>">显示全部评论</a>
+    <table width="100%">
       <tr>
         <th>评论者</th>
         <th>评论时间</th>
@@ -51,12 +51,21 @@
         </tr>
       </c:forEach>
     </table>
-    <ul class="pageNav">
+  </div>
+
+    <div class="pageNav">
       页码：
       <c:forEach begin="1" end="${pageCount}" varStatus="status">
-        <li><a href="<c:url value="/admin/comment/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+          <c:choose>
+            <c:when test="${status.count == pageNum}">
+              <span>${status.count}&nbsp;</span>
+            </c:when>
+            <c:otherwise>
+              <a href="<c:url value="/admin/comment/page/${status.count}"/>">${status.count}</a>
+            </c:otherwise>
+          </c:choose>
       </c:forEach>
-    </ul>
+    </div>
   <!--End MainContent-->
   <%@include file="jspf/footer.jspf" %>
 </body>

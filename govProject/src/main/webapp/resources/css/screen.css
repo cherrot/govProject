@@ -3,7 +3,7 @@ body {
 	padding: 0;
 	background-color: #fff;
 	font-family: Verdana, sans-serif;
-	font-size: 10px;
+	font-size: 12px;
 }
 
 #header {
@@ -145,13 +145,22 @@ margin-right:10px;
 
 /*reset*/
 ul{padding:0;margin:0;}
-li{list-style:none;margin:o;padding:0;}
+li{list-style:none;margin:0;padding:0;}
 a{text-decoration:none;}
-a:hover{text-decoration:underline}
+a:hover{text-decoration:underline;font-weight:bold;}
 
 /*public*/
 .header,.mainWrap,.footer{width:982px;margin:0 auto;}
-h1,h2,h3,h4{margin:0;padding:0}
+.mainWrap{min-height:400px;_height:400px;height:auto;}
+table
+{
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+table,tr,td,th{margin:0;padding:0;}
+h1,h2,h3,h4{margin:0;padding:0;line-height:1.4em;}
+h3{font-size:18px;font-weight:bold;}
+h4{font-size:16px;font-weight:bold;}
 *{margin:0;padding:0;}
 .fl{float:left;}
 .fr{float:right;}
@@ -159,6 +168,11 @@ h1,h2,h3,h4{margin:0;padding:0}
 .clearfix {display: block;}
 .b{font-weight:bold;}
 .highlight{color:#f00;}
+a,a:focus
+{
+    outline-style: none;
+    outline-width: 0;
+}
 
 /*首页 home   --- 框架  */
 .header{}
@@ -227,5 +241,47 @@ h1,h2,h3,h4{margin:0;padding:0}
 
 
 /*个人信息页*/
+.person{background:#f5f5f5;padding:0 20px 50px;}
+.person .infoBlock{border-bottom:1px dotted #999;padding:10px;}
+.person p {line-height:1.4em;}
+.person p a {font-size:12px;text-decoration:underline;}
+.person p.more  {padding:20px 0 0 0;font-size:10px;}
+.person h3,.person h4{padding:20px 0 10px 0 ;}
+.mb20{margin-bottom:20px;}
+.mb15{margin-bottom:15px;}
+.mb10{margin-bottom:10px;}
 
 
+/*后台操作tab*/
+.functionBar{margin-bottom:20px;}
+.functionBar { margin-bottom: 20px;    border-bottom: 1px solid #AAAAAA; height: 37px;position: relative;}
+.nav2 {border: medium none;height: 38px; margin-bottom: -1px;padding-left: 0;position: absolute;}
+.nav2 li {float: left;padding-right: 5px;width: 110px;}
+.nav2 li a {background-image: url("../images/tab.png");background-position: 0 -62px;color: #333333;display: block;font-size: 14px;height: 38px;line-height: 42px;overflow: hidden;padding-left: 4px;text-align: center;}
+.nav2 li a:hover {color: #333333;text-decoration: none;}
+.nav2 li a span { background-image: url("../images/tab.png");background-position: right -62px;cursor: pointer;display: block;height: 38px;line-height: 42px;overflow: hidden;padding-right: 4px;}
+.nav2 li.selected a { background-position: 0 0;color: #333333; font-weight: normal;}
+.nav2 li.selected a span {  background-position: right 0;}
+.nav2 li a:hover { background-position: left -112px;}
+.nav2 li a:hover span {background-position: right -112px;}
+.nav2 li.selected a:hover {background-position: 0 0;}
+.nav2 li.selected a:hover span { background-position: right 0;}
+
+/*后台表格*/
+.formTable{}
+.formTable th{background:#f5f5f5;}
+.formTable th,.formTable td{border:1px solid #ccc;padding:2px;text-align:left;}
+
+/*数字页码*/
+.pageNav{margin:20px 0;text-align:center;}
+.pageNav a{padding-right:2px;font-size:12px;text-decoration:underline;}
+.pageNav span{color:#f00;}
+
+/*文字页码*/
+.pageNav2{}
+.pageNav2 a{font-size:14px;text-decoration:underline}
+/*列表页*/
+.list{}
+.list h3{font-size:18px;font-weight:bold;line-height:20px;height:22px;padding-left:20px;margin-bottom:20px;}
+.list li{height:24px;line-height:24px;vertical-align:middle;background:#f7f7f7;margin-bottom:5px;padding-left:50px;}
+.list li a{font-size:16px;height:20px;line-height:20px;vertical-align:middle;}

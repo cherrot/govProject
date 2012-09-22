@@ -8,15 +8,15 @@
 <!DOCTYPE html>
 <html lang="zh">
   <head>
-    <%@include file="jspf/commonHead.jspf" %>
+    <%@include file="../jspf/commonHead.jspf" %>
     <title>用户管理 | 昆明文化辞典</title>
   </head>
   <body>
-      <%@include file="jspf/header.jspf" %>
+      <%@include file="../jspf/header.jspf" %>
       <%@include file="jspf/functionBar.jspf" %>
     <!--Start MainContent-->
-    <div>
-      <table>
+    <div class="formTable">
+      <table width="100%">
         <thead>
           <tr>
             <th>用户名</th>
@@ -48,12 +48,19 @@
         </tbody>
       </table>
     </div>
-    <ul class="pageNav">
+    <div class="pageNav">
       页码：
       <c:forEach begin="1" end="${pageCount}" varStatus="status">
-        <li><a href="<c:url value="/admin/user/page/${status.count}"/>" <c:if test="${status.count == pageNum}">style="color: red;"</c:if>>${status.count}</a></li>
+          <c:choose>
+            <c:when test="${status.count == pageNum}">
+              <span>${status.count}&nbsp;</span>
+            </c:when>
+            <c:otherwise>
+              <a href="<c:url value="/admin/user/page/${status.count}"/>" >${status.count}</a>
+            </c:otherwise>
+          </c:choose>
       </c:forEach>
-    </ul>
+    </div>
     <!--End MainContent-->
       <%@include file="jspf/footer.jspf" %>
   </body>

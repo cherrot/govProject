@@ -1,10 +1,10 @@
 <%--页面底部部分--%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-</div>
+</div><%--MainContent--%>
+</div><%--MainWrap--%>
 
   <div class="footer">
     <p>版权所有：中共昆明市委宣传部</p>
     <p>技术支持：昆明信息港</p>
-    <%-- TODO 这行代码在上线前记得注释掉。。--%>
       <p style="color:#999;font-size:10px;">网络支持：0871-4155248  技术支持：0871-5034596</p>
   </div>
