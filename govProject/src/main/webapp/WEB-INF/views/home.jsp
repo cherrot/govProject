@@ -34,11 +34,9 @@
         <c:forEach items="${imagePosts}" var="imagePost">
           <img src="<c:url value="${imagePost.excerpt}"/>" longdesc="<c:url value="/post/${imagePost.postParent.slug}"/>"/>
         </c:forEach>
-          <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song1.jpg" longdesc="http://www.cherrot.com" />
-          <img src="http://images.cnblogs.com/cnblogs_com/cloudgamer/143727/r_song1.jpg" longdesc="http://www.cherrot.com" />
       </div>
 
-    <c:forEach items="${categoryGroups}" end="4" var="group" varStatus="groupStatus">
+    <c:forEach items="${categoryGroups}" var="group" varStatus="groupStatus">
       <div id="tab${groupStatus.count}" class="fl main-block">
         <ul>
             <c:forEach items="${group.categoryList}" var="category" varStatus="status">

@@ -34,6 +34,11 @@ public class AdminCategoryController {
     @Inject
     private CategoryService categoryService;
 
+    /**
+     * Method to get an Category instance before any request method executed.
+     * @param categoryId if this param is set, return the category whose ID is categoryId; if not, return a new Category instance.
+     * @return Category instance.
+     */
     @ModelAttribute("category")
     public Category get2ndCategory(@RequestParam(value = "id", required = false) Integer categoryId) {
         Category category = null;
@@ -57,9 +62,8 @@ public class AdminCategoryController {
     @RequestMapping(value = {"", "/*"}, method = RequestMethod.POST)
     public ModelAndView doEditCategory(@Valid @ModelAttribute("category") Category category, BindingResult result, @RequestParam("parent") Integer categoryParentId) {
 
-        //不允许编辑顶级分类！
-//        if (categoryService.isTopLevelCategory(category)) { //该方法是通过 categoryParent判断的
-        if (category.getId() != null && category.getId() < Constants.TOP_LEVEL_CATEGORY_COUNT) {
+        //不允许编辑顶级分类，如果是顶级分类，返回404 ...
+        if (categoryService.isTopLevelCategory(category)) {
             throw new ResourceNotFoundException();
         }
 
@@ -121,7 +125,7 @@ public class AdminCategoryController {
         List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("categoryList", secondCategorys);
         List<Category> topCategorys = categoryService.listTopLevelCategories(true);
-        topCategorys.remove(topCategorys.size() - 1);//XXX 去掉多媒体分组（该分组必须由系统管理）
+        topCategorys.remove(topCategorys.size() - 1);//XXX 在分组列表中去掉最后一个分组（多媒体分组），该分组必须由系统管理。
         mav.addObject("categoryGroups", topCategorys);
         return mav;
     }

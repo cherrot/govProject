@@ -71,6 +71,10 @@ public class HomeController {
 
         //添加首页主体部分的文章群组分类和该分类的最新文章
         List<Category> topLevelCategorys = categoryService.listTopLevelCategories(true);
+        topLevelCategorys.remove(categoryService.findBySlug("hidden", false, false));
+        topLevelCategorys.remove(categoryService.findImageCategory(false));
+        topLevelCategorys.remove(categoryService.findVideoCategory(false));
+
         mav.addObject("categoryGroups", topLevelCategorys);
         for (Category group : topLevelCategorys) {
             for (Category category : group.getCategoryList()) {
@@ -94,60 +98,61 @@ public class HomeController {
 
     private void initData() {
         try {
-            userService.findByLoginName("f@f.f", false, false, false, false);
+            userService.findByLoginName("admin@cherrot.com", false, false, false, false);
         } catch (Exception ex) {
-            //创建测试用户 用户名 f@f.f 密码 fff
-            User user = new User("f@f.f", "fff", Constants.USER_XUANCHUANBU, new Date(), "Cherrot");
+            User user = new User("admin@cherrot.com", "admin", Constants.USER_XUANCHUANBU, new Date(), "管理员");
             userService.create(user);
             //创建测试分类
-            Category group1 = new Category(0, "分类群组1", "group1");
-            Category group2 = new Category(0, "分类群组2", "group2");
-            Category group3 = new Category(0, "分类群组3", "group3");
-            Category group4 = new Category(0, "分类群组4", "group4");
-            Category group5 = new Category(0, "分类群组5", "group5");
-            Category groupHidden = new Category(0, "隐藏群组", "hidden");
-            Category groupMultimedia = new Category(0, "多媒体分组", "multimedia");
-            Category wenxue = new Category(0, "文学作品", "wenxue");
-            Category yingshi = new Category(0, "影视作品", "yingshi");
-            Category mingren = new Category(0, "文化名人", "mingren");
-            Category fushi = new Category(0, "服饰风采", "fushi");
-            Category zongjiao = new Category(0, "宗教文化", "zongjiao");
-            Category fengjing = new Category(0, "风景名胜", "fengjing");
-            Category bowuguan = new Category(0, "博物馆", "bowuguan");
-            Category tiyuguan = new Category(0, "体育馆", "tiyuguan");
-            Category yichan = new Category(0, "非物质文化遗产", "feiwuzhiyichan");
-            Category shufa = new Category(0, "书法作品", "shufa");
-            Category dongman = new Category(0, "动漫作品", "dongman");
-            Category chanye = new Category(0, "文化产业", "wenhuachanye");
-            Category jieqing = new Category(0, "节庆活动", "jieqing");
-            Category meishi = new Category(0, "民间美食", "meishi");
-            Category qiye = new Category(0, "文化企业", "qiye");
-            Category tushuguan = new Category(0, "图书馆", "tushuguan");
-            Category jianzhu = new Category(0, "建筑", "jianzhu");
-            Category aiguozhuyi = new Category(0, "爱国主义教育基地", "爱国主义教育基地");
-            Category meishu = new Category(0, "美术作品", "meishu");
-            Category wutaiyishu = new Category(0, "舞台艺术", "wutaiyishu");
-            Category wenhuajiaoliu = new Category(0, "文化交流", "wenhuajiaoliu");
-            Category minsu = new Category(0, "民风民俗", "minsu");
-            Category fangyan = new Category(0, "民间方言", "fangyan");
-            Category lishi = new Category(0, "历史事件", "lishi");
-            Category meishuguan = new Category(0, "美术馆", "meishuguan");
-            Category mingrenguju = new Category(0, "名人故人居", "mingrenguju");
-            Category sheying = new Category(0, "摄影作品", "sheying");
-            Category gongyi = new Category(0, "工艺美术", "gongyi");
-            Category huodong = new Category(0, "文化活动", "wenhuahuodong");
-            Category tiyu = new Category(0, "体育竞技", "tiyu");
-            Category techan = new Category(0, "名特产品", "techan");
-            Category wenwu = new Category(0, "各级文物", "wenwu");
-            Category wenhuaguan = new Category(0, "文化馆", "wenhuaguan");
-            Category chuanshuo = new Category(0, "民间传说故事", "chuanshuo");
+            Category groupHidden = new Category("隐藏群组", "hidden");
+            Category group1 = new Category("首页群组1", "group1");
+            Category group2 = new Category("首页群组2", "group2");
+            Category group3 = new Category("首页群组3", "group3");
+            Category group4 = new Category("首页群组4", "group4");
+            Category group5 = new Category("首页群组5", "group5");
+            Category groupImage = new Category("图片", "image");
+            Category groupVideo = new Category("视频", "video");
+            Category wenxue = new Category("文学作品", "wenxue");
+            Category yingshi = new Category("影视作品", "yingshi");
+            Category mingren = new Category("文化名人", "mingren");
+            Category fushi = new Category("服饰风采", "fushi");
+            Category zongjiao = new Category("宗教文化", "zongjiao");
+            Category fengjing = new Category("风景名胜", "fengjing");
+            Category bowuguan = new Category("博物馆", "bowuguan");
+            Category tiyuguan = new Category("体育馆", "tiyuguan");
+            Category yichan = new Category("非物质文化遗产", "feiwuzhiyichan");
+            Category shufa = new Category("书法作品", "shufa");
+            Category dongman = new Category("动漫作品", "dongman");
+            Category chanye = new Category("文化产业", "wenhuachanye");
+            Category jieqing = new Category("节庆活动", "jieqing");
+            Category meishi = new Category("民间美食", "meishi");
+            Category qiye = new Category("文化企业", "qiye");
+            Category tushuguan = new Category("图书馆", "tushuguan");
+            Category jianzhu = new Category("建筑", "jianzhu");
+            Category aiguozhuyi = new Category("爱国主义教育基地", "爱国主义教育基地");
+            Category meishu = new Category("美术作品", "meishu");
+            Category wutaiyishu = new Category("舞台艺术", "wutaiyishu");
+            Category wenhuajiaoliu = new Category("文化交流", "wenhuajiaoliu");
+            Category minsu = new Category("民风民俗", "minsu");
+            Category fangyan = new Category("民间方言", "fangyan");
+            Category lishi = new Category("历史事件", "lishi");
+            Category meishuguan = new Category("美术馆", "meishuguan");
+            Category mingrenguju = new Category("名人故人居", "mingrenguju");
+            Category sheying = new Category("摄影作品", "sheying");
+            Category gongyi = new Category("工艺美术", "gongyi");
+            Category huodong = new Category("文化活动", "wenhuahuodong");
+            Category tiyu = new Category("体育竞技", "tiyu");
+            Category techan = new Category("名特产品", "techan");
+            Category wenwu = new Category("各级文物", "wenwu");
+            Category wenhuaguan = new Category("文化馆", "wenhuaguan");
+            Category chuanshuo = new Category("民间传说故事", "chuanshuo");
+            categoryService.create(groupHidden);
             categoryService.create(group1);
             categoryService.create(group2);
             categoryService.create(group3);
             categoryService.create(group4);
             categoryService.create(group5);
-            categoryService.create(groupMultimedia);
-            categoryService.create(groupHidden);
+            categoryService.create(groupImage);
+            categoryService.create(groupVideo);
             wenxue.setCategoryParent(group1);
             shufa.setCategoryParent(group1);
             meishu.setCategoryParent(group1);
@@ -216,29 +221,6 @@ public class HomeController {
             categoryService.create(wenhuaguan);
             categoryService.create(chuanshuo);
             categoryService.create(zongjiao);
-            //创建测试文章标签
-            Tag tag = new Tag(0, "测试", "testtag");
-            Tag tag1 = new Tag(0, "文章标签", "testtag2");
-            tagService.create(tag);
-            tagService.create(tag1);
-            //创建测试文章
-            Post post = new Post(new Date(), new Date(), true, 0, Post.PostStatus.PUBLISHED, Post.PostType.POST, "test", "我是文章标题", "我是文章内容");
-            post.setUser(user);
-            List<Category> categoryList = new ArrayList<Category>();
-            categoryList.add(wenxue);
-            categoryList.add(sheying);
-            categoryList.add(zongjiao);
-            post.setCategoryList(categoryList);
-            List<Tag> tagList = new ArrayList<Tag>();
-            tagList.add(tag);
-            tagList.add(tag1);
-            post.setTagList(tagList);
-            postService.create(post);
-            //创建测试评论
-            Comment comment = new Comment(new Date(), true, "Cherrot", "admin@cherrot.com", "http://www.cherrot.com", "127.0.0.1", "我是文章评论");
-            comment.setPost(post);
-            commentService.create(comment);
-            //创建测试链接分类和链接
             LinkCategory wenhuaLinkCategory = new LinkCategory();
             wenhuaLinkCategory.setName("文化相关网站");
             LinkCategory officialLinkCategory = new LinkCategory();

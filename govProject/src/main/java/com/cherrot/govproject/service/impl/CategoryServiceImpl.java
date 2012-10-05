@@ -101,6 +101,28 @@ public class CategoryServiceImpl implements CategoryService {
         return category;
     }
 
+    /**
+     * XXX 假定图片分类的slug为"image"
+     * @param withPosts
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Category findImageCategory(boolean withPosts) {
+        return findBySlug("image", withPosts, false);
+    }
+
+    /**
+     * XXX 假定视频分类的slug为"video"
+     * @param withPosts
+     * @return
+     */
+    @Override
+    @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+    public Category findVideoCategory(boolean withPosts) {
+        return findBySlug("video", withPosts, false);
+    }
+
     @Override
     @Transactional
     public void destroy(Integer id) {
@@ -184,12 +206,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public boolean isTopLevelCategory(Category category) {
-        return category.getCategoryParent() == null;
+        return category.getId() != null && category.getCategoryParent() == null;
     }
 
     @Override
     public Category getDefaultCategory() {
-        //PENDING: 本方法将返回第一个二级分类
+        //本方法将返回第一个二级分类
         return listSecondLevelCategories(false, false).get(0);
     }
 }

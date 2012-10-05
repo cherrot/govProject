@@ -23,7 +23,7 @@ public class Constants {
     public static final String SUCCESS_MSG_KEY = "successMsg";
     public static final String LOGIN_TO_URL = "toUrl";
     public static final String FILTERED_REQUEST = "@@session_context_filtered_request";
-    public static final int TOP_LEVEL_CATEGORY_COUNT = 7;
+    public static final int TOP_LEVEL_CATEGORY_COUNT = 8;
     /**
      * User Level:待审核用户
      */

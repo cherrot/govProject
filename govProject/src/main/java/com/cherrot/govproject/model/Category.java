@@ -109,9 +109,9 @@ public class Category implements Serializable {
 //    public Category(Integer id) {
 //        this.id = id;
 //    }
-    public Category(/*Integer id,*/int count, String name, String slug) {
+    public Category(/*Integer id, int count,*/String name, String slug) {
 //        this.id = id;
-        this.count = count;
+        this.count = 0;
         this.name = name;
         this.slug = slug;
 //        processLists();

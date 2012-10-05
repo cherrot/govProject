@@ -17,6 +17,10 @@ public interface CategoryService extends BaseService<Category, Integer> {
 
     Category findBySlug(String slug, boolean withPosts, boolean withChildCategories);
 
+    Category findImageCategory(boolean withPosts);
+
+    Category findVideoCategory(boolean withPosts);
+
     Category getDefaultCategory();
 
     /**
@@ -36,7 +40,7 @@ public interface CategoryService extends BaseService<Category, Integer> {
     List<Category> listTopLevelCategories(boolean withChildCategories);
 
     /**
-     * 返回二级文章分类，即首页顶部导航栏显示的文章分类
+     * 返回二级文章分类，即首页顶部导航栏显示的文章分类。注意，不能包括自动管理的分类（如多媒体分类）
      *
      * @param withPosts true if 一并取出该分类下关联的文章
      * @param withChildCategories true if 一并取出该分类的子分类
