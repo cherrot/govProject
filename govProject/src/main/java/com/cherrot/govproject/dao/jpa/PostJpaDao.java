@@ -50,9 +50,6 @@ public class PostJpaDao implements PostDao {
         if (post.getPostmetaList() == null) {
             post.setPostmetaList(new ArrayList<Postmeta>());
         }
-        if (post.getPostList() == null) {
-            post.setPostList(new ArrayList<Post>());
-        }
         if (post.getCategoryList() == null) {
             post.setCategoryList(new ArrayList<Category>());
         }
@@ -75,11 +72,6 @@ public class PostJpaDao implements PostDao {
             user = em.getReference(User.class, user.getId());
             post.setUser(user);
         }
-        Post postParent = post.getPostParent();
-        if (postParent != null) {
-            postParent = em.getReference(Post.class, postParent.getId());
-            post.setPostParent(postParent);
-        }
         /**
          * 设置一对多关系映射，确保一对多的每个引用都在数据库中存在
          */
@@ -89,12 +81,6 @@ public class PostJpaDao implements PostDao {
             attachedPostmetaList.add(postmetaListPostmetaToAttach);
         }
         post.setPostmetaList(attachedPostmetaList);
-        List<Post> attachedPostList = new ArrayList<Post>();
-        for (Post postListPostToAttach : post.getPostList()) {
-            postListPostToAttach = em.getReference(Post.class, postListPostToAttach.getId());
-            attachedPostList.add(postListPostToAttach);
-        }
-        post.setPostList(attachedPostList);
         List<Category> attachedCategoryList = new ArrayList<Category>();
         for (Category categoryListCategoryToAttach : post.getCategoryList()) {
             categoryListCategoryToAttach = em.getReference(Category.class, categoryListCategoryToAttach.getId());
@@ -125,10 +111,6 @@ public class PostJpaDao implements PostDao {
             user.getPostList().add(post);
             user = em.merge(user);
         }
-        if (postParent != null) {
-            postParent.getPostList().add(post);
-            postParent = em.merge(postParent);
-        }
         /**
          * 设置一对多关系映射的维护端（多方）。 和 多对多关系
          */
@@ -139,15 +121,6 @@ public class PostJpaDao implements PostDao {
             if (oldPostOfPostmetaListPostmeta != null) {
                 oldPostOfPostmetaListPostmeta.getPostmetaList().remove(postmetaListPostmeta);
                 oldPostOfPostmetaListPostmeta = em.merge(oldPostOfPostmetaListPostmeta);
-            }
-        }
-        for (Post postListPost : post.getPostList()) {
-            Post oldPostParentOfPostListPost = postListPost.getPostParent();
-            postListPost.setPostParent(post);
-            postListPost = em.merge(postListPost);
-            if (oldPostParentOfPostListPost != null) {
-                oldPostParentOfPostListPost.getPostList().remove(postListPost);
-                oldPostParentOfPostListPost = em.merge(oldPostParentOfPostListPost);
             }
         }
         for (Category categoryListCategory : post.getCategoryList()) {
@@ -189,7 +162,6 @@ public class PostJpaDao implements PostDao {
              */
             Post persistentPost = em.find(Post.class, post.getId());
             //XXX Post在控制器中已改变的一对多关系不会被覆盖（分类列表、标签列表、postmeta列表），其他一对多关系会被覆盖。
-            post.setPostList(persistentPost.getPostList());
             try {
                 post.getCategoryList().size();
             } catch (Exception e) {
@@ -209,12 +181,8 @@ public class PostJpaDao implements PostDao {
 
             User userOld = persistentPost.getUser();
             User userNew = post.getUser();
-            Post postParentOld = persistentPost.getPostParent();
-            Post postParentNew = post.getPostParent();
             List<Postmeta> postmetaListOld = persistentPost.getPostmetaList();
             List<Postmeta> postmetaListNew = post.getPostmetaList();
-            List<Post> postListOld = persistentPost.getPostList();
-            List<Post> postListNew = post.getPostList();
             List<Category> categoryListOld = persistentPost.getCategoryList();
             List<Category> categoryListNew = post.getCategoryList();
             List<Tag> tagListOld = persistentPost.getTagList();
@@ -252,10 +220,6 @@ public class PostJpaDao implements PostDao {
                 userNew = em.getReference(User.class, userNew.getId());
                 post.setUser(userNew);
             }
-            if (postParentNew != null) {
-                postParentNew = em.getReference(Post.class, postParentNew.getId());
-                post.setPostParent(postParentNew);
-            }
             /**
              * 设置一对多关系映射，确保每一个实体类存在
              */
@@ -266,13 +230,6 @@ public class PostJpaDao implements PostDao {
             }
             postmetaListNew = attachedPostmetaListNew;
             post.setPostmetaList(postmetaListNew);
-            List<Post> attachedPostListNew = new ArrayList<Post>();
-            for (Post postListNewPostToAttach : postListNew) {
-                postListNewPostToAttach = em.getReference(Post.class, postListNewPostToAttach.getId());
-                attachedPostListNew.add(postListNewPostToAttach);
-            }
-            postListNew = attachedPostListNew;
-            post.setPostList(postListNew);
             List<Category> attachedCategoryListNew = new ArrayList<Category>();
             for (Category categoryListNewCategoryToAttach : categoryListNew) {
                 categoryListNewCategoryToAttach = em.getReference(Category.class, categoryListNewCategoryToAttach.getId());
@@ -310,14 +267,6 @@ public class PostJpaDao implements PostDao {
                 userNew.getPostList().add(post);
                 userNew = em.merge(userNew);
             }
-            if (postParentOld != null && !postParentOld.equals(postParentNew)) {
-                postParentOld.getPostList().remove(post);
-                postParentOld = em.merge(postParentOld);
-            }
-            if (postParentNew != null && !postParentNew.equals(postParentOld)) {
-                postParentNew.getPostList().add(post);
-                postParentNew = em.merge(postParentNew);
-            }
             /**
              * 设置一对多关系的关系维护端（多方） 和 多对多关系
              */
@@ -329,23 +278,6 @@ public class PostJpaDao implements PostDao {
                     if (oldPostOfPostmetaListNewPostmeta != null && !oldPostOfPostmetaListNewPostmeta.equals(post)) {
                         oldPostOfPostmetaListNewPostmeta.getPostmetaList().remove(postmetaListNewPostmeta);
                         oldPostOfPostmetaListNewPostmeta = em.merge(oldPostOfPostmetaListNewPostmeta);
-                    }
-                }
-            }
-            for (Post postListOldPost : postListOld) {
-                if (!postListNew.contains(postListOldPost)) {
-                    postListOldPost.setPostParent(null);
-                    postListOldPost = em.merge(postListOldPost);
-                }
-            }
-            for (Post postListNewPost : postListNew) {
-                if (!postListOld.contains(postListNewPost)) {
-                    Post oldPostParentOfPostListNewPost = postListNewPost.getPostParent();
-                    postListNewPost.setPostParent(post);
-                    postListNewPost = em.merge(postListNewPost);
-                    if (oldPostParentOfPostListNewPost != null && !oldPostParentOfPostListNewPost.equals(post)) {
-                        oldPostParentOfPostListNewPost.getPostList().remove(postListNewPost);
-                        oldPostParentOfPostListNewPost = em.merge(oldPostParentOfPostListNewPost);
                     }
                 }
             }
@@ -445,16 +377,6 @@ public class PostJpaDao implements PostDao {
         if (user != null) {
             user.getPostList().remove(post);
             user = em.merge(user);
-        }
-        Post postParent = post.getPostParent();
-        if (postParent != null) {
-            postParent.getPostList().remove(post);
-            postParent = em.merge(postParent);
-        }
-        List<Post> postList = post.getPostList();
-        for (Post postListPost : postList) {
-            postListPost.setPostParent(null);
-            postListPost = em.merge(postListPost);
         }
         List<Category> categoryList = post.getCategoryList();
         for (Category categoryListCategory : categoryList) {

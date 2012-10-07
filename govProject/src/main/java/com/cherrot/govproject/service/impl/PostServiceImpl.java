@@ -240,17 +240,17 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+    public Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
         Post post = find(id);
-        processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
+        processDependency(post, withComments, withPostmetas, withCategories, withTags);
         return post;
     }
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+    public Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
         Post post = postDao.findBySlug(slug);
-        processDependency(post, withComments, withPostmetas, withCategories, withTags, withChildPosts);
+        processDependency(post, withComments, withPostmetas, withCategories, withTags);
         return post;
     }
 
@@ -292,9 +292,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-    public List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+    public List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
         List<Post> posts = postDao.findEntitiesDesc(pageSize, (pageNum - 1) * pageSize);
-        processDependency(posts, withComments, withPostmetas, withCategories, withTags, withChildPosts);
+        processDependency(posts, withComments, withPostmetas, withCategories, withTags);
         return posts;
     }
 
@@ -318,33 +318,14 @@ public class PostServiceImpl implements PostService {
         return postDao.getCountByType(type);
     }
 
-    @Override
-    public boolean isNormalPost(Post post) {
-        return post.getPostParent() == null;
-    }
-
     //TODO 此方法目前只用于添加视频。
     @Override
     @Transactional
     public void addAttachment(Integer postId, File localFile, String mime) {
-        Post videoPost = new Post();
-        Post postParent = find(postId);
-        videoPost.setUser(postParent.getUser());
-        videoPost.setPostParent(postParent);
-        videoPost.setType(Post.PostType.ATTACHMENT);
-        videoPost.setMime(mime);
-        videoPost.setContent("");
-        videoPost.setSlug("testvideo");
-        videoPost.setTitle("testvideo");
-        create(videoPost);
-
-        String content = "<object classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\">"
-            + "<embed src=\"/misc/flvplayer.swf\" allowfullscreen=\"true\" flashvars=\"vcastr_file=" + "/govProject/uploads/MVI_0015.AVI.flv" + "&BufferTime=3\" quality=\"high\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"459\" height=\"370\"></embed>"
-            + "</object>";
-        postParent.setContent(content);
+        throw new UnsupportedOperationException("TODO：该方法将用于上传图片和视频，并且将信息保存在文章的postMeta中");
     }
 
-    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
+    private void processDependency(Post post, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
         if (withComments) {
             post.getCommentList().isEmpty();
         }
@@ -357,13 +338,10 @@ public class PostServiceImpl implements PostService {
         if (withTags) {
             post.getTagList().isEmpty();
         }
-        if (withChildPosts) {
-            post.getPostList().isEmpty();
-        }
     }
 
-    private void processDependency(List<Post> posts, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts) {
-        if (withComments || withPostmetas || withCategories || withTags || withChildPosts) {
+    private void processDependency(List<Post> posts, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags) {
+        if (withComments || withPostmetas || withCategories || withTags) {
             for (Post post : posts) {
                 if (withComments) {
                     post.getCommentList().isEmpty();
@@ -376,9 +354,6 @@ public class PostServiceImpl implements PostService {
                 }
                 if (withTags) {
                     post.getTagList().isEmpty();
-                }
-                if (withChildPosts) {
-                    post.getPostList().isEmpty();
                 }
             }
         }

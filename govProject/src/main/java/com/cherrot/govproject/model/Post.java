@@ -34,7 +34,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * 根据JPA规范，MEMBER OF 后面应该为对象的某个字段，而IN后面应该是一个查询参数。这个字段/参数是一个集合。
+ * 文章实体。文章的type字段表示文章的类型（普通、图文、视频）
+ * 注意，只有当文章中的多媒体资源是上传到服务器的情况下才会添加该资源的postmeta,用于多媒体资源的管理。
+ * 也就是说，存在这一情况：文章类型不是‘普通’，但postmeta中却没有多媒体资源的描述（用户通过外链引用的多媒体资源）
  * @author sai
  */
 @Entity
@@ -42,6 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
+    //根据JPA规范，MEMBER OF 后面应该为对象的某个字段，而IN后面应该是一个查询参数。这个字段/参数是一个集合。
     @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
     @NamedQuery(name = "Post.findAllDesc", query = "SELECT p FROM Post p ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
@@ -53,8 +56,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Post.findByTypeDesc", query = "SELECT p FROM Post p WHERE p.type = :type ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
     @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
-    @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime"),
-    @NamedQuery(name = "Post.findByMimeDesc", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime ORDER BY p.id DESC"),
     //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
     @NamedQuery(name = "Post.findByCategoryDesc", query = "SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByCategorySlugDesc", query = "SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
@@ -94,7 +95,7 @@ public class Post implements Serializable {
 
     public enum PostType {
 
-        POST("文章"), ATTACHMENT("附件");
+        PLAIN("普通"), IMAGE("图文"), VIDEO("视频");
         private String description;
 
         private PostType(String description) {
@@ -154,9 +155,6 @@ public class Post implements Serializable {
     @Size(max = 20)
     @Column(name = "password", length = 20)
     private String password;
-    @Size(max = 45)
-    @Column(name = "mime", length = 45)
-    private String mime;
     @Basic(optional = false)
     @NotNull
     @Lob
@@ -172,11 +170,6 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     @ManyToOne(optional = false)
     private User user;
-    @OneToMany(mappedBy = "postParent")
-    private List<Post> postList;
-    @JoinColumn(name = "post_parent", referencedColumnName = "id")
-    @ManyToOne
-    private Post postParent;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "post")
 //    /**
 //     * Retriving the commentList order by its createDate
@@ -184,18 +177,18 @@ public class Post implements Serializable {
 //    @OrderBy("commentDate")
     private List<Comment> commentList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "category_relationships",
-    inverseJoinColumns =
-    @JoinColumn(name = "category_id"),
-    joinColumns =
-    @JoinColumn(name = "post_id"))
+    @JoinTable(
+        name = "category_relationships",
+        inverseJoinColumns = @JoinColumn(name = "category_id"),
+        joinColumns = @JoinColumn(name = "post_id")
+    )
     private List<Category> categoryList;
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinTable(name = "tag_relationships",
-    inverseJoinColumns =
-    @JoinColumn(name = "tag_id"),
-    joinColumns =
-    @JoinColumn(name = "post_id"))
+    @JoinTable(
+        name = "tag_relationships",
+        inverseJoinColumns = @JoinColumn(name = "tag_id"),
+        joinColumns = @JoinColumn(name = "post_id")
+    )
     private List<Tag> tagList;
 
     public Post() {
@@ -203,7 +196,7 @@ public class Post implements Serializable {
         commentStatus = true;
         commentCount = 0;
         status = PostStatus.DRAFT;
-        type = PostType.POST;
+        type = PostType.PLAIN;
 //        processLists();
     }
 
@@ -314,14 +307,6 @@ public class Post implements Serializable {
         this.password = password;
     }
 
-    public String getMime() {
-        return mime;
-    }
-
-    public void setMime(String mime) {
-        this.mime = mime;
-    }
-
     public String getContent() {
         return content;
     }
@@ -331,8 +316,6 @@ public class Post implements Serializable {
     }
 
     /**
-     * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
-     * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
      *
      * @return 文章摘要 或 附件文件的下载URI
      */
@@ -341,8 +324,6 @@ public class Post implements Serializable {
     }
 
     /**
-     * 如果PostType为post，那么excerpt（摘要）中存储的是文章摘要，可以为空
-     * 如果PostType为attachment，那么excerpt(摘要)中存储的是该文件的存储位置的URI
      *
      * @param excerpt 文章摘要或附件URI
      */
@@ -366,24 +347,6 @@ public class Post implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    @XmlTransient
-    public List<Post> getPostList() {
-//        if (postList == null) postList = new ArrayList<Post>();
-        return postList;
-    }
-
-    public void setPostList(List<Post> postList) {
-        this.postList = postList;
-    }
-
-    public Post getPostParent() {
-        return postParent;
-    }
-
-    public void setPostParent(Post postParent) {
-        this.postParent = postParent;
     }
 
     @XmlTransient

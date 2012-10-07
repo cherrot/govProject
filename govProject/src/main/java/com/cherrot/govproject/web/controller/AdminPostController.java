@@ -93,10 +93,6 @@ public class AdminPostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
-            //不能编辑子文章
-            if (!postService.isNormalPost(post)) {
-                throw new ForbiddenException();
-            }
             //文章标签
             List<Tag> tagList = tagService.createTagsByName(Arrays.asList(postTags.split("\\s*,|，\\s*")));//匹配非汉字： [^\\u4e00-\\u9fa5]+
             post.setTagList(tagList);
@@ -121,7 +117,7 @@ public class AdminPostController {
 
         Post post = null;
         try {
-            post = postService.find(postId, false, true, true, true, false);
+            post = postService.find(postId, false, true, true, true);
         } catch (PersistenceException e) {
             throw new ResourceNotFoundException();
         }
@@ -164,10 +160,10 @@ public class AdminPostController {
     private ModelAndView processPostList(int pageNum) {
         ModelAndView mav = new ModelAndView("admin/posts");
         List<Post> posts;
-        posts = postService.listNewestPosts(pageNum, DEFAULT_PAGE_SIZE, false, false, true, false, false);
+        posts = postService.listNewestPosts(pageNum, DEFAULT_PAGE_SIZE, false, false, true, false);
         mav.addObject("postList", posts);
         mav.addObject("pageNum", pageNum);
-        int pageCount = (int) Math.ceil(postService.getCountByType(Post.PostType.POST)/(double)DEFAULT_PAGE_SIZE);
+        int pageCount = (int) Math.ceil(postService.getCount()/(double)DEFAULT_PAGE_SIZE);
         mav.addObject("pageCount", pageCount);
         return mav;
     }

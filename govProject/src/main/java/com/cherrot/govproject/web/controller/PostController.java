@@ -45,12 +45,13 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 本类中使用三种方式处理
+ * 本类中使用三种方式处理数据注入
  *
  * @ModelAttribute 注解，一种是通过@ModelAttribute 注解的方法得到新的实例用于数据绑定和验证（处理Comment）
  * 第二种是在编辑文章时用到的，在GET请求中注入post完成数据绑定。
- * 第三中是在新建文章时用到的，如果用户是新建文章，则不注入post对象，此时Spring会使用默认构造器注入。 什么，为什么使用两种方法？ Just for
- * fun ;) ! TODO: Add http type converters which could convert String values and
+ * 第三种是在新建文章时用到的，如果用户是新建文章，则不注入post对象，此时Spring会使用默认构造器注入。 什么，为什么使用两种方法？ Just for
+ * fun ;) !
+ * TODO: Add http type converters which could convert String values and
  * Integer Values to posts.
  * @author Cherrot Luo<cherrot+dev@cherrot.com>
  */
@@ -109,7 +110,7 @@ public class PostController {
         Post post = null;
         if (postId != null) {
             //适用于用户提交（POST）文章时从数据库获取文章对象
-            post = postService.find(postId, false, true, true, true, false);
+            post = postService.find(postId, false, true, true, true);
         } else {
             //适用于新建文章
             post = new Post();
@@ -128,7 +129,7 @@ public class PostController {
     @RequestMapping(params = "postId")
     public String viewPost(@RequestParam("postId") int postId) {
         try {
-            Post post = postService.find(postId, false, false, false, false, false);
+            Post post = postService.find(postId, false, false, false, false);
             return "redirect:/post/" + post.getSlug();
         } catch (Exception ex) {
             Logger.getLogger(PostController.class.getSimpleName()).log(Level.WARNING, ex.getMessage(), ex);
@@ -150,7 +151,7 @@ public class PostController {
 
         ModelAndView mav = new ModelAndView("viewPost");
         try {
-            Post post = postService.findBySlug(postSlug, true, true, true, true, false);
+            Post post = postService.findBySlug(postSlug, true, true, true, true);
             mav.addObject("post", post);
             mav.addObject("tagList", post.getTagList());
             //测试用户是否相等
@@ -251,7 +252,7 @@ public class PostController {
 
         ModelAndView mav = null;
         try {
-            Post post = postService.findBySlug(postSlug, false, true, true, true, false);
+            Post post = postService.findBySlug(postSlug, false, true, true, true);
             User user = BaseController.getSessionUser(session);
             if ((user == null) || (!post.getUser().equals(user))) {
                 //无权修改
@@ -298,10 +299,6 @@ public class PostController {
             redirectAttr.addFlashAttribute("post", post);
             redirectAttr.addFlashAttribute("org.springframework.validation.BindingResult.post", bindingResult);
         } else {
-            //如果用户编辑的不是普通文章（而是普通文章的子文章），返回403错误
-            if (!postService.isNormalPost(post)) {
-                throw new ForbiddenException();
-            }
             //如果session不存在，或者不是新建文章但文章属主和session不同时，将返回403错误
             User author = BaseController.getSessionUser(request.getSession());
             if (author == null || (post.getUser() != null && !post.getUser().equals(author))) {
@@ -330,7 +327,7 @@ public class PostController {
     public String doDeletePost(@PathVariable("postSlug") String postSlug, HttpServletRequest request) {
         Post post = null;
         try {
-            post = postService.findBySlug(postSlug, false, false, false, false, false);
+            post = postService.findBySlug(postSlug, false, false, false, false);
             //只有文章的作者或网站管理员可以删除该文章
             User author = BaseController.getSessionUser(request.getSession());
             if (author == null || !userService.isAdministrator(author) || (post.getUser() != null && !post.getUser().equals(author))) {

@@ -22,9 +22,10 @@ public interface PostService extends BaseService<Post, Integer> {
 
     void create(Post post, List<Category> categories, List<String> tags, List<Postmeta> postmetas);
 
-    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
+    Post find(Integer id, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags);
 
-    Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
+    Post findBySlug(String slug, boolean withComments, boolean withPostmetas, boolean withCategories,
+        boolean withTags);
 
     /**
      * 向指定的文章(post)添加文章分类/文章标签（关键字）。此方法不会覆盖post原有的term关联
@@ -54,7 +55,8 @@ public interface PostService extends BaseService<Post, Integer> {
 
     void removeTagList(Post post, List<Tag> tags);
 
-    List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas, boolean withCategories, boolean withTags, boolean withChildPosts);
+    List<Post> listNewestPosts(int pageNum, int pageSize, boolean withComments, boolean withPostmetas,
+        boolean withCategories, boolean withTags);
 
     /**
      * 根据文章分类取出对应文章。
@@ -82,7 +84,6 @@ public interface PostService extends BaseService<Post, Integer> {
     List<Post> listNewestPostsByUser(User user, int pageNum, int pageSize);
 
     /**
-     * 取回MIME类型为image/XXX的post
      *
      * @param pageNum
      * @param pageSize
@@ -100,16 +101,4 @@ public interface PostService extends BaseService<Post, Integer> {
 
     void addAttachment(Integer postId, File localFile, String mime);
 
-    /**
-     *
-     * @param post
-     * @return true if post is a normal post, false if post is a child post.
-     */
-    boolean isNormalPost(Post post);
-//    /**
-//     * 只得到Post的引用，不取回post。主要用于验证该slug是否存在（通过捕获EntityNotFoundException）。
-//     * @param slug post的slug（用户自定义的文章链接）
-//     * @return Post的引用
-//     */
-//    Post getReferenceBySlug(String slug);
 }
