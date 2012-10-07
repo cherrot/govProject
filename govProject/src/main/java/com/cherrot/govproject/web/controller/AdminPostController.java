@@ -167,7 +167,7 @@ public class AdminPostController {
         posts = postService.listNewestPosts(pageNum, DEFAULT_PAGE_SIZE, false, false, true, false, false);
         mav.addObject("postList", posts);
         mav.addObject("pageNum", pageNum);
-        int pageCount = postService.getCount();
+        int pageCount = (int) Math.ceil(postService.getCountByType(Post.PostType.POST)/(double)DEFAULT_PAGE_SIZE);
         mav.addObject("pageCount", pageCount);
         return mav;
     }

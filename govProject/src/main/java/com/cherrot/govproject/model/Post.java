@@ -34,8 +34,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- * XXX 返回Post集合和COUNT()的方法都应过滤掉子Post
- *
+ * 根据JPA规范，MEMBER OF 后面应该为对象的某个字段，而IN后面应该是一个查询参数。这个字段/参数是一个集合。
  * @author sai
  */
 @Entity
@@ -43,35 +42,35 @@ import javax.xml.bind.annotation.XmlTransient;
     @UniqueConstraint(columnNames = {"slug"})})
 @XmlRootElement
 @NamedQueries({
-    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p WHERE p.postParent IS NULL"),
+    @NamedQuery(name = "Post.findAll", query = "SELECT p FROM Post p"),
+    @NamedQuery(name = "Post.findAllDesc", query = "SELECT p FROM Post p ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findById", query = "SELECT p FROM Post p WHERE p.id = :id"),
     @NamedQuery(name = "Post.findByCreateDate", query = "SELECT p FROM Post p WHERE p.createDate = :createDate"),
     @NamedQuery(name = "Post.findByModifyDate", query = "SELECT p FROM Post p WHERE p.modifyDate = :modifyDate"),
     @NamedQuery(name = "Post.findByCommentStatus", query = "SELECT p FROM Post p WHERE p.commentStatus = :commentStatus"),
-    @NamedQuery(name = "Post.findByCommentCount", query = "SELECT p FROM Post p WHERE p.commentCount = :commentCount"),
     @NamedQuery(name = "Post.findByStatus", query = "SELECT p FROM Post p WHERE p.status = :status"),
     @NamedQuery(name = "Post.findByType", query = "SELECT p FROM Post p WHERE p.type = :type"),
+    @NamedQuery(name = "Post.findByTypeDesc", query = "SELECT p FROM Post p WHERE p.type = :type ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findBySlug", query = "SELECT p FROM Post p WHERE p.slug = :slug"),
     @NamedQuery(name = "Post.findByTitle", query = "SELECT p FROM Post p WHERE p.title = :title"),
-    @NamedQuery(name = "Post.findByPassword", query = "SELECT p FROM Post p WHERE p.password = :password"),
     @NamedQuery(name = "Post.findByMime", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime"),
-    @NamedQuery(name = "Post.findAllDesc", query = "SELECT p FROM Post p ORDER BY p.id DESC"),
-    //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
-    @NamedQuery(name = "Post.findByCategoryDescOrder", query = "SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByCategorySlugDescOrder", query = "SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByTagDescOrder", query = "SELECT p FROM Post p WHERE :tag MEMBER OF p.tagList ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByTagSlugDescOrder", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.findByUser", query = "SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL"),
-    @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user AND p.postParent IS NULL ORDER BY p.id DESC"),
     @NamedQuery(name = "Post.findByMimeDesc", query = "SELECT p FROM Post p WHERE p.mime LIKE :mime ORDER BY p.id DESC"),
-    @NamedQuery(name = "Post.getCount", query = "SELECT COUNT(p) FROM Post p WHERE p.postParent IS NULL"),
-    @NamedQuery(name = "Post.getCountByUser", query = "SELECT COUNT(p) FROM Post p WHERE :user = p.user AND p.postParent IS NULL"),
+    //下面两式  IN 和 JOIN 的作用等价。 MEMBER OF 也可完成查询
+    @NamedQuery(name = "Post.findByCategoryDesc", query = "SELECT p FROM Post p, IN(p.categoryList) c WHERE c = :category ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByCategorySlugDesc", query = "SELECT p FROM Post p INNER JOIN p.categoryList c WHERE c.slug = :categorySlug ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagDesc", query = "SELECT p FROM Post p WHERE :tag MEMBER OF p.tagList ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByTagSlugDesc", query = "SELECT p FROM Post p INNER JOIN p.tagList t WHERE t.slug = :tagSlug ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.findByUser", query = "SELECT p FROM Post p WHERE p.user = :user"),
+    @NamedQuery(name = "Post.findByUserDesc", query = "SELECT p FROM Post p WHERE p.user = :user ORDER BY p.id DESC"),
+    @NamedQuery(name = "Post.getCount", query = "SELECT COUNT(p) FROM Post p"),
+    @NamedQuery(name = "Post.getCountByType", query = "SELECT COUNT(p) FROM Post p WHERE p.type = :type"),
+    @NamedQuery(name = "Post.getCountByUser", query = "SELECT COUNT(p) FROM Post p WHERE :user = p.user"),
     @NamedQuery(name = "Post.getCountByCategory", query = "SELECT COUNT(p) FROM Post p WHERE :category MEMBER OF p.categoryList"),
     @NamedQuery(name = "Post.getCountByTag", query = "SELECT COUNT(p) FROM Post p WHERE :tag MEMBER OF p.tagList")
 })
 /**
  * state_field_path_expression must have a string, numeric, or enum value.
- * PENDING: 如果是用来指示多媒体内容的Post,那么其content为用于显示这个多媒体内容的HTML代码，其摘要(excerpt)为多媒体内容的URI
+ * XXX: 如果是用来指示多媒体内容的Post,那么其content为用于显示这个多媒体内容的HTML代码，其摘要(excerpt)为多媒体内容的URI
  * @See
  * http://openjpa.apache.org/builds/1.1.0/docs/jpa_langref.html#jpa_langref_in
  */

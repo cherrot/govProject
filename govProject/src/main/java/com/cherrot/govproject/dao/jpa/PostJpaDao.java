@@ -610,6 +610,12 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
+    public int getCountByType(Post.PostType type) {
+        return ((Long) em.createNamedQuery("Post.getCountByUser")
+            .setParameter("type", type).getSingleResult()).intValue();
+    }
+
+    @Override
     public List<Post> findEntitiesDesc(int maxResults, int firstResult) {
         Query q = em.createNamedQuery("Post.findAllDesc", Post.class);
         q.setMaxResults(maxResults);

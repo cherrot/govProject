@@ -46,6 +46,8 @@ public interface PostDao extends Serializable, BaseDao<Post, Integer> {
     int getCountByCategory(Category category);
 
     int getCountByTag(Tag tag);
+
+    int getCountByType(Post.PostType type);
 //    void create(Post post);
 //
 //    void destroy(Integer id) throws IllegalOrphanException, NonexistentEntityException;

@@ -310,7 +310,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public int getCountByTag(Tag tag) {
-        return getCountByTag(tag);
+        return postDao.getCountByTag(tag);
+    }
+
+    @Override
+    public int getCountByType(Post.PostType type) {
+        return postDao.getCountByType(type);
     }
 
     @Override

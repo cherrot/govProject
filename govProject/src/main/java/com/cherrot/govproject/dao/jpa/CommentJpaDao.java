@@ -133,7 +133,7 @@ public class CommentJpaDao implements CommentDao {
 //            em.getTransaction().begin();
             Comment persistentComment = em.find(Comment.class, comment.getId());
 
-            //XXX 防止延时加载导致的问题
+            //XXX 防止延时加载导致的问题，手动调用size()方法以取得CommentmetaList
             try {
                 comment.getCommentmetaList().size();
             } catch (Exception e) {

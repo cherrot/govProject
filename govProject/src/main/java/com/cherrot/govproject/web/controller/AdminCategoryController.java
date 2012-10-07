@@ -125,7 +125,11 @@ public class AdminCategoryController {
         List<Category> secondCategorys = categoryService.listSecondLevelCategories(false, true);
         mav.addObject("categoryList", secondCategorys);
         List<Category> topCategorys = categoryService.listTopLevelCategories(true);
-        topCategorys.remove(topCategorys.size() - 1);//XXX 在分组列表中去掉最后一个分组（多媒体分组），该分组必须由系统管理。
+
+//        topCategorys.remove(topCategorys.size() - 1);// 在分组列表中去掉多媒体分组，该分组必须由系统管理。
+        topCategorys.remove(categoryService.findImageCategory(false));
+        topCategorys.remove(categoryService.findVideoCategory(false));
+
         mav.addObject("categoryGroups", topCategorys);
         return mav;
     }
@@ -134,7 +138,11 @@ public class AdminCategoryController {
         List<Category> categoryParents = null;
         if (categoryService.isSecondLevelCategory(category)) {
             categoryParents = categoryService.listTopLevelCategories(false);
-            categoryParents.remove(categoryParents.size() - 1);//XXX 去掉多媒体分组（该分组必须由系统管理）
+
+//            categoryParents.remove(categoryParents.size() - 1);// 去掉多媒体分组（该分组必须由系统管理）
+            categoryParents.remove(categoryService.findImageCategory(false));
+            categoryParents.remove(categoryService.findVideoCategory(false));
+
         } else {
             categoryParents = categoryService.listSecondLevelCategories(false, false);
         }

@@ -96,6 +96,8 @@ public interface PostService extends BaseService<Post, Integer> {
 
     int getCountByTag(Tag tag);
 
+    int getCountByType(Post.PostType type);
+
     void addAttachment(Integer postId, File localFile, String mime);
 
     /**

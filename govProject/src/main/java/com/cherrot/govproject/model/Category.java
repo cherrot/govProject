@@ -89,7 +89,7 @@ public class Category implements Serializable {
     @ManyToOne
     private Category categoryParent;
     /**
-     * TODO: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？
+     * PENDING: orderColum 貌似还不被hibernate支持。 是否是hibernate版本问题？
      * （异常栈定位到Spring的Hibernate3而不是Hibernate4） If you choose to map the
      * relationship in both directions, then one direction must be defined as
      * the owner and the other must use the mappedBy attribute to define its
