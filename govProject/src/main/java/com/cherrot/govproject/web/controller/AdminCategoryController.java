@@ -6,7 +6,6 @@ package com.cherrot.govproject.web.controller;
 
 import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.service.CategoryService;
-import com.cherrot.govproject.util.Constants;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
 import java.util.List;
 import java.util.logging.Level;
@@ -33,6 +32,16 @@ public class AdminCategoryController {
 
     @Inject
     private CategoryService categoryService;
+
+    /**
+     * 顶部导航栏的文章分类
+     *
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
 
     /**
      * Method to get an Category instance before any request method executed.

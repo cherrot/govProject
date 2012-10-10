@@ -4,7 +4,9 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Comment;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
@@ -31,6 +33,18 @@ public class AdminCommentController {
 
     @Inject
     private CommentService commentService;
+    @Inject
+    private CategoryService categoryService;
+
+    /**
+     * 顶部导航栏的文章分类
+     *
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
 
     @ModelAttribute("comment")
     public Comment getComment(@RequestParam(value = "id", required = false) Integer categoryId) {

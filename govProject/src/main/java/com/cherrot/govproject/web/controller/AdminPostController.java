@@ -54,6 +54,16 @@ public class AdminPostController {
     @Inject
     private UserService userService;
 
+    /**
+     * 顶部导航栏的文章分类
+     *
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+
     @ModelAttribute("post")
     public Post getPost(@RequestParam(value = "id", required = false) Integer postId) {
         Post post = null;

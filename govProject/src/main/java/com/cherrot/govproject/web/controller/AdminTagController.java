@@ -4,7 +4,9 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.Tag;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.TagService;
 import static com.cherrot.govproject.util.Constants.DEFAULT_PAGE_SIZE;
 import com.cherrot.govproject.web.exceptions.ResourceNotFoundException;
@@ -31,7 +33,19 @@ public class AdminTagController {
 
     @Inject
     private TagService tagService;
+    @Inject
+    private CategoryService categoryService;
 
+    /**
+     * 顶部导航栏的文章分类
+     *
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+    
     @ModelAttribute("tag")
     public Tag getTag(@RequestParam(value = "id", required = false) Integer tagId) {
         Tag tag = null;

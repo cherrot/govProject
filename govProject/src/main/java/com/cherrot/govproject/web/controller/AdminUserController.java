@@ -4,7 +4,9 @@
  */
 package com.cherrot.govproject.web.controller;
 
+import com.cherrot.govproject.model.Category;
 import com.cherrot.govproject.model.User;
+import com.cherrot.govproject.service.CategoryService;
 import com.cherrot.govproject.service.CommentService;
 import com.cherrot.govproject.service.PostService;
 import com.cherrot.govproject.service.UserService;
@@ -44,7 +46,19 @@ public class AdminUserController {
     private CommentService commentService;
     @Inject
     private PostService postService;
+    @Inject
+    private CategoryService categoryService;
 
+    /**
+     * 顶部导航栏的文章分类
+     *
+     * @return
+     */
+    @ModelAttribute("categories")
+    public List<Category> getSecondLevelCategoryList() {
+        return categoryService.listSecondLevelCategories(false, false);
+    }
+    
     @ModelAttribute("user")
     public User getUser(@RequestParam(value = "id", required = false) Integer userId) {
         User user = null;
