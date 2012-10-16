@@ -445,7 +445,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByCategoryDesc(Category category, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByCategoryDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByCategoryDesc", Post.class);
         q.setParameter("category", category);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -454,7 +454,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByCategorySlugDesc(String categorySlug, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByCategorySlugDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByCategorySlugDesc", Post.class);
         q.setParameter("categorySlug", categorySlug);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -463,7 +463,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByTagDesc(Tag tag, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByTagDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByTagDesc", Post.class);
         q.setParameter("tag", tag);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -472,7 +472,7 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByTagSlugDesc(String tagSlug, int maxResults, int firstResult) {
-        Query q = em.createNamedQuery("Post.findByTagSlugDescOrder", Post.class);
+        Query q = em.createNamedQuery("Post.findByTagSlugDesc", Post.class);
         q.setParameter("tagSlug", tagSlug);
         q.setMaxResults(maxResults);
         q.setFirstResult(firstResult);
@@ -504,10 +504,11 @@ public class PostJpaDao implements PostDao {
     }
 
     @Override
-    public List<Post> findEntitiesByMimeDesc(String mime, int maxResults, int firstResult) {
-        return em.createNamedQuery("Post.findByMimeDesc", Post.class).setParameter("mime", mime).getResultList();
+    public List<Post> findEntitiesByTypeDesc(Post.PostType type, int maxResults, int firstResult) {
+        return null;//FIXME
+        
     }
-
+    
     @Override
     public Post getReference(Integer id) {
         return em.getReference(Post.class, id);

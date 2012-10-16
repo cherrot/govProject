@@ -287,7 +287,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> listNewestImagePosts(int pageNum, int pageSize) {
-        return postDao.findEntitiesByMimeDesc("image/%", pageSize, (pageNum - 1) * pageSize);
+        return postDao.findEntitiesByTypeDesc(Post.PostType.IMAGE, pageSize, (pageNum - 1) * pageSize);
     }
 
     @Override
