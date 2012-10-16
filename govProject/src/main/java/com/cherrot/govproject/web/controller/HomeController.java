@@ -78,7 +78,7 @@ public class HomeController {
             }
         }
         //添加多媒体文章
-        List<Post> imagePosts = postService.listNewestImagePosts(1, 5);
+        List<Post> imagePosts = postService.listNewstPostsByType(Post.PostType.IMAGE, 1, 5);
         mav.addObject("imagePosts", imagePosts);
         return mav;
     }

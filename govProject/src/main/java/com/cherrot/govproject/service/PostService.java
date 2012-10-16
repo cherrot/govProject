@@ -89,7 +89,8 @@ public interface PostService extends BaseService<Post, Integer> {
      * @param pageSize
      * @return
      */
-    List<Post> listNewestImagePosts(int pageNum, int pageSize);
+    List<Post> listNewstPostsByType(Post.PostType type, int pageNum, int pageSize);
+    //List<Post> listNewestImagePosts(int pageNum, int pageSize);
 
     int getCountByUser(User user);
 

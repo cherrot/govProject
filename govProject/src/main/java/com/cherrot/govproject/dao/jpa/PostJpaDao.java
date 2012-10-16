@@ -505,10 +505,13 @@ public class PostJpaDao implements PostDao {
 
     @Override
     public List<Post> findEntitiesByTypeDesc(Post.PostType type, int maxResults, int firstResult) {
-        return null;//FIXME
-        
+        Query q = em.createNamedQuery("Post.findByTypeDesc", Post.class);
+        q.setParameter("type", type)
+            .setMaxResults(maxResults)
+            .setFirstResult(firstResult);
+        return q.getResultList();
     }
-    
+
     @Override
     public Post getReference(Integer id) {
         return em.getReference(Post.class, id);
